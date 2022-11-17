@@ -10,9 +10,14 @@ from io import StringIO
 
 app = dash.Dash(__name__)
 
+#changes title on the tab
+app.title = "Data visualisation"
+
+
 # The web page layout is all defined in here dash converts it all to html
 app.layout = html.Div(
     children=[
+        
         # This defines the web page header and paragraph at the top of the page
         html.H1(children="Results Visualisation",),
         
@@ -39,6 +44,8 @@ app.layout = html.Div(
                 "borderRadius": "5px",
                 "textAlign": "center",
                 "margin": "10px",
+                "background-color" : "initial",
+                "color" : "rgb(255, 255, 255)",
             },
             multiple=True,
         ),
@@ -51,7 +58,6 @@ app.layout = html.Div(
 
         # This is the graph component
         dcc.Graph(id='Mygraph')
-        #
     ] 
 )
 #
