@@ -17,47 +17,61 @@ app.title = "Data visualisation"
 # The web page layout is all defined in here dash converts it all to html
 app.layout = html.Div(
     children=[
-        
-        # This defines the web page header and paragraph at the top of the page
-        html.H1(children="Results Visualisation",),
-        
-        html.P(
-            children=
-            """
-                Drop a CSV file below to display its data
-            """
-        ),
-        #
 
-        # This is the drop box for files
-        dcc.Upload(
-            id="upload-data",
-            children=html.Div(
-                ["Drag and drop or click to select a file to upload."]
+        # Everything here is in the main content, not on the sidebar
+        html.Div([
+
+            # This defines the web page header and paragraph at the top of the page
+            html.H1(children="Results Visualisation",),
+        
+
+            # This is the graph component
+            dcc.Graph(id='Mygraph'),
+            
+        ], className="body"),
+        # End main page content
+
+        # Everything within this div is on the sidebar
+        html.Div([
+            html.P(
+                children=
+                """
+                    Drop a CSV file below to display its data
+                """
             ),
-            style={
-                "width": "100%",
-                "height": "60px",
-                "lineHeight": "60px",
-                "borderWidth": "1px",
-                "borderStyle": "dashed",
-                "borderRadius": "5px",
-                "textAlign": "center",
-                "margin": "10px",
-                "background-color" : "initial",
-                "color" : "rgb(255, 255, 255)",
-            },
-            multiple=True,
-        ),
-        #
+            #
+            
+            # This is the drop box for files
+            dcc.Upload(
+                id="upload-data",
+                children=html.Div(
+                    ["Drag and drop or click to select a file to upload."],
+                    style={
+                        "inline-size" : "auto",
+                    }
+                ),
+                style={   
+                    "lineHeight": "30px",                 
+                    "width": "90%",
+                    "height": "60px",
+                    "borderWidth": "1px",
+                    "borderStyle": "dashed",
+                    "borderRadius": "5px",
+                    "textAlign": "center",
+                    "margin": "10px",
+                    "background-color" : "initial",
+                    "color" : "rgb(0, 0, 0)",
+                },
+                multiple=True,
+            ),
+            #
 
-        # These are the dropdown boxes to select which features to display
-        html.Div([dcc.Dropdown(id="x_feature", options = [])]),
-        html.Div([dcc.Dropdown(id="y_feature", options = [])]),
-        #
-
-        # This is the graph component
-        dcc.Graph(id='Mygraph')
+            # These are the dropdown boxes to select which features to display
+            html.Div([dcc.Dropdown(id="x_feature", options = [])]),
+            html.Div([dcc.Dropdown(id="y_feature", options = [])]),
+            #
+        ], className="sidenav")
+        # End sidebar tab
     ] 
 )
 #
