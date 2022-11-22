@@ -48,9 +48,12 @@ app.layout = html.Div(
                     ["Drag and drop or click to select a file to upload."],
                     style={
                         "inline-size" : "auto",
+                        "color" : "black",
                     }
                 ),
-                style={   
+                style={
+                    "margin-right" : "auto",
+                    "margin-left" : "auto",
                     "lineHeight": "30px",                 
                     "width": "90%",
                     "height": "60px",
