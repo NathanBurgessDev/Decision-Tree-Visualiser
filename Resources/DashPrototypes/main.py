@@ -93,7 +93,8 @@ def displayGraph(value1, value2, value3, classFeature):
     if(value1 and value2 and value3):
         return gu.scatter3D(df, value1, value2, value3, cf)
     elif(value1 and value2):
-        return gu.scatter2D(df, value1, value2, cf)
+        # return gu.scatter2D(df, value1, value2, cf)
+        return gu.getDecisionBoundary2D(df,value1,value2,cf)
     else:
         return gu.getGraph()
 
