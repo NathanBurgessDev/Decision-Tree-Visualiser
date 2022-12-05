@@ -65,7 +65,6 @@ class GraphUtil():
 
         trainingSet = ModelUtil.getTrainingSet(newDf,startX,startY)
         classificationSet = newDf[classFeature]
-        newDf = ModelUtil.getNumericalDataFrame(newDf,targetMap,classFeature)
         h=0.2
 
         model = DecisionTreeClassifier()
@@ -91,7 +90,7 @@ class GraphUtil():
                             mode='markers',
                             showlegend=False,
                             marker=dict(size=10,
-                                        color=y, 
+                                        color=classificationSet, 
                                         colorscale='Viridis',
                                         line=dict(color='black', width=1))
                             )
@@ -110,6 +109,7 @@ Contains functions that relate to the creation of decision trees
 """
 class ModelUtil():
     def getTargetMap(df,classificationCol):
+
         uniqueValues = df[classificationCol].unique()
         numArray = []
         n = 0
