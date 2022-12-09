@@ -4,8 +4,8 @@ import pickle
 import pandas as pd
 import Tree as myTree
 
-loaded_model = pickle.load(open("finalized_model.sav", 'rb'))
-df = pd.read_csv('iris.csv')
+loaded_model = pickle.load(open("Resources/ParsingDecisionTree/finalized_model.sav", 'rb'))
+df = pd.read_csv('Resources/ParsingDecisionTree/iris.csv')
 X = df.iloc[:, 0:4]
 
 def parseTree(tree, featureNames):
