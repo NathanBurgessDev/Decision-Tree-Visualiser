@@ -5,6 +5,7 @@ import pandas as pd
 from dash.dependencies import Input, Output
 from Util import ImportUtil as iu
 from Util import GraphUtil as gu
+import unittest
 
 app = dash.Dash(__name__)
 
@@ -97,6 +98,6 @@ def displayGraph(value1, value2, value3, classFeature):
     else:
         return gu.getGraph()
 
-    
 if __name__ == "__main__":
     app.run_server(debug=True)
+
