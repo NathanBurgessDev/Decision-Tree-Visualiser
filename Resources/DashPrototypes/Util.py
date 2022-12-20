@@ -89,7 +89,7 @@ class GraphUtil():
 
         # Make a Heatmap using the array of values we previously created
         trace1 = go.Heatmap(x=xx[0], y=y_, z=Z,
-                  colorscale='Viridis',
+                  colorscale='sunset',
                   showscale=False)
 
         # Make our graph object
@@ -101,7 +101,7 @@ class GraphUtil():
                             showlegend=False,
                             marker=dict(size=10,
                                         color=classificationSet, 
-                                        colorscale='speed',
+                                        colorscale='sunsetdark',
                                         line=dict(color='black', width=1))
                             )
 
