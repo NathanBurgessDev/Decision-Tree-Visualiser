@@ -55,6 +55,8 @@ class GraphUtil():
 
     ### Returns a 2d scatter graph with a heatmap to represent
     ### the decision boundary
+    ### Credit for a lot of the decision boundary work goes to: Anisotropic
+    ### https://www.kaggle.com/code/arthurtok/decision-boundaries-visualised-via-python-plotly
     def getDecisionBoundary2D(df,startX,startY,classFeature):
 
 
