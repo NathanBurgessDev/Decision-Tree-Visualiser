@@ -6,6 +6,10 @@ import plotly.express as px
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 import plotly.graph_objs as go
+import igraph as ig
+from igraph import Graph, EdgeSeq
+import pickle
+
 
 """
 Contains functions that relate to the processsing of
@@ -25,6 +29,17 @@ class ImportUtil:
         data = StringIO(csv)
         df = pd.read_csv(data, sep=",")
         return df
+
+    ### converts base64 data into a binary stream/BytesIO object ###
+    def readPickle(file, content):
+        content_type, content_string = content.split(',')
+        contentBytes = base64.b64decode(content_string)
+        return io.BytesIO(contentBytes)
+
+    ### reconstructs a pickled object that has been converted to a BytesIO 
+    ### object into useable data ###
+    def unPickle(file):
+        return pickle.loads(file.read())
 
 """
 Contains functions that relate to the creation
@@ -116,6 +131,87 @@ class GraphUtil():
             yaxis_title=trainingSet.columns[1])
 
         return graph
+
+    ### most of this comes from https://plotly.com/python/tree-plots/
+    ### When given an iGraph object and the number of verticies contained in it
+    ### it will produce a plotly graph of the tree structure ###
+    def generateTreeGraph(G, nr_vertices):
+        lay = G.layout('rt')
+        v_label = list(map(str, range(nr_vertices)))
+        position = {k: lay[k] for k in range(nr_vertices)}
+        Y = [lay[k][1] for k in range(nr_vertices)]
+        M = max(Y)
+
+        es = EdgeSeq(G)
+        E = [e.tuple for e in G.es]
+
+        L = len(position)
+        Xn = [position[k][0] for k in range(L)]
+        Yn = [2*M-position[k][1] for k in range(L)]
+        Xe = []
+        Ye = []
+        for edge in E:
+            Xe+=[position[edge[0]][0],position[edge[1]][0], None]
+            Ye+=[2*M-position[edge[0]][1],2*M-position[edge[1]][1], None]
+
+        labels = v_label
+
+        ### Adds the text inside of the nodes in the tree visualisation ###
+        def make_annotations(pos, text, font_size=10, font_color='rgb(0,0,0)'):
+            L=len(pos)
+            if len(text)!=L:
+                raise ValueError('The lists pos and text must have the same len')
+            annotations = []
+            for k in range(L):
+                annotations.append(
+                    dict(
+                        # G.vs.info is assigned in the readMLM function #
+                        text=G.vs["info"][k],
+                        x=pos[k][0], y=2*M-position[k][1],
+                        xref='x1', yref='y1',
+                        font=dict(color=font_color, size=font_size),
+                        showarrow=False)
+                )
+            return annotations
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=Xe,
+                        y=Ye,
+                        mode='lines',
+                        line=dict(color='rgb(210,210,210)', width=1),
+                        hoverinfo='none'
+                        ))
+        fig.add_trace(go.Scatter(x=Xn,
+                        y=Yn,
+                        mode='markers',
+                        name='bla',
+                        marker=dict(symbol='circle-dot',
+                                        size=18,
+                                        color='#6175c1',
+                                        line=dict(color='rgb(50,50,50)', width=1)
+                                        ),
+                        text=labels,
+                        hoverinfo='text',
+                        opacity=0.8
+                        ))
+
+        axis = dict(showline=False, # hide axis line, grid, ticklabels and  title
+                    zeroline=False,
+                    showgrid=False,
+                    showticklabels=False,
+                    )
+
+        fig.update_layout(annotations=make_annotations(position, v_label),
+                    font_size=12,
+                    showlegend=False,
+                    xaxis=axis,
+                    yaxis=axis,
+                    margin=dict(l=40, r=40, b=85, t=100),
+                    hovermode='closest',
+                    plot_bgcolor='rgb(255,255,255)'
+                    )
+
+        return fig
 
 
 """

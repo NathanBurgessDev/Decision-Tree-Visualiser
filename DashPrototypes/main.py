@@ -3,8 +3,10 @@ from dash import dcc
 from dash import html
 import pandas as pd
 from dash.dependencies import Input, Output
+from igraph import Graph, EdgeSeq
 from Util import ImportUtil as iu
 from Util import GraphUtil as gu
+import TreeUtil as T
 import unittest
 
 app = dash.Dash(__name__)
@@ -18,6 +20,7 @@ app.layout = html.Div(
             html.H1(children="Results Visualisation"),
         
             dcc.Graph(id='Mygraph'),
+            html.Div(id='treevis'),
             
         ], className="body"),
 
@@ -28,6 +31,29 @@ app.layout = html.Div(
             
             dcc.Upload(
                 id="upload-data",
+                children=html.Div(
+                    ["Drag and drop or click to select a file to upload."],
+                    style={
+                        "inline-size" : "auto",
+                    }
+                ),
+                style={   
+                    "lineHeight": "30px",                 
+                    "width": "90%",
+                    "height": "60px",
+                    "borderWidth": "1px",
+                    "borderStyle": "dashed",
+                    "borderRadius": "5px",
+                    "textAlign": "center",
+                    "margin": "10px",
+                    "background-color" : "initial",
+                    "color" : "rgb(0, 0, 0)",
+                },
+                multiple=True,
+            ),
+
+            dcc.Upload(
+                id="upload-data-MLM",
                 children=html.Div(
                     ["Drag and drop or click to select a file to upload."],
                     style={
@@ -61,6 +87,32 @@ app.layout = html.Div(
         ], className="sidenav")
     ] 
 )
+### Callback for the tree visualisation ###
+@app.callback(
+    [Output(component_id = "treevis", component_property = "children")],
+    [Input("upload-data-MLM", "filename"), Input("upload-data-MLM", "contents")]
+)
+def readMLM(filename, contents):
+    global model
+    global df
+    if contents:
+        model = iu.unPickle(iu.readPickle(filename, contents[0]))
+        graphs = []
+
+        tu = T.TreeUtil()
+        tu.parseTree(model)
+        G = Graph(directed = "T")
+        G.add_vertices(tu.getVerticies())
+        G.add_edges(tu.getEdges())
+        G.vs["info"] = tu.getAnnotations()
+        f = gu.generateTreeGraph(G, tu.getVerticies())
+        
+        graphs.append(dcc.Graph(
+                    figure = f))
+
+        return graphs
+    else:
+        return [dcc.Graph(figure = gu.getGraph())]
 
 @app.callback(
     [Output(component_id = "x_feature", component_property='options'),
