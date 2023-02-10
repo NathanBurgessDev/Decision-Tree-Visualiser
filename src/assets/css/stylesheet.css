@@ -1,0 +1,116 @@
+body{
+    font-family: Arial, Helvetica, sans-serif;
+    background-color:rgb(195, 218, 219);
+    color:rgb(0, 0, 0);
+    text-align: center;
+}
+
+.title {
+    height: 4rem;
+    width: 75%;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: rgb(185, 215, 215); 
+    overflow-x: hidden;
+}
+
+.data {
+    height: 32rem;
+    width: 25%;
+    position: fixed;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(195, 220, 220); 
+    overflow-x: hidden;
+}
+
+.graphnav {
+    height: 100%;
+    width: 50%;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    left: 0;
+    background-color: rgb(225, 250, 255);
+    overflow-x: hidden;
+}
+
+.visnav {
+    height: 100%;
+    width: 50%;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    background-color: rgb(226, 253, 255);
+    overflow-x: hidden;
+}
+
+.graphandvis {
+    height: 28rem;
+    width: 75%;
+    position: absolute;
+    z-index: 1;
+    top: 4rem;
+    right: 0;
+    background-color: rgb(226, 253, 255);
+    overflow-x: hidden;
+}
+
+.topnav {
+    height: 32rem;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    top: 0;
+    right: 0;
+    overflow-x: hidden;
+}
+
+.treenav {
+    height: 20rem;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    background-color: rgb(180, 200, 200); 
+    overflow-x: hidden;
+}
+
+.ensemble {
+    height: 16rem;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    bottom: 0;
+    right: 0;
+    background-color: rgb(195, 218, 219);
+    overflow-x: hidden;
+}
+  
+.scrollbutton {
+    background-color: rgb(180, 200, 200); 
+    height: 100%;
+    width: 3rem;
+    border:rgb(0, 0, 0);
+    color: white;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 2rem;
+}
+
+  .bottomnav {
+    height: 36rem;
+    width: 100%;
+    position: absolute;
+    z-index: 1;
+    top: 32rem;
+    left: 0%;
+    background-color: rgb(195, 218, 219);
+    overflow-x: hidden;
+    transition: all 1s;
+}
