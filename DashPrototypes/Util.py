@@ -12,42 +12,105 @@ import pickle
 
 
 """
-Contains functions that relate to the processsing of
-data imports
+AUTHOR: Ethan Temple-Betts
+DATE CREATED: UNKNOWN
+PREVIOUS MAINTAINER: Ethan Temple-Betts
+DATE LAST MODIFIED: UNKNOWN
+
+Used to store common functions that relate to the handling of
+user inputted files, such as .csv and .sav files.
 """
 class ImportUtil:
 
-    ### Converts base64 data to a string ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Converts the the given file contents into a string of data
+
+    INPUTS
+    str file : The full filename
+
+    base64 content The contents of that file in base64
+    '''
     def readContent(file, content):
         content_type, content_string = content.split(',')
         contentBytes = base64.b64decode(content_string)
         stringContent = contentBytes.decode('utf-8')
         return stringContent
 
-    ### Converts a string of csv data to a dataframe ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Converts a string of csv data into a dataframe object
+
+    INPUTS
+    str csv : The contents of a scv file as a string
+    '''
     def csvToDataFrame(csv):
         data = StringIO(csv)
         df = pd.read_csv(data, sep=",")
         return df
 
-    ### converts base64 data into a binary stream/BytesIO object ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Converts base64 data into a binary stream/BytesIO object
+
+    INPUTS
+    str file : The full filename
+
+    base64 content The contents of that file in base64
+    '''
     def readPickle(file, content):
         content_type, content_string = content.split(',')
         contentBytes = base64.b64decode(content_string)
         return io.BytesIO(contentBytes)
 
-    ### reconstructs a pickled object that has been converted to a BytesIO 
-    ### object into useable data ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Reconstructs a pickled object that has been converted to a
+    BytesIO object into the MLM that was orginally pickled
+
+    INPUTS
+    BytesIO file : A pickled file converted to a BytesIO object
+    '''
     def unPickle(file):
         return pickle.loads(file.read())
 
 """
-Contains functions that relate to the creation
-of plotly scatter graphs
+AUTHOR: Ethan Temple-Betts
+DATE CREATED: UNKNOWN
+PREVIOUS MAINTAINER: Ethan Temple-Betts
+DATE LAST MODIFIED: UNKNOWN
+
+Used to store common functions that relate to the creation of
+plotly graphs
 """
 class GraphUtil():
 
-    ### Returns a 2d plotly scatter graph using the provided params ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Creates a 2D plotly scatter graph of the data contained in
+    df. If the colour paramater is not boolean False, then it is
+    used to colour the data based on the values of df[colour].
+
+    INPUTS
+    DataFrame df: Contains the desired data to be plotted
+
+    str x: The desired x axis feature
+
+    str y: The desired y axis feature
+
+    (str or bool) colour: Optionally specifies which feature to
+    use to colour the data
+    '''
     def scatter2D(df, x, y, colour):
         if(colour == False):
             graph = px.scatter(df, x=x, y=y)
@@ -55,7 +118,26 @@ class GraphUtil():
             graph = px.scatter(df, x=x, y=y, color=colour)
         return graph
 
-    ### Returns a 3d plotly scatter graph using the provided params ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Creates a 3D plotly scatter graph of the data contained in
+    df. If the colour paramater is not boolean False, then it is
+    used to colour the data based on the values of df[colour].
+
+    INPUTS
+    DataFrame df: Contains the desired data to be plotted
+
+    str x: The desired x axis feature
+
+    str y: The desired y axis feature
+
+    str z: The desired z axis feature
+
+    (str or bool) colour: Optionally specifies which feature to
+    use to colour the data
+    '''
     def scatter3D(df, x, y, z, colour):
         if(colour == False):
             graph = px.scatter_3d(df, x=x, y=y, z=z)
@@ -64,7 +146,12 @@ class GraphUtil():
         graph.update_traces(marker={'size': 4})
         return graph
 
-    ### Returns a blank plottly scatter graph ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Returns an empty plotly scatter graph.
+    '''
     def getGraph():
         return px.scatter()
 
@@ -112,7 +199,7 @@ class GraphUtil():
         # Make our graph object
         graph = go.Figure(data=trace1)
 
-        # make the main  scatter plot 
+        # make the main scatter plot 
         trace2 = go.Scatter(x=trainingSet.iloc[:, 0], y=trainingSet.iloc[:, 1], 
                             mode='markers',
                             showlegend=False,
@@ -132,9 +219,19 @@ class GraphUtil():
 
         return graph
 
-    ### most of this comes from https://plotly.com/python/tree-plots/
-    ### When given an iGraph object and the number of verticies contained in it
-    ### it will produce a plotly graph of the tree structure ###
+
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    When given an igraph Graph this function will return
+    a plotly graph, which represents the graphs structure.
+    Most of code comes from https://plotly.com/python/tree-plots/.
+
+    INPUTS
+    igraph.Graph G: The Graph object to be displayed
+    int nr_vertices: The number of verticies in the graph
+    '''
     def generateTreeGraph(G, nr_vertices):
         lay = G.layout('rt')
         v_label = list(map(str, range(nr_vertices)))
@@ -156,7 +253,16 @@ class GraphUtil():
 
         labels = v_label
 
-        ### Adds the text inside of the nodes in the tree visualisation ###
+        '''
+        AUTHOR: Ethan Temple-Betts
+        PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+        Used to assign annotations to nodes on the graph.
+
+        INPUTS
+        dict pos: 
+        list[int] text:
+        '''
         def make_annotations(pos, text, font_size=10, font_color='rgb(0,0,0)'):
             L=len(pos)
             if len(text)!=L:
