@@ -1,13 +1,14 @@
 import dash
 import dash_bootstrap_components as dbc
 from dash import html
+from dash import dcc
 from dash.dependencies import Input, Output, State
 
 """
 AUTHOR: Alfred Greenwood
 DATE CREATED: 8/02/2023
 PREVIOUS MAINTAINER: Alfred Greenwood
-DATE LAST MODIFIED: 10/02/2023
+DATE LAST MODIFIED: 13/02/2023
 
 Used to simplify dash commands for the website, this class sets out the layout for the website so the
 to simplify code usage of the main program
@@ -27,7 +28,7 @@ class pageLayout():
         self.titleDiv = None
         self.settingsDiv = None
         self.graphDiv = None
-        self.visDiv = None
+        
         self.topDivLayout = None
         self.topNavInit()
 
@@ -43,11 +44,30 @@ class pageLayout():
     """
     def topNavInit(self):
         self.titleDiv = html.Div(children=[html.H1(children="Results visualisation")], className="title")
-        self.settingsDiv = html.Div(children=[], className="data")
-        self.graphDiv = html.Div(children=[], className="graphnav")
-        self.visDiv = html.Div(children=[], className="visnav")
-        gandv = html.Div(children=[self.graphDiv, self.visDiv], className="graphandvis")
-        self.topDivLayout = html.Div(children=[self.settingsDiv, gandv, self.titleDiv], className="topnav")
+        
+        # Initialising the settings on the left side of the GUI with the upload box and graph settings
+        self.settingsDiv = html.Div(children=[
+            
+            # Add file upload box
+            dcc.Upload(
+                id="upload-data",
+                children=html.Div(
+                    ["Drag and drop or click to select a file to upload."],
+                    style={
+                        "inline-size" : "auto",
+                    }
+                ), className="upload", multiple=True,
+
+            # Create the dropdown boxes for graph axis
+            ),
+            html.H5(children="Choose X-axis feature"), html.Div([dcc.Dropdown(id="x_feature", options = [])]),
+            html.H5(children="Choose Y-axis feature"), html.Div([dcc.Dropdown(id="y_feature", options = [])]),
+            html.H5(children="Choose Z-axis feature"), html.Div([dcc.Dropdown(id="z_feature", options = [])]),
+
+        ], className="data")
+        
+        self.graphDiv = html.Div(children=[html.Div([dcc.Graph(id="myGraph")], className="graph")], className="graphnav")
+        self.topDivLayout = html.Div(children=[self.settingsDiv, self.graphDiv, self.titleDiv], className="topnav")
 
     """
     Initialises the HTML div that is at the bottom of the screen

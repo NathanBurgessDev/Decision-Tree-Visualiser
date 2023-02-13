@@ -7,7 +7,7 @@ body{
 
 .title {
     height: 4rem;
-    width: 75%;
+    width: 80%;
     position: absolute;
     z-index: 1;
     top: 0;
@@ -18,8 +18,8 @@ body{
 
 .data {
     height: 32rem;
-    width: 25%;
-    position: fixed;
+    width: 20%;
+    position: absolute;
     z-index: 1;
     top: 0;
     left: 0;
@@ -28,16 +28,17 @@ body{
 }
 
 .graphnav {
-    height: 100%;
-    width: 50%;
+    height: 34rem;
+    width: 80%;
     position: absolute;
     z-index: 1;
-    top: 0;
-    left: 0;
-    background-color: rgb(225, 250, 255);
+    top: 4rem;
+    right: 0;
+    background-color: rgb(226, 253, 255);
     overflow-x: hidden;
 }
 
+/*Depracated, decision boundaries not required side by side with graph*/
 .visnav {
     height: 100%;
     width: 50%;
@@ -49,6 +50,7 @@ body{
     overflow-x: hidden;
 }
 
+/*Depracated, decision boundaries not required side by side with graph*/
 .graphandvis {
     height: 28rem;
     width: 75%;
@@ -61,7 +63,7 @@ body{
 }
 
 .topnav {
-    height: 32rem;
+    height: 38rem;
     width: 100%;
     position: absolute;
     z-index: 1;
@@ -92,7 +94,7 @@ body{
 }
   
 .scrollbutton {
-    background-color: rgb(180, 200, 200); 
+    background-color: rgb(180, 200, 200);
     height: 100%;
     width: 3rem;
     border:rgb(0, 0, 0);
@@ -101,6 +103,11 @@ body{
     text-decoration: none;
     display: inline-block;
     font-size: 2rem;
+    transition: 0.25s;
+}
+.scrollbutton:hover {
+    transition: 0.25s;
+    background-color: rgb(180, 210, 210);
 }
 
   .bottomnav {
@@ -108,9 +115,37 @@ body{
     width: 100%;
     position: absolute;
     z-index: 1;
-    top: 32rem;
+    top: 38rem;
     left: 0%;
     background-color: rgb(195, 218, 219);
     overflow-x: hidden;
     transition: all 1s;
+}
+
+.graph {
+    height: 98%;
+    width: 98%;
+    position: absolute;
+    top: 1%;
+    left: 1%;
+    background-color: white;
+    overflow-x: hidden;
+}
+
+.upload {
+    line-height: 2rem; 
+    height: 4rem;
+    width: 90%;
+    border-width: 1px;
+    border-style: dashed;
+    border-radius: 5px;
+    text-align: center;
+    margin: 10px;
+    background-color: rgb(195, 218, 219);
+    color: black;
+}
+
+.upload:hover {
+    background-color: rgb(210, 235, 236);
+    transition: 0.1s;
 }
