@@ -16,7 +16,7 @@ body{
     overflow-x: hidden;
 }
 
-.data {
+.settings {
     height: 32rem;
     width: 20%;
     position: absolute;
@@ -123,11 +123,11 @@ body{
 }
 
 .graph {
-    height: 98%;
-    width: 98%;
+    height: 97.5%;
+    width: 97.5%;
     position: absolute;
-    top: 1%;
-    left: 1%;
+    top: 1.25%;
+    left: 1.25%;
     background-color: white;
     overflow-x: hidden;
 }

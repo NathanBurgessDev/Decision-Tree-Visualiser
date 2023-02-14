@@ -4,11 +4,12 @@ from dash import html
 from dash import dcc
 from dash.dependencies import Input, Output, State
 
+
 """
 AUTHOR: Alfred Greenwood
 DATE CREATED: 8/02/2023
 PREVIOUS MAINTAINER: Alfred Greenwood
-DATE LAST MODIFIED: 13/02/2023
+DATE LAST MODIFIED: 14/02/2023
 
 Used to simplify dash commands for the website, this class sets out the layout for the website so the
 to simplify code usage of the main program
@@ -40,7 +41,8 @@ class pageLayout():
         
         
     """
-    Initialises the HTML div that contains the graphs, title, 
+    Initialises the HTML div that contains the graphs, title and settings including the file upload and
+    graph axis settings
     """
     def topNavInit(self):
         self.titleDiv = html.Div(children=[html.H1(children="Results visualisation")], className="title")
@@ -64,16 +66,20 @@ class pageLayout():
             html.H5(children="Choose Y-axis feature"), html.Div([dcc.Dropdown(id="y_feature", options = [])]),
             html.H5(children="Choose Z-axis feature"), html.Div([dcc.Dropdown(id="z_feature", options = [])]),
 
-        ], className="data")
+        ], className="settings")
         
-        self.graphDiv = html.Div(children=[html.Div([dcc.Graph(id="myGraph")], className="graph")], className="graphnav")
+        self.graphDiv = html.Div(children=[
+            
+            # Contains the graph that has the information of the original graph
+            html.Div([dcc.Graph(id="myGraph")], className="graph")], className="graphnav")
         self.topDivLayout = html.Div(children=[self.settingsDiv, self.graphDiv, self.titleDiv], className="topnav")
 
     """
-    Initialises the HTML div that is at the bottom of the screen
+    Initialises the HTML div that holds the decision tree and any ensemble decision trees
     """
 
     def bottomNavInit(self):
+        # Buttons to navigate ensemble learning trees
         lButton = dbc.Button("<", color="primary", style={"position" : "absolute",
                 "left" : "0",
                 "bottom" : "0"
@@ -82,8 +88,16 @@ class pageLayout():
                 "right" : "0",
                 "bottom" : "0"
             }, className="scrollbutton")
-        self.treeDiv = html.Div([], className="treenav")
-        self.ensembleDiv = html.Div([lButton, rButton], className="ensemble")
+
+        self.treeDiv = html.Div([
+            # Insert decision tree here
+        ], className="treenav")
+
+        self.ensembleDiv = html.Div([
+            lButton,
+            # Insert ensemble learning trees here, meant to change data when arrows are pushed
+            rButton
+            ], className="ensemble")
         self.bottomDivLayout = html.Div(children=[self.treeDiv, self.ensembleDiv], className="bottomnav")
     
     """
