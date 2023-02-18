@@ -1,10 +1,19 @@
-import dash
-from layoutUtils import pageLayout as pl
-import dash_bootstrap_components as dbc
-from dash import dcc
-from dash import html
-from dash.dependencies import Input, Output
+from utils.PageLayout import PageLayout
+from DashInstance import app
+
+"""
+AUTHOR: Dominic Cripps
+DATE CREATED: 17/02/2023
+PREVIOUS MAINTAINER: Dominic Cripps
+DATE LAST MODIFIED: 18/02/2023
+
+--THE MAIN FILE TO RUN--
+
+Get a reference to the app instance from 'DashInstance' it will
+then use the class 'PageLayout' to update the app layout and
+run it.
+"""
 
 if __name__ == "__main__":
-    app = pl("Results visualisation")
-    app.runServer(True)
+    pageLayout = PageLayout("Results visualisation", app)
+    pageLayout.runServer(True)
