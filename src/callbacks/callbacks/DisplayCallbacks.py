@@ -30,7 +30,7 @@ def get_callbacks(app):
         [Input("trained-models", component_property="value")]
     )
     def modelSelected(modelFilename):
-        classifierComponents = []
+        classifierComponents = [()]
         if(modelFilename):
             modelIndex = modelFilenames.index(modelFilename)
             modelData = models[modelIndex]

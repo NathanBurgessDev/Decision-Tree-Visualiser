@@ -156,7 +156,7 @@ class PageLayout():
 
 
         # Define the div that will contain all components related to the selected model
-        self.componentsDiv = html.Div(id="model-components", className="classifierComponentContainer")
+        self.componentsDiv = html.Div(id="model-components", className="classifierComponentContainer", children=[])
         
 
     """
