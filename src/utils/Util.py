@@ -6,47 +6,111 @@ import plotly.express as px
 from sklearn.tree import DecisionTreeClassifier
 import numpy as np
 import plotly.graph_objs as go
-from igraph import Graph, EdgeSeq
 import pickle
 
 
 """
-Contains functions that relate to the processsing of
-data imports
+AUTHOR: Ethan Temple-Betts
+DATE CREATED: UNKNOWN
+PREVIOUS MAINTAINER: Ethan Temple-Betts
+DATE LAST MODIFIED: UNKNOWN
+
+Used to store common functions that relate to the handling of
+user inputted files, such as .csv and .sav files.
 """
+
 class ImportUtil:
 
-    ### Converts base64 data to a string ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Converts the the given file contents into a string of data
+
+    INPUTS
+    str file : The full filename
+
+    base64 content The contents of that file in base64
+    '''
     def readContent(file, content):
         content_type, content_string = content.split(',')
         contentBytes = base64.b64decode(content_string)
         stringContent = contentBytes.decode('utf-8')
         return stringContent
 
-    ### Converts a string of csv data to a dataframe ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Converts a string of csv data into a dataframe object
+
+    INPUTS
+    str csv : The contents of a scv file as a string
+    '''
     def csvToDataFrame(csv):
         data = StringIO(csv)
         df = pd.read_csv(data, sep=",")
         return df
 
-    ### converts base64 data into a binary stream/BytesIO object ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Converts base64 data into a binary stream/BytesIO object
+
+    INPUTS
+    str file : The full filename
+
+    base64 content The contents of that file in base64
+    '''
     def readPickle(file, content):
         content_type, content_string = content.split(',')
         contentBytes = base64.b64decode(content_string)
         return io.BytesIO(contentBytes)
 
-    ### reconstructs a pickled object that has been converted to a BytesIO 
-    ### object into useable data ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Reconstructs a pickled object that has been converted to a
+    BytesIO object into the MLM that was orginally pickled
+
+    INPUTS
+    BytesIO file : A pickled file converted to a BytesIO object
+    '''
     def unPickle(file):
         return pickle.loads(file.read())
 
 """
-Contains functions that relate to the creation
-of plotly scatter graphs
+AUTHOR: Ethan Temple-Betts
+DATE CREATED: UNKNOWN
+PREVIOUS MAINTAINER: Ethan Temple-Betts
+DATE LAST MODIFIED: UNKNOWN
+
+Used to store common functions that relate to the creation of
+plotly graphs
 """
+
 class GraphUtil():
 
-    ### Returns a 2d plotly scatter graph using the provided params ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Creates a 2D plotly scatter graph of the data contained in
+    df. If the colour paramater is not boolean False, then it is
+    used to colour the data based on the values of df[colour].
+
+    INPUTS
+    DataFrame df: Contains the desired data to be plotted
+
+    str x: The desired x axis feature
+
+    str y: The desired y axis feature
+
+    (str or bool) colour: Optionally specifies which feature to
+    use to colour the data
+    '''
     def scatter2D(df, x, y, colour):
         if(colour == False):
             graph = px.scatter(df, x=x, y=y)
@@ -54,7 +118,26 @@ class GraphUtil():
             graph = px.scatter(df, x=x, y=y, color=colour)
         return graph
 
-    ### Returns a 3d plotly scatter graph using the provided params ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Creates a 3D plotly scatter graph of the data contained in
+    df. If the colour paramater is not boolean False, then it is
+    used to colour the data based on the values of df[colour].
+
+    INPUTS
+    DataFrame df: Contains the desired data to be plotted
+
+    str x: The desired x axis feature
+
+    str y: The desired y axis feature
+
+    str z: The desired z axis feature
+
+    (str or bool) colour: Optionally specifies which feature to
+    use to colour the data
+    '''
     def scatter3D(df, x, y, z, colour):
         if(colour == False):
             graph = px.scatter_3d(df, x=x, y=y, z=z)
@@ -63,7 +146,12 @@ class GraphUtil():
         graph.update_traces(marker={'size': 4})
         return graph
 
-    ### Returns a blank plottly scatter graph ###
+    '''
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Returns an empty plotly scatter graph.
+    '''
     def getGraph():
         return px.scatter()
 
@@ -129,86 +217,7 @@ class GraphUtil():
 
         return graph
 
-    ### most of this comes from https://plotly.com/python/tree-plots/
-    ### When given an iGraph object and the number of verticies contained in it
-    ### it will produce a plotly graph of the tree structure ###
-    def generateTreeGraph(G, nr_vertices):
-        lay = G.layout('rt')
-        v_label = list(map(str, range(nr_vertices)))
-        position = {k: lay[k] for k in range(nr_vertices)}
-        Y = [lay[k][1] for k in range(nr_vertices)]
-        M = max(Y)
-
-        es = EdgeSeq(G)
-        E = [e.tuple for e in G.es]
-
-        L = len(position)
-        Xn = [position[k][0] for k in range(L)]
-        Yn = [2*M-position[k][1] for k in range(L)]
-        Xe = []
-        Ye = []
-        for edge in E:
-            Xe+=[position[edge[0]][0],position[edge[1]][0], None]
-            Ye+=[2*M-position[edge[0]][1],2*M-position[edge[1]][1], None]
-
-        labels = v_label
-
-        ### Adds the text inside of the nodes in the tree visualisation ###
-        def make_annotations(pos, text, font_size=10, font_color='rgb(0,0,0)'):
-            L=len(pos)
-            if len(text)!=L:
-                raise ValueError('The lists pos and text must have the same len')
-            annotations = []
-            for k in range(L):
-                annotations.append(
-                    dict(
-                        # G.vs.info is assigned in the readMLM function #
-                        text=G.vs["info"][k],
-                        x=pos[k][0], y=2*M-position[k][1],
-                        xref='x1', yref='y1',
-                        font=dict(color=font_color, size=font_size),
-                        showarrow=False)
-                )
-            return annotations
-
-        fig = go.Figure()
-        fig.add_trace(go.Scatter(x=Xe,
-                        y=Ye,
-                        mode='lines',
-                        line=dict(color='rgb(210,210,210)', width=1),
-                        hoverinfo='none'
-                        ))
-        fig.add_trace(go.Scatter(x=Xn,
-                        y=Yn,
-                        mode='markers',
-                        name='bla',
-                        marker=dict(symbol='circle-dot',
-                                        size=18,
-                                        color='#6175c1',
-                                        line=dict(color='rgb(50,50,50)', width=1)
-                                        ),
-                        text=labels,
-                        hoverinfo='text',
-                        opacity=0.8
-                        ))
-
-        axis = dict(showline=False, # hide axis line, grid, ticklabels and  title
-                    zeroline=False,
-                    showgrid=False,
-                    showticklabels=False,
-                    )
-
-        fig.update_layout(annotations=make_annotations(position, v_label),
-                    font_size=12,
-                    showlegend=False,
-                    xaxis=axis,
-                    yaxis=axis,
-                    margin=dict(l=40, r=40, b=85, t=100),
-                    hovermode='closest',
-                    plot_bgcolor='rgb(255,255,255)'
-                    )
-
-        return fig
+    
 
 
 """

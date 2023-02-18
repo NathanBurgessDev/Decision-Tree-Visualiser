@@ -1,7 +1,7 @@
 from dash import ctx
 import dash
 from dash.dependencies import Input, Output, State, ALL
-from utils.Util import ImportUtil as iu
+from utils.Util import ImportUtil as ImportUtil
 from model_settings.ClassifierSettingsFactory import ClassifierSettingsFactory
 from sklearn.model_selection import train_test_split
 
@@ -10,10 +10,25 @@ models = []
 modelFilenames = []
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
-trainingParameters = []
 
 def get_callbacks(app):
 
+    """
+    AUTHOR: Dominic Cripps
+    DATE CREATED: 17/02/2023
+    PREVIOUS MAINTAINER: Dominic Cripps
+    DATE LAST MODIFIED: 18/02/2023
+
+    Callback is triggered when the user has uploaded a file into 'upload-dataset'.
+
+    Callback output will show appropriate error messages and update the 
+    'classifer' and 'training-feature' checklists to contain the column titles 
+    from the dataset.
+
+    It will check for a correct file extension, and that the contents has been
+    read properly.
+
+    """
     @app.callback(
         [Output(component_id = "upload-df-alert", component_property="displayed"), 
         Output(component_id = "upload-df-alert", component_property = "message"),
@@ -27,7 +42,7 @@ def get_callbacks(app):
 
         if(contents):
             if(str(filename[0]).endswith(".csv")):
-                df.insert(0, iu.csvToDataFrame(iu.readContent(filename, contents[0])))
+                df.insert(0, ImportUtil.csvToDataFrame(ImportUtil.readContent(filename, contents[0])))
                 return False, "", str(filename[0]), df[0].columns, df[0].columns
             else:
                 return True, "Wrong File Type!", defaultUploadMessage, [], []
@@ -36,23 +51,55 @@ def get_callbacks(app):
 
 
 
+    """
+    AUTHOR: Dominic Cripps
+    DATE CREATED: 17/02/2023
+    PREVIOUS MAINTAINER: Dominic Cripps
+    DATE LAST MODIFIED: 18/02/2023
 
+    Callback is triggered when the user selected a training classifer.
+
+    Callback output will set the children of 'classifier-settings' to be 
+    appropriate html elements, each representing a parameter that could be 
+    used to train the selected classifier.
+
+    It will use the 'ClassifierSettingsFactory' to generate and return the 
+    appropriate settings.
+
+    """
     @app.callback(
             [Output(component_id="classifier-settings", component_property="children")],
             [Input("training-class", "value")]
     )
     def updateClassifierSettings(classifier):
-        global trainingParameters
         global selectedSettings
         selectedSettings = ClassifierSettingsFactory.Factory(classifier)
         settings = selectedSettings.classifierLayout
-        trainingParameters = selectedSettings.parameters
 
         return settings
 
 
 
+    """
+    AUTHOR: Dominic Cripps
+    DATE CREATED: 17/02/2023
+    PREVIOUS MAINTAINER: Dominic Cripps
+    DATE LAST MODIFIED: 18/02/2023
 
+    Callback is triggered when the user presses the train button.
+
+    Callback output will show appropriate error alerts, and will update
+    the dropdown component 'trained-models' options and current value if
+    successfully trained.
+    (Note : the update to 'trained-models' value will trigger the callback
+    to display the model)
+
+    Inputs : The value of all setting components
+
+    It performs sanity checks using the selected settings, if it passes them
+    all it will create the appropriate dataframes, train the data and fit 
+    a model with all classifier specific settings as arguments.
+    """
     @app.callback(
         [Output(component_id="training-alert", component_property="displayed"), 
         Output(component_id = "training-alert", component_property = "message"),

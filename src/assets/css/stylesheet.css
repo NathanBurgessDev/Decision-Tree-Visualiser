@@ -8,7 +8,7 @@ body{
 
 .settings {
     height: 100%;
-    width: 16%;
+    width: 20%;
     position: fixed;
     top: 0;
     left: 0;
@@ -84,6 +84,11 @@ body{
     transition: 0.1s;
 }
 
+.rc-slider{
+    width:80%;
+    margin-left: auto;
+    margin-right: auto;
+}
 
 .rc-slider-track {
     background-color:rgb(165, 117, 222);
@@ -105,7 +110,7 @@ body{
 }
 
 .rc-slider-handle:hover {
-    border-color:  rgb(175, 141, 216);
+    border-color:  #af8dd8;
 }
 
 .rc-slider-handle-active:active {
@@ -114,12 +119,12 @@ body{
 
 .classifierComponent { 
     border-radius: 10px;
-    padding: 5%;
+    padding: 2%;
     margin-left: 20px;
     margin-right: 20px;
     margin-top: 20px;
     margin-bottom: 20px;
-    background-color: rgb(35, 35, 35); 
+    background-color: #232323; 
 }
 
 .classifierComponentContainer { 
@@ -127,7 +132,7 @@ body{
     position: absolute;
     height: 100%;
     width: 80%;
-    left: 18%;
+    left: 20%;
     top: 2%;
 }
 

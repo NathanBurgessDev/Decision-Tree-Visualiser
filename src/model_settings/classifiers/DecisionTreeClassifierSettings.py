@@ -3,12 +3,21 @@ import dash_daq as daq
 from model_settings.ClassifierSettings import ClassifierSettings
 from sklearn.tree import DecisionTreeClassifier
 
+"""
+AUTHOR: Dominic Cripps
+DATE CREATED: 17/02/2023
+PREVIOUS MAINTAINER: Dominic Cripps
+DATE LAST MODIFIED: 18/02/2023
 
+Child of 'ClassifierSettings' this class defines 
+its attributes to be appropriate for the DecisionTreeClassifier
+
+"""
 class DecisionTreeClassifierSettings(ClassifierSettings):
 
-
     def __init__(self):
-
+        
+        # Array of supported parameters
         self.parameters = [
             "criterion",
             "splitter",
@@ -21,8 +30,10 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
             "min_impurity_decrease",
         ]
 
+        # Class Reference To Classifier Type
         self.classifier = DecisionTreeClassifier
 
+        # HTML structure for classifier specific settings
         self.classifierLayout = [html.Div(id = "decision-tree-classifier", children=[
             html.Div(id="hidden-div", style={"display": "none"}),
             html.H4("Decision Tree Params", style = {"border-top" : "2px solid rgb(200,200,200)", "padding" : "4px", "padding-top" : "10px"}),
@@ -54,7 +65,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
             html.H4("Minimum Sample Split"),
             daq.NumericInput(
                 id=dict(name="classifier-settings", idx="min_samples_split"), 
-                min=1,
+                min=2,
                 value=2,
                 className="numericInput"
             ),
