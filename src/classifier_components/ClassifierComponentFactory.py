@@ -1,6 +1,7 @@
 from classifier_components.components.ClassifierInfoComponent import ClassifierInfoComponent
 from classifier_components.ClassifierComponent import ClassifierComponent
 from classifier_components.components.ClassifierTreeComponent import ClassifierTreeComponent
+from classifier_components.components.ClassifierDecisionBoundaryComponent import ClassifierDecisionBoundaryComponent
 from dash import html
 
 
@@ -16,11 +17,12 @@ correct child components determined by the classifier type.
 """
 class ClassifierComponentFactory():
 
-    def Factory(model, classType, filename):
+    def Factory(model, classType, filename, trainingData):
         components = {
             "DecisionTreeClassifier" : 
                                         [
                                             ClassifierInfoComponent(model, classType, filename), 
+                                            ClassifierDecisionBoundaryComponent(model, trainingData),
                                             ClassifierTreeComponent(model)
                                         ],
             "GradientBoostingClassifier" : 

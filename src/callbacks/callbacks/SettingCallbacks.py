@@ -10,6 +10,7 @@ models = []
 modelFilenames = []
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
+trainingData = []
 
 def get_callbacks(app):
 
@@ -165,9 +166,11 @@ def get_callbacks(app):
                 if str(filename) in modelFilenames:
                     index = modelFilenames.index(str(filename))
                     models[index] = model
+                    trainingData[index] = [xTrain, yTrain]
                 else:
                     models.append(model)
                     modelFilenames.append(str(filename))
+                    trainingData.append([xTrain, yTrain])
 
                 return error, errorMessage, modelFilenames, filename
             
