@@ -8,6 +8,7 @@ from UserSession import UserSession
 
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
+trainingData = []
 
 def get_callbacks(app):
 

@@ -2,6 +2,7 @@ from classifier_components.components.ClassifierInfoComponent import ClassifierI
 from classifier_components.ClassifierComponent import ClassifierComponent
 from classifier_components.components.ClassifierTreeComponent import ClassifierTreeComponent
 from classifier_components.components.ClassifierClassSplitComponent import ClassifierClassSplitComponent
+from classifier_components.components.ClassifierDecisionBoundaryComponent import ClassifierDecisionBoundaryComponent
 from dash import html
 
 
@@ -25,6 +26,7 @@ class ClassifierComponentFactory():
             "DecisionTreeClassifier" : 
                                         [
                                             [ClassifierInfoComponent(modelInfo), ClassifierClassSplitComponent(modelInfo)],
+                                            [ClassifierDecisionBoundaryComponent(modelInfo)],
                                             [ClassifierTreeComponent(modelInfo)],
                                         ],
             "GradientBoostingClassifier" : 
