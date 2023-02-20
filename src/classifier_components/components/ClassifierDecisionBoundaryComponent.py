@@ -4,15 +4,16 @@ from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
 
 class ClassifierDecisionBoundaryComponent(ClassifierComponent):
 
-    def __init__(self, model, trainingData):
+    def __init__(self, modelInfo):
         
         BoundaryUtil = DecisionBoundaryUtil()
 
-        if(len(model.feature_names_in_) == 1):
-            self.boundary = BoundaryUtil.decisionBoundaries1D(model, 0, trainingData)
-        elif(len(model.feature_names_in_) == 2):
-            self.boundary = BoundaryUtil.decisionBoundaries2D(model, [0, 1], trainingData)
+        if(len(modelInfo["modelData"].feature_names_in_) == 1):
+            self.boundary = BoundaryUtil.decisionBoundaries1D(modelInfo["modelData"], 0, modelInfo["trainingData"])
+        elif(len(modelInfo["modelData"].feature_names_in_) == 2):
+            self.boundary = BoundaryUtil.decisionBoundaries2D(modelInfo["modelData"], [0, 1], modelInfo["trainingData"])
         else:
             self.boundary = html.P("Higher Dimensions are not yet implemented")
 
-        self.componentLayout = html.Div(id = "decision-boundary-component", children=self.boundary, className="ClassifierComponent")
+        self.componentTitle = "Decision Boundary Visualisation"
+        self.componentChildren = html.Div(id = "decision-boundary-component", children=self.boundary, className="ClassifierComponent")

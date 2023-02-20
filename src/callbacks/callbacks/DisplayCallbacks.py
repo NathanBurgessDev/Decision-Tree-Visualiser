@@ -1,7 +1,6 @@
 from dash.dependencies import Input, Output
-from callbacks.callbacks.SettingCallbacks import modelFilenames, models, trainingData
 from classifier_components.ClassifierComponentFactory import ClassifierComponentFactory
-
+from UserSession import UserSession
 
 def get_callbacks(app):
 
@@ -32,11 +31,7 @@ def get_callbacks(app):
     def modelSelected(modelFilename):
         classifierComponents = [()]
         if(modelFilename):
-            modelIndex = modelFilenames.index(modelFilename)
-            modelData = models[modelIndex]
-            classType = str(type(modelData)).replace('>', '').replace("'", '').split('.')
-            classType = classType[len(classType) - 1]
-            modelTrainingData = trainingData[modelIndex]
-            classifierComponents = ClassifierComponentFactory.Factory(modelData, classType, modelFilename, modelTrainingData)
+            modelInfo = UserSession().instance.modelInformation[modelFilename]
+            classifierComponents = ClassifierComponentFactory.Factory(modelInfo)
             
         return classifierComponents

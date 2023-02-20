@@ -72,6 +72,8 @@ class DecisionBoundaryUtil():
                     classifications[i] = count
                     modelText[i] = str(x)
             count+=1
+
+
         # Make a Heatmap using the array of values we previously created
         trace = go.Heatmap(z=classifications, 
                         x = modelData[featureID], 
@@ -79,6 +81,7 @@ class DecisionBoundaryUtil():
                         text = modelText, 
                         colorscale='sunset',
                         hoverinfo='text',
+                        colorbar=dict(bgcolor = "#232323"),
                         showscale=False)
 
         instances = trainingData[0]
@@ -88,11 +91,19 @@ class DecisionBoundaryUtil():
                             showlegend=False,
                             marker=dict(size=10,
                                         colorscale='sunsetdark',
-                                        line=dict(color='black', width=1))
+                                        line=dict(color='black', width=1)),
                            )
-
+ 
         # Make our graph object
+        
+
+
         graph = go.Figure(data=trace)
+        graph.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font_color = "#f5f5f5",
+        )   
         graph.add_trace(trace2)
 
         # Set the titles of the X and Y Axis
@@ -100,7 +111,7 @@ class DecisionBoundaryUtil():
             xaxis_title=str(model.feature_names_in_[featureID]), 
             title = "Decision Boundary Visualisation For Model Trained With Feature(s) - " 
             + str(model.feature_names_in_[featureID]))
-
+        
         graph.update_yaxes(visible=False, showticklabels=False)
 
         decisionBoundary.append(dcc.Graph(figure = graph))
@@ -158,6 +169,7 @@ class DecisionBoundaryUtil():
                         text = modelText, 
                         colorscale='sunset',
                         hoverinfo='text',
+                        colorbar=dict(bgcolor = "#232323"),
                         showscale=False)
 
         instances = trainingData[0]
@@ -172,6 +184,11 @@ class DecisionBoundaryUtil():
 
         # Make our graph object
         graph = go.Figure(data = trace)
+        graph.update_layout(
+            paper_bgcolor="#232323",
+            plot_bgcolor="#232323",
+            font_color="#f5f5f5",
+        ) 
         graph.add_trace(trace2)
 
         # Set the titles of the X and Y Axis

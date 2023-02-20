@@ -4,10 +4,8 @@ from dash.dependencies import Input, Output, State, ALL
 from utils.Util import ImportUtil as ImportUtil
 from model_settings.ClassifierSettingsFactory import ClassifierSettingsFactory
 from sklearn.model_selection import train_test_split
+from UserSession import UserSession
 
-
-models = []
-modelFilenames = []
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
 trainingData = []
@@ -35,7 +33,9 @@ def get_callbacks(app):
         Output(component_id = "upload-df-alert", component_property = "message"),
         Output(component_id = "upload-dataset", component_property = "children"),
         Output(component_id = "training-features", component_property = "options"),
-        Output(component_id = "classifier", component_property = "options"),],
+        Output(component_id = "classifier", component_property = "options"),
+        Output(component_id = "training-features", component_property = "value"),
+        Output(component_id = "classifier", component_property = "value")],
         [Input("upload-dataset", "filename"), Input("upload-dataset", "contents")]
     )
     def readDataframe(filename, contents):
@@ -44,11 +44,11 @@ def get_callbacks(app):
         if(contents):
             if(str(filename[0]).endswith(".csv")):
                 df.insert(0, ImportUtil.csvToDataFrame(ImportUtil.readContent(filename, contents[0])))
-                return False, "", str(filename[0]), df[0].columns, df[0].columns
+                return False, "", str(filename[0]), df[0].columns, df[0].columns, [], []
             else:
-                return True, "Wrong File Type!", defaultUploadMessage, [], []
+                return True, "Wrong File Type!", defaultUploadMessage, [], [], [], []
         else:
-            return False, "No Contents!", defaultUploadMessage, [], []
+            return False, "No Contents!", defaultUploadMessage, [], [], [], []
 
 
 
@@ -85,7 +85,7 @@ def get_callbacks(app):
     AUTHOR: Dominic Cripps
     DATE CREATED: 17/02/2023
     PREVIOUS MAINTAINER: Dominic Cripps
-    DATE LAST MODIFIED: 18/02/2023
+    DATE LAST MODIFIED: 19/02/2023
 
     Callback is triggered when the user presses the train button.
 
@@ -120,7 +120,9 @@ def get_callbacks(app):
         errorMessage = ""
         error = False
 
+        modelFilenames = [modelName for modelName in UserSession().instance.modelInformation]
         if "train-button" == ctx.triggered_id:
+
             if(len(df) == 0):
                 return False, "", modelFilenames, dash.no_update
 
@@ -141,7 +143,7 @@ def get_callbacks(app):
                 if x in classifier:
                     errorMessage += " \n Error : The Classifier Cannot Be Used To Train The Model"
                     error = True
-            
+
             if(filename == None):
                 errorMessage += " \n Error : You Need To Provide A Filename"
                 error = True
@@ -150,11 +152,10 @@ def get_callbacks(app):
             if(not isinstance(df[0][classifier[0]][0], str)):
                 errorMessage += " \n We Do Not Currently Support Regression Problems, Use A Categorical Feature As The Classifier To Create A Classification Problem "
                 error = True
-            
+
             if error == False:
                 dfIn = df[0].drop(df[0].columns.difference(features), axis = 1)
                 dfOut = df[0][str(classifier[0])]
-
                 xTrain, xTest, yTrain, yTest = train_test_split(dfIn, dfOut, test_size = split)
                 
                 arguments = {}
@@ -163,14 +164,24 @@ def get_callbacks(app):
                 
                 model = selectedSettings.classifier(**arguments).fit(xTrain, yTrain)
 
-                if str(filename) in modelFilenames:
-                    index = modelFilenames.index(str(filename))
-                    models[index] = model
-                    trainingData[index] = [xTrain, yTrain]
-                else:
-                    models.append(model)
-                    modelFilenames.append(str(filename))
-                    trainingData.append([xTrain, yTrain])
+                classType = str(type(model)).replace('>', '').replace("'", '').split('.')
+                classType = classType[len(classType) - 1]
+
+                # The information that will be stored in the 'UserSession' singleton
+                # this will be accessed when a model is selected, any information
+                # needed for a classifier component should be stored here upon training.
+                modelInfo = {
+                    "modelData" : model, 
+                    "trainingData" : [xTrain, yTrain],
+                    "modelArguments" : arguments, 
+                    "testTrainSplit" : split, 
+                    "classifierType" : classType,
+                    "modelName" : str(filename)
+                    }
+
+                UserSession().instance.modelInformation[str(filename)] = modelInfo
+                
+                modelFilenames = [modelName for modelName in UserSession().instance.modelInformation]
 
                 return error, errorMessage, modelFilenames, filename
             

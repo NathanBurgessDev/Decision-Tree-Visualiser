@@ -141,7 +141,7 @@ class TreeUtil():
 
         '''
         AUTHOR: Ethan Temple-Betts
-        PREVIOUS MAINTAINER: Ethan Temple-Betts
+        PREVIOUS MAINTAINER: Dominic Cripps
 
         A function to recurse over every node in the tree and
         calculate all the edges that exist between them.
@@ -218,7 +218,7 @@ class TreeUtil():
                 # have made it to this leaf node
                 # Addition : The classification of each node will be 
                 # returned by getClassification and shown on the label.
-                self.annotations.append(str(tree_.value[node]) + "\n " + self.getClassificiation(tree, tree_, node))
+                self.annotations.append(self.getClassificiation(tree, tree_, node))
 
         recurse(0, [])
 
@@ -266,7 +266,7 @@ class TreeUtil():
         dict pos: 
         list[int] text:
         '''
-        def make_annotations(pos, text, font_size=10, font_color='rgb(0,0,0)'):
+        def make_annotations(pos, text, font_size=10, font_color="#f5f5f5"):
             L=len(pos)
             if len(text)!=L:
                 raise ValueError('The lists pos and text must have the same len')
@@ -295,13 +295,13 @@ class TreeUtil():
                         mode='markers',
                         name='bla',
                         marker=dict(symbol='circle-dot',
-                                        size=18,
+                                        size=12,
                                         color='#6175c1',
                                         line=dict(color='rgb(50,50,50)', width=1)
                                         ),
                         text=labels,
                         hoverinfo='text',
-                        opacity=0.8
+                        opacity=1
                         ))
 
         axis = dict(showline=False, # hide axis line, grid, ticklabels and  title
@@ -315,10 +315,14 @@ class TreeUtil():
                     showlegend=False,
                     xaxis=axis,
                     yaxis=axis,
-                    margin=dict(l=40, r=40, b=85, t=100),
                     hovermode='closest',
-                    plot_bgcolor='rgb(255,255,255)'
+                    plot_bgcolor="#232323",
+                    paper_bgcolor = "#232323",
+                    font_color = "#f5f5f5",
+                    autosize=True, 
+                    margin={'t': 10,'l':10,'b':5,'r':10},
                     )
+        
 
         return fig
 
