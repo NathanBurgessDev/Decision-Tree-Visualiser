@@ -1,0 +1,140 @@
+
+body{
+    font-family: Helvetica, sans-serif;
+    background-color:rgb(25, 25, 25);
+    color:rgb(245, 245, 245);
+    text-align: center;
+}
+
+.settings {
+    height: 100%;
+    width: 20%;
+    position: fixed;
+    top: 0;
+    left: 0;
+    background-color: rgb(35, 35, 35); 
+    color:rgb(240,240,240);
+    overflow-x: hidden;
+}
+
+.upload {
+    height: auto;
+    min-height: 4rem;
+    width: 80%;
+    text-align: center;
+    padding-top: 10% ;
+    margin-left: auto;
+    margin-right: auto;
+    border-style: hidden;
+    border-radius: 5px;
+    background-color: rgb(165, 117, 222);
+    color: rgb(240,240,240);
+}
+
+.upload:hover {
+    background-color: rgb(175, 141, 216);
+    transition: 0.1s;
+    border-color: rgb(175, 141, 216);
+}
+
+.dropdown {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    color:rgb(71, 71, 71);
+}
+
+
+.numericInput {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    color:rgb(71, 71, 71);
+}
+
+.textInput { 
+    text-align: center;
+    background-color: rgb(245, 245, 245); 
+    color:rgb(71, 71, 71);
+    width: 80%;
+    border-style: hidden;
+    border-radius: 5px;
+    font-size: 16px;
+    height: auto;
+    min-height: 2rem;
+}
+
+.trainButton {
+    text-align: center;
+    background-color: rgb(165, 117, 222);
+    color: rgb(245, 245, 245);
+    width: 80%;
+    border-style: hidden;
+    border-radius: 5px;
+    font-size: 16px;
+    height: auto;
+    min-height: 2rem;
+}
+.trainButton:hover {
+    background-color: rgb(175, 141, 216);
+    transition: 0.1s;
+}
+.trainButton:active{
+    margin-top: 6px;
+    transition: 0.1s;
+}
+
+.rc-slider{
+    width:80%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.rc-slider-track {
+    background-color:rgb(165, 117, 222);
+}
+
+.rc-slider-dot-active {  
+    border-color:rgb(165, 117, 222);
+    border: solid 2pxrgb(165, 117, 222);
+}
+
+.rc-slider-dot {  
+    border-color: rgb(175, 141, 216);
+    border: solid 2pxrgb(175, 141, 216);
+}
+
+.rc-slider-handle {
+    background-color: rgb(245, 245, 245);
+    border-color: rgb(165, 117, 222);
+}
+
+.rc-slider-handle:hover {
+    border-color:  #af8dd8;
+}
+
+.rc-slider-handle-active:active {
+    border-color: rgb(175, 141, 216);
+}
+
+.classifierComponent { 
+    border-radius: 10px;
+    padding: 2%;
+    margin-left: 20px;
+    margin-right: 20px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    background-color: #232323; 
+}
+
+.classifierComponentContainer { 
+    display: flexbox;
+    position: absolute;
+    height: 100%;
+    width: 80%;
+    left: 20%;
+    top: 2%;
+}
+
+
+  
