@@ -1,21 +1,18 @@
 from sklearn.tree import _tree
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 import numpy as np
 import math
 from dash import dcc
-from utils.Util import ModelUtil
-from plotly.subplots import make_subplots
 
 class DecisionBoundaryUtil():
 
-    def getModelData(self, model, featureDivisions):
+    def getModelData(self, model, featureDivisions, trainingData):
         smallestThreshold = [None, None]
         largestThreshold = [None, None]
         buffers = [None, None]
         steps = [None, None]
-
+        
         count = 0
         for x in featureDivisions:
             for i in range(0, model.tree_.node_count):
@@ -32,24 +29,35 @@ class DecisionBoundaryUtil():
             steps[count] = buffers[count] / 20
             count+=1
 
+        heatmapMins = []
+        heatmapMaxs = []
+
+        instances = trainingData[0]
+        for i in instances:
+            min = instances[i].min()
+            max = instances[i].max()
+            buffer = (max - min) / 10
+            heatmapMins.append(min - buffer)
+            heatmapMaxs.append(max + buffer)
+
         modelData = []
 
         for j in range (0, len(featureDivisions)):
             tempModelData = []
 
-            divisions = (largestThreshold[j] - smallestThreshold[j]) / steps[j]
+            divisions = (heatmapMaxs[j] - heatmapMins[j]) / steps[j]
             for i in range (0, int(divisions)):
-                tempModelData.append(smallestThreshold[j] + (i * steps[j]))
+                tempModelData.append(heatmapMins[j] + (i * steps[j]))
             modelData.append(tempModelData)
 
         return modelData
 
 
-    def decisionBoundaries1D(self, model, featureID):
+    def decisionBoundaries1D(self, model, featureID, trainingData):
 
         decisionBoundary = []
 
-        modelData = self.getModelData(model, [featureID])
+        modelData = self.getModelData(model, [featureID], trainingData)
  
         dataframe = pd.DataFrame(data = modelData[featureID], columns = [str(model.feature_names_in_[featureID])])
 
@@ -73,9 +81,19 @@ class DecisionBoundaryUtil():
                         hoverinfo='text',
                         showscale=False)
 
+        instances = trainingData[0]
+
+        trace2 = go.Scatter(x=instances.iloc[:, 0], y = [0] * len(modelData[featureID]), 
+                            mode='markers',
+                            showlegend=False,
+                            marker=dict(size=10,
+                                        colorscale='sunsetdark',
+                                        line=dict(color='black', width=1))
+                           )
+
         # Make our graph object
         graph = go.Figure(data=trace)
-
+        graph.add_trace(trace2)
 
         # Set the titles of the X and Y Axis
         graph.update_layout(
@@ -95,7 +113,7 @@ class DecisionBoundaryUtil():
 
         decisionBoundary = []
 
-        modelData = self.getModelData(model, divisions)
+        modelData = self.getModelData(model, divisions, trainingData)
         
         data = []
 
@@ -153,9 +171,8 @@ class DecisionBoundaryUtil():
                            )
 
         # Make our graph object
-        graph = make_subplots(specs=[[{"secondary_y": True}]])
-        graph.add_trace(trace)
-        graph.add_trace(trace2,secondary_y=True)
+        graph = go.Figure(data = trace)
+        graph.add_trace(trace2)
 
         # Set the titles of the X and Y Axis
         graph.update_layout(
