@@ -109,8 +109,7 @@ class DecisionBoundaryUtil():
         # Set the titles of the X and Y Axis
         graph.update_layout(
             xaxis_title=str(model.feature_names_in_[featureID]), 
-            title = "Decision Boundary Visualisation For Model Trained With Feature(s) - " 
-            + str(model.feature_names_in_[featureID]))
+        )
         
         graph.update_yaxes(visible=False, showticklabels=False)
 
@@ -193,9 +192,7 @@ class DecisionBoundaryUtil():
 
         # Set the titles of the X and Y Axis
         graph.update_layout(
-            xaxis_title=str(model.feature_names_in_[0]), 
-            title = "Decision Boundary Visualisation For Model Trained With Feature(s) - " 
-            + str(model.feature_names_in_[0] + ", " + str(model.feature_names_in_[1])),
+            xaxis_title=str(model.feature_names_in_[0]),
             yaxis_title=str(model.feature_names_in_[1]))
         
         decisionBoundary.append(dcc.Graph(figure = graph))

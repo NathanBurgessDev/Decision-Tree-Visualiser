@@ -173,6 +173,7 @@ def get_callbacks(app):
                 modelInfo = {
                     "modelData" : model, 
                     "trainingData" : [xTrain, yTrain],
+                    "testingData" : [xTest, yTest],
                     "modelArguments" : arguments, 
                     "testTrainSplit" : split, 
                     "classifierType" : classType,

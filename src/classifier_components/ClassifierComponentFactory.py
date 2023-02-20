@@ -3,6 +3,8 @@ from classifier_components.ClassifierComponent import ClassifierComponent
 from classifier_components.components.ClassifierTreeComponent import ClassifierTreeComponent
 from classifier_components.components.ClassifierClassSplitComponent import ClassifierClassSplitComponent
 from classifier_components.components.ClassifierDecisionBoundaryComponent import ClassifierDecisionBoundaryComponent
+from classifier_components.components.ClassifierConfusionMatrixComponent import ClassifierConfusionMatrixComponent
+
 from dash import html
 
 
@@ -27,7 +29,7 @@ class ClassifierComponentFactory():
                                         [
                                             [ClassifierInfoComponent(modelInfo), ClassifierClassSplitComponent(modelInfo)],
                                             [ClassifierDecisionBoundaryComponent(modelInfo)],
-                                            [ClassifierTreeComponent(modelInfo)],
+                                            [ClassifierTreeComponent(modelInfo), ClassifierConfusionMatrixComponent(modelInfo)],
                                         ],
             "GradientBoostingClassifier" : 
                                         [

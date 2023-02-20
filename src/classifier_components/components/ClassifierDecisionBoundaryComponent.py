@@ -16,4 +16,4 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
             self.boundary = html.P("Higher Dimensions are not yet implemented")
 
         self.componentTitle = "Decision Boundary Visualisation"
-        self.componentChildren = html.Div(id = "decision-boundary-component", children=self.boundary, className="ClassifierComponent")
+        self.componentChildren = html.Div(id = "decision-boundary-component", children=self.boundary)
