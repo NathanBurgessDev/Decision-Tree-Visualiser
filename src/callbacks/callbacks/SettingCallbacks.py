@@ -84,7 +84,7 @@ def get_callbacks(app):
     AUTHOR: Dominic Cripps
     DATE CREATED: 17/02/2023
     PREVIOUS MAINTAINER: Dominic Cripps
-    DATE LAST MODIFIED: 18/02/2023
+    DATE LAST MODIFIED: 19/02/2023
 
     Callback is triggered when the user presses the train button.
 
@@ -166,16 +166,20 @@ def get_callbacks(app):
                 classType = str(type(model)).replace('>', '').replace("'", '').split('.')
                 classType = classType[len(classType) - 1]
 
+                # The information that will be stored in the 'UserSession' singleton
+                # this will be accessed when a model is selected, any information
+                # needed for a classifier component should be stored here upon training.
                 modelInfo = {
                     "modelData" : model, 
-                    "trainingData" : [xTrain, yTrain], 
+                    "trainingData" : [xTrain, yTrain],
                     "modelArguments" : arguments, 
                     "testTrainSplit" : split, 
                     "classifierType" : classType,
                     "modelName" : str(filename)
                     }
-                
+
                 UserSession().instance.modelInformation[str(filename)] = modelInfo
+                
                 modelFilenames = [modelName for modelName in UserSession().instance.modelInformation]
 
                 return error, errorMessage, modelFilenames, filename

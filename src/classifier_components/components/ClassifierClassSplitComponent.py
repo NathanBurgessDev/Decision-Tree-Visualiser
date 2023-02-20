@@ -13,12 +13,12 @@ PREVIOUS MAINTAINER: Dominic Cripps
 DATE LAST MODIFIED: 18/02/2023
 
 Child of 'ClassifierComponent' this class defines 
-an appropriate 'componentLayout' based on the model
-selected. It will show information regarding the model:
-    - Model Class
-    - Filename
-    - Features used to train the model
-    - Possible classifications of data from the model
+an appropriate 'componentLayout' to represent the 
+split between the classifications used to train the
+model.
+
+It does this in the form of a pie chart and can be used to
+evaluate whether the training data was fair.
 
 """
 class ClassifierClassSplitComponent(ClassifierComponent):

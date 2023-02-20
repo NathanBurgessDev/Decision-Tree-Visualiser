@@ -315,12 +315,14 @@ class TreeUtil():
                     showlegend=False,
                     xaxis=axis,
                     yaxis=axis,
-                    margin=dict(l=40, r=40, b=85, t=100),
                     hovermode='closest',
                     plot_bgcolor="#232323",
                     paper_bgcolor = "#232323",
                     font_color = "#f5f5f5",
+                    autosize=True, 
+                    margin={'t': 10,'l':10,'b':5,'r':10},
                     )
+        
 
         return fig
 

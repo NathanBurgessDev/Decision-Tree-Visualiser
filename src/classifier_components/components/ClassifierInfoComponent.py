@@ -5,21 +5,17 @@ from dash import html
 AUTHOR: Dominic Cripps
 DATE CREATED: 17/02/2023
 PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 18/02/2023
+DATE LAST MODIFIED: 19/02/2023
 
 Child of 'ClassifierComponent' this class defines 
 an appropriate 'componentLayout' based on the model
-selected. It will show information regarding the model:
-    - Model Class
-    - Filename
-    - Features used to train the model
-    - Possible classifications of data from the model
+selected.
 
 """
 class ClassifierInfoComponent(ClassifierComponent):
     
     def __init__(self, modelInfo):
-
+        
         features = []
         for feature in modelInfo["modelData"].feature_names_in_:
             features.append(str(feature))
@@ -36,6 +32,9 @@ class ClassifierInfoComponent(ClassifierComponent):
             parameters.append(html.Div(modelInfo["modelArguments"][param]))
             parameters.append(html.Br())
 
+        # It seperates the model information into two columns, one for general info,
+        # containing things like the classification type, and the other for the 
+        # parameters used to train the model.
         generalInfo = html.Div(
             children =[
                 html.Div(children = "General Info", className="textSubTitle"),

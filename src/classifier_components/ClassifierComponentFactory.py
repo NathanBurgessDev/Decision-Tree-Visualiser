@@ -9,7 +9,7 @@ from dash import html
 AUTHOR: Dominic Cripps
 DATE CREATED: 17/02/2023
 PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 18/02/2023
+DATE LAST MODIFIED: 19/02/2023
 
 Using the factory method, this class will return the
 correct child components determined by the classifier type.
@@ -18,6 +18,9 @@ correct child components determined by the classifier type.
 class ClassifierComponentFactory():
 
     def Factory(modelInfo):
+        # The value of each dictionary entry represents all rows containing components,
+        # if you want multiple components on a row, place them within the same array as
+        # shown below.
         components = {
             "DecisionTreeClassifier" : 
                                         [
@@ -31,10 +34,11 @@ class ClassifierComponentFactory():
                                         ],
             None : [ClassifierComponent()]
         }
-        # For each 'ClassifierComponent' in components[classType] it will create an 
-        # object of that component, the property 'componentLayout' of which
-        # will be used to create an array in the structure of an html div child.
-        # Return this array.
+        # It will iterate through each row one component at a time, work out the correct 
+        # margins in order to space the components correctly and will assign both the 
+        # correct title and component layout to a 'ClasifierComponent' div.
+        # Rows are then added to an array which is returned to be the child of
+        # 'model-components' div.
         rows = []
         for x in components[modelInfo["classifierType"]]:
             split = str(100 / len(x)) + "%"
