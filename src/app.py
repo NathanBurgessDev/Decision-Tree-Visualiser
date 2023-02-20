@@ -1,5 +1,5 @@
 from utils.PageLayout import PageLayout
-from DashInstance import app
+from DashInstance import dash_app
 
 """
 AUTHOR: Dominic Cripps
@@ -15,5 +15,5 @@ run it.
 """
 
 if __name__ == "__main__":
-    pageLayout = PageLayout("Results visualisation", app)
+    pageLayout = PageLayout("Results visualisation", dash_app)
     pageLayout.runServer(True)
