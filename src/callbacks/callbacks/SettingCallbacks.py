@@ -5,6 +5,7 @@ from utils.Util import ImportUtil as ImportUtil
 from model_settings.ClassifierSettingsFactory import ClassifierSettingsFactory
 from sklearn.model_selection import train_test_split
 from UserSession import UserSession
+import pandas as pd
 
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
@@ -154,7 +155,7 @@ def get_callbacks(app):
                 error = True
 
             if error == False:
-                dfIn = df[0].drop(df[0].columns.difference(features), axis = 1)
+                dfIn = pd.get_dummies(df[0].drop(df[0].columns.difference(features), axis = 1))
                 dfOut = df[0][str(classifier[0])]
                 xTrain, xTest, yTrain, yTest = train_test_split(dfIn, dfOut, test_size = split)
                 
