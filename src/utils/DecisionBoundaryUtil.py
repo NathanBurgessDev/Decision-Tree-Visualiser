@@ -103,6 +103,8 @@ class DecisionBoundaryUtil():
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
             font_color = "#f5f5f5",
+            autosize=True, 
+            margin={'t': 50,'l':10,'b':5,'r':30}, 
         )   
         graph.add_trace(trace2)
 
@@ -187,7 +189,10 @@ class DecisionBoundaryUtil():
             paper_bgcolor="#232323",
             plot_bgcolor="#232323",
             font_color="#f5f5f5",
+            autosize=True, 
+            margin={'t': 50,'l':10,'b':5,'r':30}, 
         ) 
+
         graph.add_trace(trace2)
 
         # Set the titles of the X and Y Axis
