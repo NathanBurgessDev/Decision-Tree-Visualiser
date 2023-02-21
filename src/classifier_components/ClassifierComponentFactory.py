@@ -50,17 +50,9 @@ class ClassifierComponentFactory():
             children = []
             for i in range (0, len(x)):
                 modelComponent = x[i]
-                if i + 1 == len(x):
-                    compMargin = "25px"
-                else:
-                    margin = 25 / (len(x) - 1)
-                    compMargin = str(margin) + "px"
-
                 titleDiv = html.Div(children = modelComponent.componentTitle, className = "componentTitle")
                 layout = html.Div(children = [titleDiv, modelComponent.componentChildren], className="classifierComponent")
-                children.append(html.Div(children = layout, style = {"width" : split, "margin-right" : compMargin}))
+                children.append(html.Div(children = layout, style = {"width" : split, "margin-right" : "25px", "overflow": "hidden", "position": "relative"}))
             row = html.Div(children = children, className="classifierComponentRow")
-            for x in row.children:
-                print(x.style)
             rows.append(row)
         return [rows]
