@@ -1,10 +1,8 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
-from dash import html
 import plotly.graph_objects as go 
 import plotly.express as px
 from dash import dcc
-import pandas as pd
-import numpy as np
+
 
 """
 AUTHOR: Dominic Cripps
