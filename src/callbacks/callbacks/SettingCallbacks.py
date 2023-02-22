@@ -150,9 +150,14 @@ def get_callbacks(app):
                 error = True
                 return error, errorMessage, modelFilenames, dash.no_update
 
-            if(not isinstance(df[0][classifier[0]][0], str)):
-                errorMessage += " \n We Do Not Currently Support Regression Problems, Use A Categorical Feature As The Classifier To Create A Classification Problem "
+            if(isinstance(df[0][classifier[0]][0], float)):
+                errorMessage += " \n We Do Not Currently Support Regression Problems, Use A Categorical or Integer Feature As The Classifier To Create A Classification Problem "
                 error = True
+
+            if(len(df[0][classifier[0]]) > 50):
+                errorMessage += " \n We Do Not Support The Training Of A Model With More Than 50 Classes"
+                error = True
+
 
             if error == False:
                 dfIn = pd.get_dummies(df[0].drop(df[0].columns.difference(features), axis = 1))
