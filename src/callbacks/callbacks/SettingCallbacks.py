@@ -6,6 +6,7 @@ from model_settings.ClassifierSettingsFactory import ClassifierSettingsFactory
 from sklearn.model_selection import train_test_split
 from UserSession import UserSession
 import pandas as pd
+import numpy as np
 
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
@@ -154,7 +155,7 @@ def get_callbacks(app):
                 errorMessage += " \n We Do Not Currently Support Regression Problems, Use A Categorical or Integer Feature As The Classifier To Create A Classification Problem "
                 error = True
 
-            if(len(df[0][classifier[0]]) > 50):
+            if(len(np.unique(df[0][classifier[0]])) > 50):
                 errorMessage += " \n We Do Not Support The Training Of A Model With More Than 50 Classes"
                 error = True
 
