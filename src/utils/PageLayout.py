@@ -37,7 +37,13 @@ class PageLayout():
         # A list containing all classifiers that have training support
         self.SUPPORTED_CLASSIFIERS = [
             "Decision Tree Classifier", 
-            "Gradient Boosted Classifier"
+            "Decision Tree Regressor",
+            "Gradient Boosted Classifier",
+            "Gradient Boosted Regressor",
+            "Random Forest Classifier",
+            "Random Forest Regressor",
+            "SVM Classifier",
+            "SVM Regressor",
         ]
 
         # Initialises HTML that contains all components
@@ -113,7 +119,7 @@ class PageLayout():
             ),
 
             # Title and dropdown for selecting which classifier to train the model with
-            html.H4 (children="Class"),
+            html.H4 (children="Model"),
             html.Div([dcc.Dropdown(id="training-class", options = self.SUPPORTED_CLASSIFIERS)], className = "dropdown"),
 
             # Title and slider for selecting the Test and Train split of the 
@@ -150,7 +156,7 @@ class PageLayout():
 
             # Div that will contain all settings that are specific to the selected
             # classifier.
-            html.Div(id = "classifier-settings", children = []),
+            html.Div(id = "classifier-settings", children = [], style={"margin-bottom" : "20px"}),
 
         ], className="settings")
 
