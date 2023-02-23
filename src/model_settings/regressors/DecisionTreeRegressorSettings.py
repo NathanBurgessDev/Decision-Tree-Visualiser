@@ -1,7 +1,7 @@
 from dash import html, dcc
 import dash_daq as daq
 from model_settings.ModelSettings import ClassifierSettings
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import DecisionTreeRegressor
 import dash_mantine_components as dmc
 
 """
@@ -11,10 +11,10 @@ PREVIOUS MAINTAINER: Dominic Cripps
 DATE LAST MODIFIED: 18/02/2023
 
 Child of 'ClassifierSettings' this class defines 
-its attributes to be appropriate for the DecisionTreeClassifier
+its attributes to be appropriate for the DecisionTreeRegressor
 
 """
-class DecisionTreeClassifierSettings(ClassifierSettings):
+class DecisionTreeRegressorSettings(ClassifierSettings):
 
     def __init__(self):
         
@@ -33,10 +33,10 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
         ]
 
         # Class Reference To Classifier Type
-        self.classifier = DecisionTreeClassifier
+        self.classifier = DecisionTreeRegressor
 
         # HTML structure for classifier specific settings
-        self.classifierLayout = [html.Div(id = "decision-tree-classifier", children=[
+        self.classifierLayout = [html.Div(id = "decision-tree-regressor", children=[
             html.Div(id="hidden-div", style={"display": "none"}),
             html.H4("Decision Tree Params", style = {"border-top" : "2px solid rgb(200,200,200)", "padding" : "4px", "padding-top" : "10px"}),
 
@@ -48,8 +48,8 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                               className = "paramCheckbox"),
             dcc.Dropdown(
                 id=dict(name="classifier-settings", idx="criterion"), 
-                options = ["gini", "entropy", "log_loss"], 
-                value = "gini",
+                options = ["squared_error", "friedman_mse", "absolute_error", "poisson"], 
+                value = "squared_error",
                 className="dropdown"
             ),
                             

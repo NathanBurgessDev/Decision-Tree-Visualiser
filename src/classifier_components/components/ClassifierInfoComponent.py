@@ -16,27 +16,7 @@ class ClassifierInfoComponent(ClassifierComponent):
     
     def __init__(self, modelInfo):
         
-        features = []
-        for feature in modelInfo["modelData"].feature_names_in_:
-            features.append(str(feature))
-            features.append(html.Br())
-
-        classes = []
-        for classification in modelInfo["modelData"].classes_:
-            classes.append(str(classification))
-            classes.append(html.Br())
-        
-        parameters = []
-        for param in modelInfo["modelArguments"]:
-            parameters.append(html.Div(children=[param + ":"], style={"font-weight" : "bold"}))
-            parameters.append(html.Div(modelInfo["modelArguments"][param]))
-            parameters.append(html.Br())
-
-        # It seperates the model information into two columns, one for general info,
-        # containing things like the classification type, and the other for the 
-        # parameters used to train the model.
-        generalInfo = html.Div(
-            children =[
+        generalInfoChildren = [
                 html.Div(children = "General Info", className="textSubTitle"),
                 
                 html.Br(),
@@ -50,21 +30,45 @@ class ClassifierInfoComponent(ClassifierComponent):
                 html.Div(modelInfo["classifierType"]),
 
                 html.Br(),
+        ]
 
-                html.Div(children=" Features", style={"font-weight" : "bold"}),
-                html.Div(features),
-
-                html.Br(),
-
-                html.Div(children=" Classes", style={"font-weight" : "bold"}),
-                html.Div(classes),
-
-                html.Br(),
-
-                html.Div(children=" Test / Train", style={"font-weight" : "bold"}),
-                html.Div(modelInfo["testTrainSplit"]),
+        if(hasattr(modelInfo["modelData"], "feature_names_in_")):
+            features = []
+            for feature in modelInfo["modelData"].feature_names_in_:
+                features.append(str(feature))
+                features.append(html.Br())
+            generalInfoChildren += [
+                    html.Div(children=" Features", style={"font-weight" : "bold"}),
+                    html.Div(features),
+                    html.Br(),
             ]
-        ,className="classifierInfoComponent")
+
+        if(hasattr(modelInfo["modelData"], "classes_")):
+            classes = []
+            for classification in modelInfo["modelData"].classes_:
+                classes.append(str(classification))
+                classes.append(html.Br())
+            generalInfoChildren += [
+                    html.Div(children=" Classes", style={"font-weight" : "bold"}),
+                    html.Div(classes),
+                    html.Br(),
+                ]
+
+        generalInfoChildren += [
+                    html.Div(children=" Test / Train", style={"font-weight" : "bold"}),
+                    html.Div(modelInfo["testTrainSplit"]),
+                ]
+
+        parameters = []
+        for param in modelInfo["modelArguments"]:
+            parameters.append(html.Div(children=[param + ":"], style={"font-weight" : "bold"}))
+            parameters.append(html.Div(modelInfo["modelArguments"][param]))
+            parameters.append(html.Br())
+
+        # It seperates the model information into two columns, one for general info,
+        # containing things like the classification type, and the other for the 
+        # parameters used to train the model.
+        generalInfo = html.Div(children = generalInfoChildren, className="classifierInfoComponent")
 
 
         parameterInfo = html.Div(
