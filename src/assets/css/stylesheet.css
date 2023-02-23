@@ -16,32 +16,6 @@ body {
     overflow-x: hidden;
 }
 
-.featureTitle
-{
-    text-align: center;
-    font-weight: bold;
-
-}
-
-.featureList { 
-    overflow-y: auto;
-    height: 11rem;
-    max-height: 11rem;
-}
-
-.featureInput {
-    width: 80%;
-    margin-left: auto;
-    margin-right: auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    color:rgb(71, 71, 71);
-    font-size: 16px;
-    padding: 5px;
-    text-align: center;
-
-}
-
 .paramCheckbox {
     margin: 5px;
     margin-bottom: 10px;
