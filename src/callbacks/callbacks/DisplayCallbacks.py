@@ -26,12 +26,14 @@ def get_callbacks(app):
     """
     @app.callback(
         [Output(component_id="model-components", component_property="children")],
-        [Input("trained-models", component_property="value")]
+        [Input("trained-models", component_property="value")],
+        
     )
     def modelSelected(modelFilename):
         classifierComponents = [()]
         if(modelFilename):
             modelInfo = UserSession().instance.modelInformation[modelFilename]
             classifierComponents = ClassifierComponentFactory.Factory(modelInfo)
+            UserSession().instance.selectedModel = modelInfo["modelData"]
             
         return classifierComponents

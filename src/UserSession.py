@@ -16,3 +16,4 @@ class UserSession(object):
         return self.instance
 
     modelInformation = {}
+    selectedModel = None
