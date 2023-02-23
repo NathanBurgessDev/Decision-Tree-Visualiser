@@ -151,6 +151,7 @@ def get_callbacks(app):
                 errorMessage += " \n Error : You Need To Provide A Filename"
                 error = True
                 return error, errorMessage, modelFilenames, dash.no_update
+            
 
             '''
             if(isinstance(df[0][classifier[0]][0], float)):
@@ -170,8 +171,14 @@ def get_callbacks(app):
                 arguments = {}
                 for i in range (0, len(classifierSettings)):
                     if customParameters[i] == True:
-                        arguments[selectedSettings.parameters[i]] = classifierSettings[i] 
-                
+                        if classifierSettings[i] != None:
+                            arguments[selectedSettings.parameters[i]] = classifierSettings[i] 
+                        else:
+                            errorMessage += " \n Error : A Selected Parameter Has No Value"
+                            error = True
+                            return error, errorMessage, modelFilenames, dash.no_update
+
+
                 model = selectedSettings.classifier(**arguments).fit(xTrain, yTrain)
 
                 classType = str(type(model)).replace('>', '').replace("'", '').split('.')

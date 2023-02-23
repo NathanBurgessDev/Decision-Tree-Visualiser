@@ -307,8 +307,8 @@ class GradientBoostingRegressorSettings(ClassifierSettings):
             dbc.Input(
                 id=dict(name="classifier-settings", idx="tol"), 
                 type = "number",
-                min=0.0,
-                value=0.0,
+                min=0.01,
+                value=0.01,
                 step = 0.01,
                 className="floatInput"
             ),

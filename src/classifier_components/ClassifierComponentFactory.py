@@ -29,7 +29,7 @@ class ClassifierComponentFactory():
         components = {
             "DecisionTreeClassifier" : 
                                         [
-                                            [ClassifierInfoComponent, ClassifierClassSplitComponent],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierDecisionBoundaryComponent],
                                             [ClassifierTreeComponent, ClassifierConfusionMatrixComponent],
                                         ],
@@ -39,7 +39,7 @@ class ClassifierComponentFactory():
                                         ],
             "GradientBoostingClassifier" : 
                                         [
-                                            [ClassifierInfoComponent, ClassifierClassSplitComponent],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
                                         ],
             "GradientBoostingRegressor" :
@@ -48,7 +48,7 @@ class ClassifierComponentFactory():
                                         ],    
             "RandomForestClassifier" : 
                                         [
-                                            [ClassifierInfoComponent, ClassifierClassSplitComponent],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
                                         ],
             "RandomForestRegressor" :
@@ -57,7 +57,7 @@ class ClassifierComponentFactory():
                                         ],  
             "SVC":
                                         [
-                                            [ClassifierInfoComponent, ClassifierClassSplitComponent],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
                                         ], 
             "SVR":

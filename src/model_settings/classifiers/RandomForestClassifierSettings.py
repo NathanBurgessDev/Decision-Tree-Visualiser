@@ -271,8 +271,8 @@ class RandomForestClassifierSettings(ClassifierSettings):
                               className = "paramCheckbox"),
             daq.NumericInput(
                 id=dict(name="classifier-settings", idx="max_samples"), 
-                min=0,
-                value=0,
+                min=1,
+                value=1,
                 className="numericInput"
             ),
 

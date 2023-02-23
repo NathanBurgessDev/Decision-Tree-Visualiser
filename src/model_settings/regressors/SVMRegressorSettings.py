@@ -21,7 +21,7 @@ class SVMRegressorSettings(ClassifierSettings):
         
         # Array of supported parameters
         self.parameters = [
-            "kernal",
+            "kernel",
             "degree",
             "gamma",
             "coef0",
@@ -44,14 +44,14 @@ class SVMRegressorSettings(ClassifierSettings):
 
             
 
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="kernal"), 
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="kernel"), 
                               checked=False,
                               size = "xs",
                               color = "violet",
                               label = "Kernel",
                               className = "paramCheckbox"),
             dcc.Dropdown(
-                id=dict(name="classifier-settings", idx="kernal"), 
+                id=dict(name="classifier-settings", idx="kernel"), 
                 options = ["linear", "poly", "rbf", "sigmoid", "precomputed"], 
                 value = "rbf",
                 className="dropdown"
@@ -108,8 +108,8 @@ class SVMRegressorSettings(ClassifierSettings):
             dbc.Input(
                 id=dict(name="classifier-settings", idx="tol"), 
                 type = "number",
-                min=0.0,
-                value=0.0,
+                min=0.01,
+                value=0.01,
                 step = 0.01,
                 className="floatInput"
             ),

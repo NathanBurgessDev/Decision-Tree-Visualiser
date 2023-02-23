@@ -31,11 +31,9 @@ class ClassifierUserInputComponent(ClassifierComponent):
         layout = [
                 html.Div(children = "Model Accuracy", className="textSubTitleCenter"),
                 html.Div(id = "accuracy", children = accuracy, style={"text-align" : "center", "margin-top" : "10px", "font-weight" : "bold"}),
-                html.Br(),
 
                 html.Div(children = "Prediction", className="textSubTitleCenter"),
                 html.Div(id = "prediction", children = "Input Features To Start", style={"text-align" : "center", "margin-top" : "10px", "font-weight" : "bold"}),
-                html.Br(),
 
                 html.Div(children="Features", className="textSubTitleCenter"),
 
@@ -62,6 +60,7 @@ class ClassifierUserInputComponent(ClassifierComponent):
         layout += [
             html.Br(),
             html.Button("Predict", id="predict-button", n_clicks = 0, className = "trainButton"),
+            html.Br(),
         ]
 
         self.componentTitle = "Predict User Input"
