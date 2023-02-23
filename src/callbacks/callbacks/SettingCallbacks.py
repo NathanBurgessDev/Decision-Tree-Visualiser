@@ -2,10 +2,11 @@ from dash import ctx
 import dash
 from dash.dependencies import Input, Output, State, ALL
 from utils.Util import ImportUtil as ImportUtil
-from model_settings.ClassifierSettingsFactory import ClassifierSettingsFactory
+from model_settings.ModelSettingsFactory import ClassifierSettingsFactory
 from sklearn.model_selection import train_test_split
 from UserSession import UserSession
 import pandas as pd
+import numpy as np
 
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
@@ -110,6 +111,7 @@ def get_callbacks(app):
         [
         Input("train-button", "n_clicks"), 
         State(dict(name="classifier-settings", idx=ALL), "value"),
+        State(dict(name="classifier-settings-custom", idx=ALL), "checked"),
         State("training-features", "value"),
         State("classifier", "value"),
         State("test-train-split", "value"),
@@ -117,7 +119,7 @@ def get_callbacks(app):
         State("training-class", "value")
         ] 
     )
-    def train(clicks, classifierSettings, features, classifier, split, filename, modelClass):
+    def train(clicks, classifierSettings, customParameters, features, classifier, split, filename, modelClass):
         errorMessage = ""
         error = False
 
@@ -150,14 +152,15 @@ def get_callbacks(app):
                 error = True
                 return error, errorMessage, modelFilenames, dash.no_update
 
+            '''
             if(isinstance(df[0][classifier[0]][0], float)):
                 errorMessage += " \n We Do Not Currently Support Regression Problems, Use A Categorical or Integer Feature As The Classifier To Create A Classification Problem "
                 error = True
 
-            if(len(df[0][classifier[0]]) > 50):
+            if(len(np.unique(df[0][classifier[0]])) > 50):
                 errorMessage += " \n We Do Not Support The Training Of A Model With More Than 50 Classes"
                 error = True
-
+            '''
 
             if error == False:
                 dfIn = pd.get_dummies(df[0].drop(df[0].columns.difference(features), axis = 1))
@@ -166,7 +169,8 @@ def get_callbacks(app):
                 
                 arguments = {}
                 for i in range (0, len(classifierSettings)):
-                    arguments[selectedSettings.parameters[i]] = classifierSettings[i] 
+                    if customParameters[i] == True:
+                        arguments[selectedSettings.parameters[i]] = classifierSettings[i] 
                 
                 model = selectedSettings.classifier(**arguments).fit(xTrain, yTrain)
 

@@ -1,44 +1,64 @@
 from dash import html, dcc
 import dash_daq as daq
 from model_settings.ModelSettings import ClassifierSettings
-from sklearn.tree import DecisionTreeClassifier
+from sklearn.ensemble import RandomForestClassifier
 import dash_mantine_components as dmc
 
 """
 AUTHOR: Dominic Cripps
-DATE CREATED: 17/02/2023
+DATE CREATED: 22/02/2023
 PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 18/02/2023
+DATE LAST MODIFIED: 22/02/2023
 
 Child of 'ClassifierSettings' this class defines 
-its attributes to be appropriate for the DecisionTreeClassifier
+its attributes to be appropriate for the RandomForestClassifier
 
 """
-class DecisionTreeClassifierSettings(ClassifierSettings):
+class RandomForestClassifierSettings(ClassifierSettings):
 
     def __init__(self):
         
         # Array of supported parameters
         self.parameters = [
+            "n_estimators",
             "criterion",
-            "splitter",
             "max_depth",
             "min_samples_split",
             "min_samples_leaf",
             "min_weight_fraction_leaf",
             "max_features",
-            "random_state",
             "max_leaf_nodes",
             "min_impurity_decrease",
+            "bootstrap",
+            "oob_score",
+            "n_jobs",
+            "random_state",          
+            "verbose",
+            "warm_start",  
+            "max_samples",
         ]
 
         # Class Reference To Classifier Type
-        self.classifier = DecisionTreeClassifier
+        self.classifier = RandomForestClassifier
 
         # HTML structure for classifier specific settings
-        self.classifierLayout = [html.Div(id = "decision-tree-classifier", children=[
+        self.classifierLayout = [html.Div(id = "random-forest-classifier", children=[
             html.Div(id="hidden-div", style={"display": "none"}),
-            html.H4("Decision Tree Params", style = {"border-top" : "2px solid rgb(200,200,200)", "padding" : "4px", "padding-top" : "10px"}),
+            html.H4("Random Forest Params", style = {"border-top" : "2px solid rgb(200,200,200)", "padding" : "4px", "padding-top" : "10px"}),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="n_estimators"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Number Of Estimators",
+                              className = "paramCheckbox"),
+            daq.NumericInput(
+                id=dict(name="classifier-settings", idx="n_estimators"), 
+                min=1,
+                value=10,
+                className="numericInput"
+            ),
+
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="criterion"), 
                               checked=False,
@@ -52,20 +72,8 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value = "gini",
                 className="dropdown"
             ),
-                            
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="splitter"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Splitter",
-                              className = "paramCheckbox"),
-            dcc.Dropdown(
-                id=dict(name="classifier-settings", idx="splitter"), 
-                options = ["best", "random"], 
-                value = "best",
-                className="dropdown"
-            ),
-            
+
+
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_depth"), 
                               checked=False,
                               size = "xs",
@@ -78,6 +86,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value=5,
                 className="numericInput"
             ),
+
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_samples_split"), 
                               checked=False,
@@ -125,6 +134,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
+            
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_features"), 
                               checked=False,
@@ -139,18 +149,6 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 className="numericInput"
             ),
 
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="random_state"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Random State",
-                              className = "paramCheckbox"),
-            daq.NumericInput(
-                id=dict(name="classifier-settings", idx="random_state"), 
-                min=0,
-                value=0,
-                className="numericInput"
-            ),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_leaf_nodes"), 
                               checked=False,
@@ -164,6 +162,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value=10,
                 className="numericInput"
             ),
+            
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_impurity_decrease"), 
                               checked=False,
@@ -185,6 +184,98 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
+
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="bootstrap"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Bootstrap",
+                              className = "paramCheckbox"),
+            dcc.Dropdown(
+                id=dict(name="classifier-settings", idx="bootstrap"), 
+                options = [True, False], 
+                value = True,
+                className="dropdown"
+            ),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="oob_score"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "OOB Score",
+                              className = "paramCheckbox"),
+            dcc.Dropdown(
+                id=dict(name="classifier-settings", idx="oob_score"), 
+                options = [True, False], 
+                value = False,
+                className="dropdown"
+            ),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="n_jobs"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Number Of Jobs",
+                              className = "paramCheckbox"),
+            daq.NumericInput(
+                id=dict(name="classifier-settings", idx="n_jobs"), 
+                value=0,
+                className="numericInput"
+            ),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="random_state"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Random State",
+                              className = "paramCheckbox"),
+            daq.NumericInput(
+                id=dict(name="classifier-settings", idx="random_state"), 
+                min=0,
+                value=0,
+                className="numericInput"
+            ),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="verbose"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Verbose",
+                              className = "paramCheckbox"),
+            daq.NumericInput(
+                id=dict(name="classifier-settings", idx="verbose"), 
+                min=0,
+                value=0,
+                className="numericInput"
+            ),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="warm_start"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Warm Start",
+                              className = "paramCheckbox"),
+            dcc.Dropdown(
+                id=dict(name="classifier-settings", idx="warm_start"), 
+                options = [True, False], 
+                value = False,
+                className="dropdown"
+            ),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_samples"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Max Samples",
+                              className = "paramCheckbox"),
+            daq.NumericInput(
+                id=dict(name="classifier-settings", idx="max_samples"), 
+                min=0,
+                value=0,
+                className="numericInput"
+            ),
+
         ])]
 
         
