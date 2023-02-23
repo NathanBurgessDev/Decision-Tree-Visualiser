@@ -188,7 +188,7 @@ def get_callbacks(app):
                     }
 
                 UserSession().instance.modelInformation[str(filename)] = modelInfo
-                
+
                 modelFilenames = [modelName for modelName in UserSession().instance.modelInformation]
 
                 return error, errorMessage, modelFilenames, filename

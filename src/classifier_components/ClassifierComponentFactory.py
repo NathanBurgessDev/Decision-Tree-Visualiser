@@ -4,6 +4,7 @@ from classifier_components.components.ClassifierTreeComponent import ClassifierT
 from classifier_components.components.ClassifierClassSplitComponent import ClassifierClassSplitComponent
 from classifier_components.components.ClassifierDecisionBoundaryComponent import ClassifierDecisionBoundaryComponent
 from classifier_components.components.ClassifierConfusionMatrixComponent import ClassifierConfusionMatrixComponent
+from classifier_components.components.ClassifierUserInputComponent import ClassifierUserInputComponent
 
 from dash import html
 
@@ -27,7 +28,7 @@ class ClassifierComponentFactory():
         components = {
             "DecisionTreeClassifier" : 
                                         [
-                                            [ClassifierInfoComponent(modelInfo), ClassifierClassSplitComponent(modelInfo)],
+                                            [ClassifierInfoComponent(modelInfo), ClassifierUserInputComponent(modelInfo), ClassifierClassSplitComponent(modelInfo)],
                                             [ClassifierDecisionBoundaryComponent(modelInfo)],
                                             [ClassifierTreeComponent(modelInfo), ClassifierConfusionMatrixComponent(modelInfo)],
                                         ],

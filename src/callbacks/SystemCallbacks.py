@@ -1,5 +1,6 @@
 from callbacks.callbacks.SettingCallbacks import get_callbacks as get_setting_callbacks
 from callbacks.callbacks.DisplayCallbacks import get_callbacks as get_display_callbacks
+from callbacks.callbacks.PredictCallbacks import get_callbacks as get_predict_callbacks
 
 """
 AUTHOR: Dominic Cripps
@@ -37,3 +38,5 @@ To create a new file that contains callbacks :
 def get_system_callbacks(app):
     get_setting_callbacks(app)
     get_display_callbacks(app)
+    get_predict_callbacks(app)
+    
