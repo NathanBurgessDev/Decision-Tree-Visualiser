@@ -23,14 +23,10 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
         
         BoundaryUtil = DecisionBoundaryUtil()
 
-        #Uses .feature_names_in to determine which DecisionBoundaryUtil function to call
-        if(len(modelInfo["modelData"].feature_names_in_) == 1):
-            self.boundary = BoundaryUtil.decisionBoundaries1D(modelInfo["modelData"], 0, modelInfo["trainingData"])
-        elif(len(modelInfo["modelData"].feature_names_in_) == 2):
-            self.boundary = BoundaryUtil.decisionBoundaries2D(modelInfo["modelData"], [0, 1], modelInfo["trainingData"])
-        #Placeholder until higher dimensions are supported
-        else:
+        if(len(modelInfo["modelData"].feature_names_in_) > 2):
             self.boundary = html.P("Higher Dimensions are not yet implemented")
+        else:
+            self.boundary = BoundaryUtil.generateDecisionBoundary(modelInfo["modelData"], modelInfo["trainingData"])
 
         #Sets the values for the component to be displayed within the app
         self.componentTitle = "Decision Boundary Visualisation"
