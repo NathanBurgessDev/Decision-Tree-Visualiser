@@ -20,7 +20,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATEDD: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 24/03/2023
+    DATE LAST MODIFIED: 24/02/2023
 
     Generates the values required to create a heatmap using values from
     the model's training data.
@@ -74,6 +74,46 @@ class DecisionBoundaryUtil():
         return heatmapValues
 
     """
+    AUTHOR: Daniel Ferring
+    DATE CREATED: 24/02/2023
+    PREVIOUS MAINTAINER: Daniel Ferring
+    DATE LAST MODIFIED: 24/02/2023
+
+    Plots a scatter graph of the training data used to train the model.
+    The scatter graph produced by this function is overlaid on the heatmap
+
+    INPUTS:
+    trainingData: the data used to train the model
+    """
+    def plotScatterGraph(self, trainingData):
+        #Extracts feature values from the training data
+        instances = trainingData[0]
+
+        #There will alwats be at least one feature, which is used as the x axis
+        xPlot = instances.iloc[:, 0]
+
+        #Creates the y axis for a one dimensional tree
+        if len(instances.columns) == 1:
+            yPlot = [0] * len(instances)
+        #Uses the values of the second feature in the case of a two dimensional tree
+        elif len(instances.columns) == 2:
+            yPlot = instances.iloc[:, 1]
+        else:
+            print("THis shouldn't happen")
+        
+        #Creates the scatter graph object
+        scatter = go.Scatter(x=xPlot, 
+                            y = yPlot, 
+                            mode='markers',
+                            showlegend=False,
+                            marker=dict(size=10,
+                                        colorscale='sunsetdark',
+                                        line=dict(color='black', width=1))
+                            )
+        
+        return scatter
+
+    """
     AUTHOR: Dominic Cripps
     DATE CREATED: UNKNOWN
     PREVIOUS MAINTAINER: Daniel Ferring
@@ -122,17 +162,8 @@ class DecisionBoundaryUtil():
                         colorbar=dict(bgcolor = "#232323"),
                         showscale=False)
 
-        #Extracts data instances to be plotted as a scatter graph
-        instances = trainingData[0]
-
         #Creates the scatter graph to be overlaid on the decison boundary
-        trace2 = go.Scatter(x=instances.iloc[:, 0], y = [0] * len(modelData[featureID]), 
-                            mode='markers',
-                            showlegend=False,
-                            marker=dict(size=10,
-                                        colorscale='sunsetdark',
-                                        line=dict(color='black', width=1)),
-                           )
+        trace2 = self.plotScatterGraph(trainingData)
  
         #Creates the graph object, adding the heatmap to it
         graph = go.Figure(data=trace)
@@ -229,17 +260,8 @@ class DecisionBoundaryUtil():
                         colorbar=dict(bgcolor = "#232323"),
                         showscale=False)
 
-        #Extracts data instances to be plotted as a scatter graph
-        instances = trainingData[0]
-
         #Creates the scatter graph to be overlaid on the heatmap
-        trace2 = go.Scatter(x=instances.iloc[:, 0], y=instances.iloc[:, 1], 
-                            mode='markers',
-                            showlegend=False,
-                            marker=dict(size=10,
-                                        colorscale='sunsetdark',
-                                        line=dict(color='black', width=1))
-                           )
+        trace2 = self.plotScatterGraph(trainingData)
 
         #Creates the graph object, adding the heatmap to it
         graph = go.Figure(data = trace)
