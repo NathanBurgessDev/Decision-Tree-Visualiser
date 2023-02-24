@@ -17,71 +17,61 @@ boundaries. Can create either 1D or 2D representations.
 class DecisionBoundaryUtil():
 
     """
-    AUTHOR: Dominic Cripps
-    DATE CREATED: UNKNOWN
+    AUTHOR: Daniel Ferring
+    DATE CREATEDD: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    Date Last Modified: 20/02/2023
+    DATE LAST MODIFIED: 24/03/2023
 
-    Used to acquire the values required to create the heatmap.
-    Uses the decison tree fresholds to determine the steps between
-    values and the training data itself to determine the heatmap
-    bounds.
+    Generates the values required to create a heatmap using values from
+    the model's training data.
 
-    Inputs:
-    model: The model to be parsed
-    featureDivisions: The Number of features used in the model
-    trainingData: The data set used to train the model
+    INPUTS:
+    trainingData: the data used to train the model
     """
-    def getModelData(self, model, featureDivisions, trainingData):
-        smallestThreshold = [None, None]
-        largestThreshold = [None, None]
-        buffers = [None, None]
-        steps = [None, None]
-        
-        #Calculates the steps (value intervals) for the heatmap creation
-        count = 0
-        for x in featureDivisions:
-            for i in range(0, model.tree_.node_count):
-                tempVal = model.tree_.threshold[i]
-                if(tempVal != _tree.TREE_UNDEFINED and model.tree_.feature[i] == x):
-                    if(largestThreshold[count] == None or tempVal > largestThreshold[count]):
-                        largestThreshold[count] = tempVal
-                    if(smallestThreshold[count] == None or tempVal < smallestThreshold[count]):
-                        smallestThreshold[count] = tempVal
+    def getHeatmapValues(self, trainingData):
 
-            buffers[count] = (largestThreshold[count] - smallestThreshold[count]) / 5
-            largestThreshold[count] += buffers[count]
-            smallestThreshold[count] -= buffers[count]
-            steps[count] = buffers[count] / 20
-            count+=1
+        #Stores minimum values for each feature
+        mins = []
+        #Stores maximum values for each feature
+        maxs = []
 
-        #Stores minimum values for x and y
-        heatmapMins = []
-        #Stores maximum values for x and y
-        heatmapMaxs = []
+        #Extracts feature values from the training data
+        features = trainingData[0]
 
-        #Finds the min and max values of x and y for each feature
-        instances = trainingData[0]
-        for i in instances:
-            min = instances[i].min()
-            max = instances[i].max()
+        #Finds the minimum and maximum values for each feature
+        for i in features:
+            min = features[i].min()
+            max = features[i].max()
+
+            #Applies a buffer so that the visualisation extends a bit beyond each 
+            #min and max value (looks nicer)
             buffer = (max - min) / 10
-            heatmapMins.append(min - buffer)
-            heatmapMaxs.append(max + buffer)
+            mins.append(min - buffer)
+            maxs.append(max + buffer)
+        
+        #Stores the values that will be used to create the heatmap
+        heatmapValues = []
 
-        #Stores the values required to create the heatmap
-        modelData = []
+        #The divisions for each axis of the heatmap grid, increasing this value will increase
+        #the resolution of the decision boundary at the expense of performance
+        divisions = 150
 
-        #Generates the values required to create the heatmap
-        for j in range (0, len(featureDivisions)):
-            tempModelData = []
+        #Creates a list of values for each feature (each list becomes an axis in the heatmap)
+        #and appends them to heatmapValues
+        for i in range(0, len(features.columns)):
+            featureValues = []
 
-            divisions = (heatmapMaxs[j] - heatmapMins[j]) / steps[j]
-            for i in range (0, int(divisions)):
-                tempModelData.append(heatmapMins[j] + (i * steps[j]))
-            modelData.append(tempModelData)
+            #Uses the range in values and number of divisions to calculate the step needed between each value
+            step = (maxs[i] - mins[i]) / divisions
 
-        return modelData
+            #Generates the values for the feature's list
+            for j in range(0, divisions):
+                value = mins[i] + (step * j)
+                featureValues.append(value)
+            
+            heatmapValues.append(featureValues)
+        
+        return heatmapValues
 
     """
     AUTHOR: Dominic Cripps
@@ -103,7 +93,7 @@ class DecisionBoundaryUtil():
         decisionBoundary = []
 
         #Gets the data required to create the heatmap
-        modelData = self.getModelData(model, [featureID], trainingData)
+        modelData = self.getHeatmapValues(trainingData)
  
         #Extracts relevant data from the training data
         dataframe = pd.DataFrame(data = modelData[featureID], columns = [str(model.feature_names_in_[featureID])])
@@ -188,7 +178,7 @@ class DecisionBoundaryUtil():
         decisionBoundary = []
 
         #Gets the data required to create the heatmap
-        modelData = self.getModelData(model, divisions, trainingData)
+        modelData = self.getHeatmapValues(trainingData)
         
         data = []
 
