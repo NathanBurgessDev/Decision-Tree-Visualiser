@@ -1,8 +1,8 @@
 from sklearn.tree import _tree
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 import numpy as np
-import math
 from dash import dcc
 
 """
@@ -18,7 +18,7 @@ class DecisionBoundaryUtil():
 
     """
     AUTHOR: Daniel Ferring
-    DATE CREATEDD: 24/02/2023
+    DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
     DATE LAST MODIFIED: 24/02/2023
 
@@ -101,7 +101,7 @@ class DecisionBoundaryUtil():
             predictData = []
             for y in heatmapValues[1]:
                 for x in heatmapValues[0]:
-                    predictData.append([x,y])
+                    predictData.append([x, y])
         
         #Creates a data frame with predictData as the rows and features as the columns
         predictDF = pd.DataFrame(data = predictData, columns = features)
@@ -121,7 +121,7 @@ class DecisionBoundaryUtil():
                 if predictions[j] == str(i):
                     classifications[j] = classificationNum
                     classificationsText[j] = str(i)
-                classificationNum += 1
+            classificationNum += 1
         
         #Regardless of tree dimension the first feature in heatmapValues will be plotted on the x axis
         xData = heatmapValues[0]
@@ -132,8 +132,8 @@ class DecisionBoundaryUtil():
         #Reshapes arrays as necessary and uses the second feature's values for the y axis if the 
         #tree has two dimensions
         else:
-            classifications = np.reshape(classifications, (len(heatmapValues[0]), len(heatmapValues[1])))
-            classificationsText = np.reshape(classificationsText, (len(heatmapValues[0]), len(heatmapValues[1])))
+            classifications = np.reshape(classifications, (len(heatmapValues[1]), len(heatmapValues[0])))
+            classificationsText = np.reshape(classificationsText, (len(heatmapValues[1]), len(heatmapValues[0])))
             yData = heatmapValues[1]
         
         #Creates the hetmap object
@@ -147,6 +147,8 @@ class DecisionBoundaryUtil():
             colorbar = dict(bgcolor = "#232323"),
             showscale = False
         )
+
+        print(classifications)
 
         return heatmap
 
@@ -176,13 +178,13 @@ class DecisionBoundaryUtil():
             yPlot = instances.iloc[:, 1]
         
         #Creates the scatter graph object
-        scatter = go.Scatter(x=xPlot, 
+        scatter = go.Scatter(x = xPlot, 
                             y = yPlot, 
-                            mode='markers',
-                            showlegend=False,
-                            marker=dict(size=10,
-                                        colorscale='sunsetdark',
-                                        line=dict(color='black', width=1))
+                            mode = 'markers',
+                            showlegend = False,
+                            marker = dict(size = 7,
+                                        colorscale = 'sunsetdark',
+                                        line = dict(color = 'black', width = 0.5))
                             )
         
         return scatter
