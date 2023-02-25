@@ -77,7 +77,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 24/02/2023
+    DATE LAST MODIFIED: 25/02/2023
     --Uses logic initially implemented by Dominic Cripps--
 
     Creates the heatmap object used to represent the decision boundaries of a given model
@@ -148,15 +148,13 @@ class DecisionBoundaryUtil():
             showscale = False
         )
 
-        print(classifications)
-
         return heatmap
 
     """
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 24/02/2023
+    DATE LAST MODIFIED: 25/02/2023
 
     Plots a scatter graph of the training data used to train the model.
 
@@ -182,9 +180,10 @@ class DecisionBoundaryUtil():
                             y = yPlot, 
                             mode = 'markers',
                             showlegend = False,
-                            marker = dict(size = 7,
+                            marker = dict(size = 10,
                                         colorscale = 'sunsetdark',
-                                        line = dict(color = 'black', width = 0.5))
+                                        line = dict(color = 'black', 
+                                        width = 0.5))
                             )
         
         return scatter
