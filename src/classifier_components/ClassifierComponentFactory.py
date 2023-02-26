@@ -33,7 +33,7 @@ class ClassifierComponentFactory():
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierDecisionBoundaryComponent],
                                             [ClassifierTreeComponent, ClassifierConfusionMatrixComponent],
-                                            [ClassifierParallelCoordinatesComponent(modelInfo)]
+                                            [ClassifierParallelCoordinatesComponent]
                                         ],
             "DecisionTreeRegressor" :
                                         [
