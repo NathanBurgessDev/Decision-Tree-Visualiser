@@ -5,6 +5,7 @@ from classifier_components.components.ClassifierClassSplitComponent import Class
 from classifier_components.components.ClassifierDecisionBoundaryComponent import ClassifierDecisionBoundaryComponent
 from classifier_components.components.ClassifierConfusionMatrixComponent import ClassifierConfusionMatrixComponent
 from classifier_components.components.ClassifierParallelCoordinatesComponent import ClassifierParallelCoordinatesComponent
+from classifier_components.components.ClassifierUserInputComponent import ClassifierUserInputComponent
 
 from dash import html
 
@@ -22,22 +23,50 @@ correct child components determined by the classifier type.
 class ClassifierComponentFactory():
 
     def Factory(modelInfo):
+
         # The value of each dictionary entry represents all rows containing components,
         # if you want multiple components on a row, place them within the same array as
         # shown below.
         components = {
             "DecisionTreeClassifier" : 
                                         [
-                                            [ClassifierInfoComponent(modelInfo), ClassifierClassSplitComponent(modelInfo)],
-                                            [ClassifierDecisionBoundaryComponent(modelInfo)],
-                                            [ClassifierTreeComponent(modelInfo), ClassifierConfusionMatrixComponent(modelInfo)],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
+                                            [ClassifierDecisionBoundaryComponent],
+                                            [ClassifierTreeComponent, ClassifierConfusionMatrixComponent],
                                             [ClassifierParallelCoordinatesComponent(modelInfo)]
+                                        ],
+            "DecisionTreeRegressor" :
+                                        [
+                                            [ClassifierInfoComponent],
                                         ],
             "GradientBoostingClassifier" : 
                                         [
-                                            [ClassifierInfoComponent(modelInfo)],
-                                            [ClassifierTreeComponent(modelInfo)]
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
+                                            [ClassifierConfusionMatrixComponent],
                                         ],
+            "GradientBoostingRegressor" :
+                                        [
+                                            [ClassifierInfoComponent],
+                                        ],    
+            "RandomForestClassifier" : 
+                                        [
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
+                                            [ClassifierConfusionMatrixComponent],
+                                        ],
+            "RandomForestRegressor" :
+                                        [
+                                            [ClassifierInfoComponent],
+                                        ],  
+            "SVC":
+                                        [
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
+                                            [ClassifierConfusionMatrixComponent],
+                                        ], 
+            "SVR":
+                                        [
+                                            [ClassifierInfoComponent],
+                                        ],
+                                                           
             None : [ClassifierComponent()]
         }
         # It will iterate through each row one component at a time, work out the correct 
@@ -51,7 +80,7 @@ class ClassifierComponentFactory():
 
             children = []
             for i in range (0, len(x)):
-                modelComponent = x[i]
+                modelComponent = x[i](modelInfo)
                 titleDiv = html.Div(children = modelComponent.componentTitle, className = "componentTitle")
                 layout = html.Div(children = [titleDiv, modelComponent.componentChildren], className="classifierComponent")
                 children.append(html.Div(children = layout, style = {"width" : split, "margin-right" : "25px", "overflow": "hidden", "position": "relative"}))

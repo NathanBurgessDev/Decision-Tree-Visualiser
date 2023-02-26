@@ -16,6 +16,48 @@ body {
     overflow-x: hidden;
 }
 
+.featureTitle
+{
+    text-align: center;
+    font-weight: bold;
+
+}
+.featureList { 
+    overflow-y: auto;
+    height: 10rem;
+    max-height: 10rem;
+}
+
+.featureInput {
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    color:rgb(71, 71, 71);
+    padding: 5px;
+    text-align: center;
+}
+
+.paramCheckbox {
+    margin: 5px;
+    margin-bottom: 10px;
+    margin-top: 25px;
+    margin-left: 10%;
+    color:rgb(245, 245, 245);
+    width: 80%;
+    text-align: left;
+    border-top : 2px solid rgb(200,200,200);
+    padding-top: 4px;
+
+}
+
+.mantine-708xpa{
+    color:rgb(245, 245, 245);
+    font-size: 16px;
+    font-weight: bold;
+}
+
 .upload {
     height: auto;
     min-height: 4rem;
@@ -26,7 +68,7 @@ body {
     margin-right: auto;
     border-style: hidden;
     border-radius: 5px;
-    background-color: rgb(165, 117, 222);
+    background-color: #a575de;
     color: rgb(240,240,240);
 }
 
@@ -36,6 +78,7 @@ body {
     border-color: rgb(175, 141, 216);
 }
 
+
 .dropdown {
     width: 80%;
     margin-left: auto;
@@ -43,6 +86,15 @@ body {
     color:rgb(71, 71, 71);
 }
 
+.floatInput {
+    width: 80%;
+    height: 140%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    color:rgb(71, 71, 71);
+    font-size: 16px;
+}
 
 .numericInput {
     width: 80%;
@@ -170,6 +222,18 @@ body {
     padding : 4px;
     padding-top : 10px;
     text-align: left;
+    font-weight: bold;
+}
+
+.textSubTitleCenter {
+    border-bottom : 2px solid rgb(200,200,200);
+    width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    padding : 4px;
+    padding-top : 20px;
+    margin-bottom : 10px;
+    text-align: center;
     font-weight: bold;
 }
 
