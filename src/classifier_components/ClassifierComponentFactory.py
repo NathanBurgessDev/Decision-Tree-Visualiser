@@ -4,6 +4,7 @@ from classifier_components.components.ClassifierTreeComponent import ClassifierT
 from classifier_components.components.ClassifierClassSplitComponent import ClassifierClassSplitComponent
 from classifier_components.components.ClassifierDecisionBoundaryComponent import ClassifierDecisionBoundaryComponent
 from classifier_components.components.ClassifierConfusionMatrixComponent import ClassifierConfusionMatrixComponent
+from classifier_components.components.ClassifierParallelCoordinatesComponent import ClassifierParallelCoordinatesComponent
 from classifier_components.components.ClassifierUserInputComponent import ClassifierUserInputComponent
 
 from dash import html
@@ -32,6 +33,7 @@ class ClassifierComponentFactory():
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierDecisionBoundaryComponent],
                                             [ClassifierTreeComponent, ClassifierConfusionMatrixComponent],
+                                            [ClassifierParallelCoordinatesComponent(modelInfo)]
                                         ],
             "DecisionTreeRegressor" :
                                         [
