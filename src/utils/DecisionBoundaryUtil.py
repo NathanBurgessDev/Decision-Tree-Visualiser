@@ -1,15 +1,15 @@
 from sklearn.tree import _tree
 import pandas as pd
 import plotly.graph_objects as go
+import plotly.express as px
 import numpy as np
-import math
 from dash import dcc
 
 """
 AUTHOR: Daniel Ferring
 DATE CREATED: 19/02/2023
-PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 21/02/2023
+PREVIOUS MAINTAINER: Daniel Ferring
+DATE LAST MODIFIED: 24/02/2023
 
 Used to create visualisations of a given model's decision
 boundaries. Can create either 1D or 2D representations.
@@ -17,256 +17,220 @@ boundaries. Can create either 1D or 2D representations.
 class DecisionBoundaryUtil():
 
     """
-    AUTHOR: Dominic Cripps
-    DATE CREATED: UNKNOWN
+    AUTHOR: Daniel Ferring
+    DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    Date Last Modified: 20/02/2023
+    DATE LAST MODIFIED: 24/02/2023
 
-    Used to acquire the values required to create the heatmap.
-    Uses the decison tree fresholds to determine the steps between
-    values and the training data itself to determine the heatmap
-    bounds.
+    Generates the values required to create a heatmap using values from
+    the model's training data.
 
-    Inputs:
-    model: The model to be parsed
-    featureDivisions: The Number of features used in the model
-    trainingData: The data set used to train the model
+    INPUTS:
+    trainingData: the data used to train the model
     """
-    def getModelData(self, model, featureDivisions, trainingData):
-        smallestThreshold = [None, None]
-        largestThreshold = [None, None]
-        buffers = [None, None]
-        steps = [None, None]
-        
-        #Calculates the steps (value intervals) for the heatmap creation
-        count = 0
-        for x in featureDivisions:
-            for i in range(0, model.tree_.node_count):
-                tempVal = model.tree_.threshold[i]
-                if(tempVal != _tree.TREE_UNDEFINED and model.tree_.feature[i] == x):
-                    if(largestThreshold[count] == None or tempVal > largestThreshold[count]):
-                        largestThreshold[count] = tempVal
-                    if(smallestThreshold[count] == None or tempVal < smallestThreshold[count]):
-                        smallestThreshold[count] = tempVal
+    def getHeatmapValues(self, trainingData):
 
-            buffers[count] = (largestThreshold[count] - smallestThreshold[count]) / 5
-            largestThreshold[count] += buffers[count]
-            smallestThreshold[count] -= buffers[count]
-            steps[count] = buffers[count] / 20
-            count+=1
+        #Stores minimum values for each feature
+        mins = []
+        #Stores maximum values for each feature
+        maxs = []
 
-        #Stores minimum values for x and y
-        heatmapMins = []
-        #Stores maximum values for x and y
-        heatmapMaxs = []
+        #Extracts feature values from the training data
+        features = trainingData[0]
 
-        #Finds the min and max values of x and y for each feature
-        instances = trainingData[0]
-        for i in instances:
-            min = instances[i].min()
-            max = instances[i].max()
+        #Finds the minimum and maximum values for each feature
+        for i in features:
+            min = features[i].min()
+            max = features[i].max()
+
+            #Applies a buffer so that the visualisation extends a bit beyond each 
+            #min and max value (looks nicer)
             buffer = (max - min) / 10
-            heatmapMins.append(min - buffer)
-            heatmapMaxs.append(max + buffer)
+            mins.append(min - buffer)
+            maxs.append(max + buffer)
+        
+        #Stores the values that will be used to create the heatmap
+        heatmapValues = []
 
-        #Stores the values required to create the heatmap
-        modelData = []
+        #The divisions for each axis of the heatmap grid, increasing this value will increase
+        #the resolution of the decision boundary at the expense of performance
+        divisions = 150
 
-        #Generates the values required to create the heatmap
-        for j in range (0, len(featureDivisions)):
-            tempModelData = []
+        #Creates a list of values for each feature (each list becomes an axis in the heatmap)
+        #and appends them to heatmapValues
+        for i in range(0, len(features.columns)):
+            featureValues = []
 
-            divisions = (heatmapMaxs[j] - heatmapMins[j]) / steps[j]
-            for i in range (0, int(divisions)):
-                tempModelData.append(heatmapMins[j] + (i * steps[j]))
-            modelData.append(tempModelData)
+            #Uses the range in values and number of divisions to calculate the step needed between each value
+            step = (maxs[i] - mins[i]) / divisions
 
-        return modelData
-
+            #Generates the values for the feature's list
+            for j in range(0, divisions):
+                value = mins[i] + (step * j)
+                featureValues.append(value)
+            
+            heatmapValues.append(featureValues)
+        
+        return heatmapValues
+    
     """
-    AUTHOR: Dominic Cripps
-    DATE CREATED: UNKNOWN
+    AUTHOR: Daniel Ferring
+    DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    Date Last Modified: 20/02/2023
+    DATE LAST MODIFIED: 25/02/2023
+    --Uses logic initially implemented by Dominic Cripps--
 
-    Generates a visual representation of the decision boundary
-    of a 1 dimensional decision tree. Returns a graph object
-    within an array.
+    Creates the heatmap object used to represent the decision boundaries of a given model
 
-    Inputs:
-    model: The model to be represented
-    featureID: The ID of the feature being plotted
-    trainingData: The data set used to train the model
+    INPUTS:
+    model: The decision tree model to be represented
+    trainingData: The data used to train the model
     """
-    def decisionBoundaries1D(self, model, featureID, trainingData):
+    def plotHeatmap(self, model, trainingData):
+        #creates lists used to create the heatmap
+        heatmapValues = self.getHeatmapValues(trainingData)
 
+        #List of features used to train the model
+        features = model.feature_names_in_
+
+        #Uses the data of the single feature if tree is one-dimensional
+        if len(features) == 1:
+            predictData = heatmapValues[0]
+        #Combines the data of both features if the tree is two-dimensional
+        else:
+            predictData = []
+            for y in heatmapValues[1]:
+                for x in heatmapValues[0]:
+                    predictData.append([x, y])
+        
+        #Creates a data frame with predictData as the rows and features as the columns
+        predictDF = pd.DataFrame(data = predictData, columns = features)
+        #Predicts the classifications for the data frame
+        predictions = model.predict(predictDF)
+
+        #List containing the numerical representation of each classification
+        classifications = [None] * len(predictions)
+        #List containing string names of each classification
+        classificationsText = [''] * len(predictions)
+        #Used to assign a numerical value to each class
+        classificationNum = 0
+
+        #Gets values for the classifications and clasificationsText lists
+        for i in model.classes_:
+            for j in range(0, len(predictions)):
+                if predictions[j] == str(i):
+                    classifications[j] = classificationNum
+                    classificationsText[j] = str(i)
+            classificationNum += 1
+        
+        #Regardless of tree dimension the first feature in heatmapValues will be plotted on the x axis
+        xData = heatmapValues[0]
+        
+        #Creates values for the y axis in the case of a one-dimensional tree
+        if len(features) == 1:
+            yData = [0] * len(xData)
+        #Reshapes arrays as necessary and uses the second feature's values for the y axis if the 
+        #tree has two dimensions
+        else:
+            classifications = np.reshape(classifications, (len(heatmapValues[1]), len(heatmapValues[0])))
+            classificationsText = np.reshape(classificationsText, (len(heatmapValues[1]), len(heatmapValues[0])))
+            yData = heatmapValues[1]
+        
+        #Creates the hetmap object
+        heatmap = go.Heatmap(
+            z = classifications, 
+            x = xData, 
+            y = yData, 
+            text = classificationsText, 
+            colorscale = 'sunset',
+            hoverinfo = 'text',
+            colorbar = dict(bgcolor = "#232323"),
+            showscale = False
+        )
+
+        return heatmap
+
+    """
+    AUTHOR: Daniel Ferring
+    DATE CREATED: 24/02/2023
+    PREVIOUS MAINTAINER: Daniel Ferring
+    DATE LAST MODIFIED: 25/02/2023
+
+    Plots a scatter graph of the training data used to train the model.
+
+    INPUTS:
+    trainingData: the data to be plotted
+    """
+    def plotScatterGraph(self, trainingData):
+        #Extracts feature values from the training data
+        instances = trainingData[0]
+
+        #There will alwats be at least one feature, which is used as the x axis
+        xPlot = instances.iloc[:, 0]
+
+        #Creates the y axis for a one dimensional tree
+        if len(instances.columns) == 1:
+            yPlot = [0] * len(instances)
+        #Uses the values of the second feature in the case of a two dimensional tree
+        else:
+            yPlot = instances.iloc[:, 1]
+        
+        #Creates the scatter graph object
+        scatter = go.Scatter(x = xPlot, 
+                            y = yPlot, 
+                            mode = 'markers',
+                            showlegend = False,
+                            marker = dict(size = 10,
+                                        colorscale = 'sunsetdark',
+                                        line = dict(color = 'black', 
+                                        width = 0.5))
+                            )
+        
+        return scatter
+
+    """
+    AUTHOR: Daniel Ferring
+    DATE CREATED: 24/02/2023
+    PREVIOUS MAINTAINER: Daniel Ferring
+    DATE LAST MODIFIED: 24/02/2023
+
+    Combines the heatmap and the scatter plot into a single
+    graph object to represent the decision boundaries of a
+    given model
+
+    INPUTS:
+    model: The decision tree model to be represented
+    trainingData: the data used to train the model
+    """
+    def generateDecisionBoundary(self, model, trainingData):
+        #Stores the created graph object for use in the wider system
         decisionBoundary = []
 
-        #Gets the data required to create the heatmap
-        modelData = self.getModelData(model, [featureID], trainingData)
- 
-        #Extracts relevant data from the training data
-        dataframe = pd.DataFrame(data = modelData[featureID], columns = [str(model.feature_names_in_[featureID])])
+        #Creates heatmap and scatter plot objects
+        heatmap = self.plotHeatmap(model, trainingData)
+        scatter = self.plotScatterGraph(trainingData)
 
-        #Predicts classifications using the model
-        Z = model.predict(dataframe)
+        #Creates the graph object, the heatmap is overlaid with the scatter graph
+        graph = go.Figure(data = heatmap)
+        graph.add_trace(scatter)
 
-        classifications = [None] * len(Z)
-        modelText = [''] * len(Z)
-        count = 0 
-        for x in model.classes_:
-            for i in range (0, len(Z)):
-                if(Z[i] == str(x)):
-                    classifications[i] = count
-                    modelText[i] = str(x)
-            count+=1
-
-
-        # Make a Heatmap using the array of values we previously created
-        trace = go.Heatmap(z=classifications, 
-                        x = modelData[featureID], 
-                        y = [0] * len(modelData[featureID]), 
-                        text = modelText, 
-                        colorscale='sunset',
-                        hoverinfo='text',
-                        colorbar=dict(bgcolor = "#232323"),
-                        showscale=False)
-
-        #Extracts data instances to be plotted as a scatter graph
-        instances = trainingData[0]
-
-        #Creates the scatter graph to be overlaid on the decison boundary
-        trace2 = go.Scatter(x=instances.iloc[:, 0], y = [0] * len(modelData[featureID]), 
-                            mode='markers',
-                            showlegend=False,
-                            marker=dict(size=10,
-                                        colorscale='sunsetdark',
-                                        line=dict(color='black', width=1)),
-                           )
- 
-        #Creates the graph object, adding the heatmap to it
-        graph = go.Figure(data=trace)
+        #Labels x axis and makes the graph match the aesthetic of the rest of the app
         graph.update_layout(
             paper_bgcolor='rgba(0,0,0,0)',
             plot_bgcolor='rgba(0,0,0,0)',
             font_color = "#f5f5f5",
             autosize=True, 
-            margin={'t': 50,'l':10,'b':5,'r':30}, 
-        )  
-        #Adds the scatter plot to the graph
-        graph.add_trace(trace2)
-
-        # Set the titles of the X and Y Axis
-        graph.update_layout(
-            xaxis_title=str(model.feature_names_in_[featureID]), 
+            margin={'t': 50,'l':10,'b':5,'r':30},
+            xaxis_title = str(model.feature_names_in_[0])
         )
-        
-        graph.update_yaxes(visible=False, showticklabels=False)
 
-        decisionBoundary.append(dcc.Graph(figure = graph))
-
-        return decisionBoundary
-
-
-    """
-    AUTHOR: Dominic Cripps
-    DATE CREATED: UNKNOWN
-    PREVIOUS MAINTAINER: Daniel Ferring
-    Date Last Modified: 20/02/2023
-
-    Generates a visual representation of the decision boundary
-    of a 2 dimensional decision tree. Returns a graph object
-    within an array.
-
-    Inputs:
-    model: The model to be represented
-    divisions: The IDs of the two features being plotted
-    trainingData: The data set used to train the model
-    """
-    def decisionBoundaries2D(self, model, divisions, trainingData):
-
-        decisionBoundary = []
-
-        #Gets the data required to create the heatmap
-        modelData = self.getModelData(model, divisions, trainingData)
-        
-        data = []
-
-        #Collects the data required for each feature and combines them
-        tempData = []
-        for x in modelData[0]:
-            for y in modelData[1]:
-                tempData.append(x)
-        data.append(tempData)
-
-        tempData = []
-        for y in modelData[1]:
-            for x in modelData[0]:
-                tempData.append(y)
-        data.append(tempData)
-    
-        modelDataCombination = []
-        for y in modelData[1]:
-            for x in modelData[0]:
-                modelDataCombination.append([x, y])
-
-        dataframe = pd.DataFrame(data = modelDataCombination, columns = model.feature_names_in_)
-
-        #Uses the model to predict classifications
-        Z = model.predict(dataframe)
-
-        classifications = Z
-        modelText = [''] * len(Z)
-        count = 0 
-
-        for x in model.classes_:
-            for i in range (0, len(Z)):
-                if(Z[i] == str(x)):
-                    classifications[i] = count
-                    modelText[i] = str(x)
-            count+=1
-
-        classifications = classifications.reshape(len(modelData[1]), len(modelData[0]))
-        modelText = np.reshape(modelText, (len(modelData[1]), len(modelData[0])))
-
-        #Creates a heatmap using the relevant data
-        trace = go.Heatmap(z=classifications, 
-                        x = modelData[0], 
-                        y = modelData[1], 
-                        text = modelText, 
-                        colorscale='sunset',
-                        hoverinfo='text',
-                        colorbar=dict(bgcolor = "#232323"),
-                        showscale=False)
-
-        #Extracts data instances to be plotted as a scatter graph
-        instances = trainingData[0]
-
-        #Creates the scatter graph to be overlaid on the heatmap
-        trace2 = go.Scatter(x=instances.iloc[:, 0], y=instances.iloc[:, 1], 
-                            mode='markers',
-                            showlegend=False,
-                            marker=dict(size=10,
-                                        colorscale='sunsetdark',
-                                        line=dict(color='black', width=1))
-                           )
-
-        #Creates the graph object, adding the heatmap to it
-        graph = go.Figure(data = trace)
-        graph.update_layout(
-            paper_bgcolor="#232323",
-            plot_bgcolor="#232323",
-            font_color="#f5f5f5",
-            autosize=True, 
-            margin={'t': 50,'l':10,'b':5,'r':30}, 
-        ) 
-        #Adds the scatter plot to the graph
-        graph.add_trace(trace2)
-
-        # Set the titles of the X and Y Axis
-        graph.update_layout(
-            xaxis_title=str(model.feature_names_in_[0]),
-            yaxis_title=str(model.feature_names_in_[1]))
+        #Hides y axis if one-dimensional, labels it if two-dimensional
+        if len(model.feature_names_in_) == 1:
+            graph.update_yaxes(visible=False, showticklabels=False)
+        else:
+            graph.update_layout(
+                yaxis_title = str(model.feature_names_in_[1])
+            )
         
         decisionBoundary.append(dcc.Graph(figure = graph))
 
