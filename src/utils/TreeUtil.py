@@ -35,6 +35,9 @@ class TreeUtil():
         # classification then the string will contain the number
         # of samples at that node
         self.annotations = []
+        # A dictionary that stores the calculated Gini values
+        # for each node and its key is the ID of the node in the decision tree.
+        self.gini_dict = {}
 
     '''
     AUTHOR: Ethan Temple-Betts
@@ -115,7 +118,7 @@ class TreeUtil():
 
     '''
     AUTHOR: Ethan Temple-Betts
-    PREVIOUS MAINTAINER: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts and Kieran Patel
 
     Parses the decision tree classifier. The edges of the tree
     are put into the edges array. The verticies counter is
@@ -130,7 +133,46 @@ class TreeUtil():
         tree_ = tree.tree_
         # An array of feature names used to train the model
         featureName = tree.feature_names_in_
-            
+        
+        
+        '''
+        AUTHOR: Kieran Patel
+
+        Date Created: 26/02/2023
+
+        A recursive function that calculates and stores the Gini impurity
+        values for each node in the decision tree.
+
+        INPUTS:
+        - node (int): The ID of the next node in the sequence,
+        starting from the root node (ID = 0).
+
+        RETURNS:
+        None
+        '''
+
+        def calcAndStoreGini(node):
+            # Checks if the current node is a leaf node, 
+            # in which case the Gini impurity value is stored directly
+            # from the tree object into the gini_dict.
+            if tree_.children_left[node] == _tree.TREE_LEAF:
+                self.gini_dict[node] = tree_.impurity[node]
+            else:
+                # This part recursively calls calcAndStoreGini for the left and right child nodes
+                # and calculates the total number of samples in both child nodes.
+                # The Gini impurity value for the current node is then calculated as a
+                # weighted average of the impurity values of the left and right child nodes,
+                # based on the number of samples in each child node.
+                # Finally, the Gini impurity value is stored in the gini_dict for the current node.
+                left = calcAndStoreGini(tree_.children_left[node])
+                right = calcAndStoreGini(tree_.children_right[node])
+                total_samples = tree_.n_node_samples[tree_.children_left[node]] + tree_.n_node_samples[tree_.children_right[node]]
+                self.gini_dict[node] = (tree_.n_node_samples[tree_.children_left[node]] / total_samples) * tree_.impurity[tree_.children_left[node]] + (tree_.n_node_samples[tree_.children_right[node]] / total_samples) * tree_.impurity[tree_.children_right[node]]
+
+        # Calls calcAndStoreGini starting from the root node
+        calcAndStoreGini(0)
+
+
         # Creates an array of feature names, indexed by node,
         # that represent the feature used to split the data at
         # each node in the tree
@@ -154,7 +196,7 @@ class TreeUtil():
         (initially empty [])
         '''
         def recurse(node, route):
-            # Increment thje shared ID variable to give each
+            # Increment the shared ID variable to give each
             # node a unique ID
             self.ID += 1
             # Stores the ID of the node being parsed in each
@@ -191,6 +233,7 @@ class TreeUtil():
                 if localID > self.verticies:
                     self.verticies = localID
 
+
                 # Recurse over the left and right children 
                 recurse(tree_.children_left[node], [localID])
                 recurse(tree_.children_right[node], [localID])
@@ -211,7 +254,8 @@ class TreeUtil():
                 # that exist
                 if localID > self.verticies:
                     self.verticies = localID
-                    
+                
+
                 # As this node is a classification, the
                 # annotation is instead an array, which contains
                 # the amount of samples from each class, which
@@ -237,7 +281,11 @@ class TreeUtil():
     '''
     def generateTreeGraph(self, G, nr_vertices):
         lay = G.layout('rt')
-        v_label = list(map(str, range(nr_vertices)))
+        hover_information = []
+        for i in range(nr_vertices):
+            gini_value = round(self.gini_dict[i], 2)
+            gini_str = "Gini: " + str(gini_value)
+            hover_information.append(gini_str)
         position = {k: lay[k] for k in range(nr_vertices)}
         Y = [lay[k][1] for k in range(nr_vertices)]
         M = max(Y)
@@ -254,17 +302,26 @@ class TreeUtil():
             Xe+=[position[edge[0]][0],position[edge[1]][0], None]
             Ye+=[2*M-position[edge[0]][1],2*M-position[edge[1]][1], None]
 
-        labels = v_label
+        #below may be redundant
+        #labels = hover_information
 
         '''
         AUTHOR: Ethan Temple-Betts
-        PREVIOUS MAINTAINER: Ethan Temple-Betts
+        PREVIOUS MAINTAINER: Kieran Patel
 
         Used to assign annotations to nodes on the graph.
+
+        Addition: Hover information (Gini value so far) is now displayed on each node.
 
         INPUTS
         dict pos: 
         list[int] text:
+
+        TO-DO:
+        - Make the markers bigger to fit the text
+        - Colour leaf nodes differently
+        - Perhaps add a probability distribution for bigger trees
+
         '''
         def make_annotations(pos, text, font_size=10, font_color="#f5f5f5"):
             L=len(pos)
@@ -299,7 +356,7 @@ class TreeUtil():
                                         color='#6175c1',
                                         line=dict(color='rgb(50,50,50)', width=1)
                                         ),
-                        text=labels,
+                        text=hover_information,
                         hoverinfo='text',
                         opacity=1
                         ))
@@ -310,7 +367,7 @@ class TreeUtil():
                     showticklabels=False,
                     )
 
-        fig.update_layout(annotations=make_annotations(position, v_label),
+        fig.update_layout(annotations=make_annotations(position, hover_information),
                     font_size=12,
                     showlegend=False,
                     xaxis=axis,
