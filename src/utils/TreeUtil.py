@@ -219,7 +219,7 @@ class TreeUtil():
                 # Add the decision that relates to this node
                 # "[feature name] <= [threshold]" to the
                 # annotations list
-                self.annotations.append(name + " <= " + str(round(threshold, 2)))
+                self.annotations.append(name + "<br> <= " + str(round(threshold, 2)))
 
                 # If there are 2 items in the route array, then
                 # this is a complete edge and the tuple is
@@ -311,19 +311,21 @@ class TreeUtil():
 
         Used to assign annotations to nodes on the graph.
 
-        Addition: Hover information (Gini value so far) is now displayed on each node.
+        Additions:
+        - Hover information (Gini value so far) is now displayed on each node.
+        - Markers are now bigger to fit the text.
+        - The colour of leaf nodes is now different to the colour of decision nodes.
 
         INPUTS
         dict pos: 
         list[int] text:
 
         TO-DO:
-        - Make the markers bigger to fit the text
-        - Colour leaf nodes differently
+        - Adaptable sizes for text and nodes depending on the size of the tree
         - Perhaps add a probability distribution for bigger trees
 
         '''
-        def make_annotations(pos, text, font_size=10, font_color="#f5f5f5"):
+        def make_annotations(pos, text, font_size=7, font_color="#f5f5f5"):
             L=len(pos)
             if len(text)!=L:
                 raise ValueError('The lists pos and text must have the same len')
@@ -351,14 +353,14 @@ class TreeUtil():
                         y=Yn,
                         mode='markers',
                         name='bla',
-                        marker=dict(symbol='circle-dot',
-                                        size=12,
-                                        color='#6175c1',
-                                        line=dict(color='rgb(50,50,50)', width=1)
-                                        ),
+                        marker=dict(symbol='diamond-wide',
+                            size=55, #This can change according to the tree size
+                            color=[color if node_degree == 1 else '#6175c1' for node_degree, color in zip(G.degree(), ['#06c258'] * nr_vertices)],
+                            line=dict(color='Black', width=2)
+                            ),
                         text=hover_information,
                         hoverinfo='text',
-                        opacity=1
+                        opacity=0.9
                         ))
 
         axis = dict(showline=False, # hide axis line, grid, ticklabels and  title
@@ -368,7 +370,6 @@ class TreeUtil():
                     )
 
         fig.update_layout(annotations=make_annotations(position, hover_information),
-                    font_size=12,
                     showlegend=False,
                     xaxis=axis,
                     yaxis=axis,
