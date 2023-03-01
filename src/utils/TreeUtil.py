@@ -48,8 +48,8 @@ class TreeUtil():
     Inputs: 
     DecisionTreeClassifier model : The model to be parsed.
     '''
-    def generateDecisionTree(self, model):
-        tree = []
+    def generateDecisionTree(self, classifier, model, tree):
+        tree_ = []
         """ 
         The parseTree function changes several member variables
         within the TreeUtil object.
@@ -70,7 +70,7 @@ class TreeUtil():
         getEdges()
         getAnnotations()
         """
-        self.parseTree(model)
+        self.parseTree(classifier, model, tree)
         #Create graph component
         graphComp = Graph(directed = "T")
         #Assign properties (edges, vertices, annotations) 
@@ -80,8 +80,8 @@ class TreeUtil():
         #Generate graph for the tree. 
         fig = self.generateTreeGraph(graphComp, self.getVerticies())
         #Append this object to an array to be used as a child component
-        tree.append(dcc.Graph(figure = fig))
-        return tree
+        tree_.append(dcc.Graph(figure = fig))
+        return tree_
     
     '''
     AUTHOR: Dominic Cripps
@@ -126,10 +126,9 @@ class TreeUtil():
     INPUTS
     DecisionTreeClassifier tree : The model to be parsed
     '''
-    def parseTree(self, tree):
-        tree_ = tree.tree_
+    def parseTree(self, classifier, model, tree_):
         # An array of feature names used to train the model
-        featureName = tree.feature_names_in_
+        featureName = classifier.feature_names_in_
             
         # Creates an array of feature names, indexed by node,
         # that represent the feature used to split the data at
@@ -218,7 +217,7 @@ class TreeUtil():
                 # have made it to this leaf node
                 # Addition : The classification of each node will be 
                 # returned by getClassification and shown on the label.
-                self.annotations.append(self.getClassificiation(tree, tree_, node))
+                self.annotations.append(self.getClassificiation(model, tree_, node))
 
         recurse(0, [])
 

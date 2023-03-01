@@ -1,6 +1,7 @@
 from callbacks.callbacks.SettingCallbacks import get_callbacks as get_setting_callbacks
 from callbacks.callbacks.DisplayCallbacks import get_callbacks as get_display_callbacks
 from callbacks.callbacks.PredictCallbacks import get_callbacks as get_predict_callbacks
+from callbacks.callbacks.TreeLoopCallbacks import get_callbacks as get_tree_callbacks
 
 """
 AUTHOR: Dominic Cripps
@@ -39,4 +40,5 @@ def get_system_callbacks(app):
     get_setting_callbacks(app)
     get_display_callbacks(app)
     get_predict_callbacks(app)
+    get_tree_callbacks(app)
     
