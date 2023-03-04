@@ -10,7 +10,7 @@ import plotly.graph_objects as go
 AUTHOR: Ethan Temple-Betts
 DATE CREATED: 22/02/2023
 PREVIOUS MAINTAINER: Ethan Temple-Betts
-DATE LAST MODIFIED: 23/02/2023
+DATE LAST MODIFIED: 04/03/2023
 
 This class will create a parallel coordinates plot
 using the TESTING data for the model. The colour of the lines
@@ -95,7 +95,7 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
         features.remove("True Class")
 
         # We don't want the dummy values to be plotted
-        # so they are removed
+        # yet so they are removed
         features.remove('dummy')
 
         # This feature is used to assign colour
@@ -107,7 +107,8 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
         for i in features:
             dim = dict(range=[xTest[i].min(),xTest[i].max()],
                     label=i,
-                    values=xTest[i])
+                    values=xTest[i],
+                    visible=False)
             
             dimensions.append(dim)
 
@@ -134,8 +135,31 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
         self.componentTitle = "Parallel Coordinates"
 
         # Update the componentChildren property to be a html div
-        # containing the parallel coordinates plot
-        self.componentChildren = html.Div(dcc.Graph(figure = fig))
+        # containing a seperate div for dimension control;
+        # div[('-' button), (feature dropdown), ('+' button)]
+        # and below this the parallel coordinates plot
+        self.componentChildren = html.Div(
+            [html.Div(children=[
+            html.Button(
+            "-",
+            id="pc_del_dim",
+            className="pcButton"),
+
+            dcc.Dropdown(
+            options=features,
+            value = features[0],
+            id='pc_dim_select',
+            className = "pcDimDropdown"),
+
+            html.Button(
+            "+",
+            id="pc_add_dim",
+            className="pcButton")],
+            className = "pcControlContainer"),
+            
+            dcc.Graph(
+            figure = fig,
+            id="pc_plot")])
 
 
     
