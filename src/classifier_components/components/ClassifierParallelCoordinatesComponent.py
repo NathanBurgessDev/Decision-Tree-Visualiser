@@ -123,7 +123,8 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
         # Create the plot and use the predicted class to colour
         # the lines
         fig = go.Figure(data=go.Parcoords(
-            line = dict(color = xTest[classifier]),
+            line = dict(color = xTest[classifier],
+                        colorscale = 'spectral'),
             dimensions=dimensions))
         
         # Customise the colours of the plot

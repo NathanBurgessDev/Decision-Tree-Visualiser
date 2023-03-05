@@ -37,34 +37,37 @@ class ClassifierComponentFactory():
                                         ],
             "DecisionTreeRegressor" :
                                         [
-                                            [ClassifierInfoComponent],
+                                            [ClassifierInfoComponent]
                                         ],
             "GradientBoostingClassifier" : 
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierParallelCoordinatesComponent]
                                         ],
             "GradientBoostingRegressor" :
                                         [
-                                            [ClassifierInfoComponent],
+                                            [ClassifierInfoComponent]
                                         ],    
             "RandomForestClassifier" : 
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierParallelCoordinatesComponent]
                                         ],
             "RandomForestRegressor" :
                                         [
-                                            [ClassifierInfoComponent],
+                                            [ClassifierInfoComponent]
                                         ],  
             "SVC":
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierParallelCoordinatesComponent]
                                         ], 
             "SVR":
                                         [
-                                            [ClassifierInfoComponent],
+                                            [ClassifierInfoComponent]
                                         ],
                                                            
             None : [ClassifierComponent()]
