@@ -66,6 +66,10 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
 
         # Create dimensions for the remaining features
         dimensions = self.createPlotDimensions(features, xTest)
+        dropDownOrder = self.orderByCorrelation(features, xTest)
+
+        # Order the dimensions based on correlation
+        dimensions = self.orderDimensions(dimensions, dropDownOrder)
 
         # Create the 'True Class' dimension and plot data using
         # dummy values and label the axis with the true class
@@ -100,8 +104,8 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
             className="pcButton"),
 
             dcc.Dropdown(
-            options=features,
-            value = features[0],
+            options=dropDownOrder,
+            value = dropDownOrder[0],
             id='pc_dim_select',
             className = "pcDimDropdown"),
 
@@ -167,6 +171,83 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
             dimensions.append(dim)
 
         return dimensions
+    
+
+    ''' 
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Orders the features based on the next most correlated feature
+    starting from features[0]. It doesn't calculate the optimal
+    order but instead calculates the feature most correlated to
+    its predecessor that has not already been placed in the list.
+
+    Inputs:
+    list[str] features : a list of feature names in data to be
+    ordered
+
+    dataframe data : A dataframe containing the data to be
+    checked for correlation
+
+    Returns:
+    list[str] ordered : the features input in order of correlation
+    '''
+    def orderByCorrelation(self, features, data):
+        ordered = [features[0]]
+
+        for i in features:
+            index = -1
+            # Corelation is measured between -1..1
+            # so a value of -2 ensures a feature is always chossen
+            correlation = -2 
+
+            for j in features:
+                c = -2
+
+                if(j not in ordered):
+                    c = data[i].corr(data[j])
+
+                if(c > correlation):
+                    index = features.index(j)
+
+            if(index != -1):
+             ordered.append(features[index])
+
+        return ordered
+    
+
+    ''' 
+    AUTHOR: Ethan Temple-Betts
+    PREVIOUS MAINTAINER: Ethan Temple-Betts
+
+    Orders a list of paracoord dimensions based on the order
+    that the feature names appear in the order list.
+
+    Inputs:
+    list[dict] dimensions : a list of paracoord dimensions
+
+    list[str] order : A list of feature names, used in the
+    dimensions array, that are ordered by correlation
+
+    Returns:
+    list[dict] dims : A list of paracoord dimensions in the order
+    specified
+    '''    
+    def orderDimensions(self, dimensions, order):
+        dims = []
+        c = 0
+
+        for c in range(len(dimensions)):
+            for i in dimensions:
+                if i['label'] == order[c]:
+                    dims.append(i)
+        
+        return dims
+
+
+            
+                
+
 
 
 
