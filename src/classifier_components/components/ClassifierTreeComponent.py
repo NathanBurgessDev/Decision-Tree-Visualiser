@@ -20,7 +20,7 @@ class ClassifierTreeComponent(ClassifierComponent):
 
         # The model is parsed to 'TreeUtil.generateDecisionTree', this will 
         # return a 'dcc.Graph' object containing the tree
-        self.tree = treeUtil.generateDecisionTree(modelInfo["modelData"])
+        self.tree = treeUtil.generateDecisionTree(modelInfo["modelData"], modelInfo["modelData"], modelInfo["modelData"].tree_)
 
         self.componentTitle = "Model Decision Tree"
         # Set component layout property to be a div containing the tree graph
