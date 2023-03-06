@@ -48,8 +48,8 @@ class TreeUtil():
     Inputs: 
     DecisionTreeClassifier model : The model to be parsed.
     '''
-    def generateDecisionTree(self, model):
-        tree = []
+    def generateDecisionTree(self, classifier, model, tree):
+        tree_ = []
         """ 
         The parseTree function changes several member variables
         within the TreeUtil object.
@@ -70,7 +70,7 @@ class TreeUtil():
         getEdges()
         getAnnotations()
         """
-        self.parseTree(model)
+        self.parseTree(classifier, model, tree)
         #Create graph component
         graphComp = Graph(directed = "T")
         #Assign properties (edges, vertices, annotations) 
@@ -80,8 +80,8 @@ class TreeUtil():
         #Generate graph for the tree. 
         fig = self.generateTreeGraph(graphComp, self.getVerticies())
         #Append this object to an array to be used as a child component
-        tree.append(dcc.Graph(figure = fig))
-        return tree
+        tree_.append(dcc.Graph(figure = fig))
+        return tree_
     
     '''
     AUTHOR: Dominic Cripps
@@ -126,10 +126,9 @@ class TreeUtil():
     INPUTS
     DecisionTreeClassifier tree : The model to be parsed
     '''
-    def parseTree(self, tree):
-        tree_ = tree.tree_
+    def parseTree(self, classifier, model, tree_):
         # An array of feature names used to train the model
-        featureName = tree.feature_names_in_
+        featureName = classifier.feature_names_in_
             
         # Creates an array of feature names, indexed by node,
         # that represent the feature used to split the data at
@@ -141,7 +140,7 @@ class TreeUtil():
 
         '''
         AUTHOR: Ethan Temple-Betts
-        PREVIOUS MAINTAINER: Ethan Temple-Betts
+        PREVIOUS MAINTAINER: Dominic Cripps
 
         A function to recurse over every node in the tree and
         calculate all the edges that exist between them.
@@ -218,7 +217,7 @@ class TreeUtil():
                 # have made it to this leaf node
                 # Addition : The classification of each node will be 
                 # returned by getClassification and shown on the label.
-                self.annotations.append(str(tree_.value[node]) + "\n " + self.getClassificiation(tree, tree_, node))
+                self.annotations.append(self.getClassificiation(model, tree_, node))
 
         recurse(0, [])
 
@@ -266,7 +265,7 @@ class TreeUtil():
         dict pos: 
         list[int] text:
         '''
-        def make_annotations(pos, text, font_size=10, font_color='rgb(0,0,0)'):
+        def make_annotations(pos, text, font_size=10, font_color="#f5f5f5"):
             L=len(pos)
             if len(text)!=L:
                 raise ValueError('The lists pos and text must have the same len')
@@ -295,13 +294,13 @@ class TreeUtil():
                         mode='markers',
                         name='bla',
                         marker=dict(symbol='circle-dot',
-                                        size=18,
+                                        size=12,
                                         color='#6175c1',
                                         line=dict(color='rgb(50,50,50)', width=1)
                                         ),
                         text=labels,
                         hoverinfo='text',
-                        opacity=0.8
+                        opacity=1
                         ))
 
         axis = dict(showline=False, # hide axis line, grid, ticklabels and  title
@@ -315,10 +314,14 @@ class TreeUtil():
                     showlegend=False,
                     xaxis=axis,
                     yaxis=axis,
-                    margin=dict(l=40, r=40, b=85, t=100),
                     hovermode='closest',
-                    plot_bgcolor='rgb(255,255,255)'
+                    plot_bgcolor="#232323",
+                    paper_bgcolor = "#232323",
+                    font_color = "#f5f5f5",
+                    autosize=True, 
+                    margin={'t': 10,'l':10,'b':5,'r':10},
                     )
+        
 
         return fig
 

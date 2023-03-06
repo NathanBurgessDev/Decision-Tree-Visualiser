@@ -5,43 +5,88 @@ from dash import html
 AUTHOR: Dominic Cripps
 DATE CREATED: 17/02/2023
 PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 18/02/2023
+DATE LAST MODIFIED: 19/02/2023
 
 Child of 'ClassifierComponent' this class defines 
 an appropriate 'componentLayout' based on the model
-selected. It will show information regarding the model:
-    - Model Class
-    - Filename
-    - Features used to train the model
-    - Possible classifications of data from the model
+selected.
 
 """
 class ClassifierInfoComponent(ClassifierComponent):
     
-    def __init__(self, model, classType, modelFilename):
-        # Define array containing initial model info formatted as an
-        # html child component
-        modelInfo = [
-            "Model Class : ", html.Br(), classType, html.Br(), html.Br(),
-            "Filename : ", html.Br(), modelFilename, html.Br(), html.Br(), 
-            "Features : ", html.Br()]
+    def __init__(self, modelInfo):
+        
+        generalInfoChildren = [
+                html.Div(children = "General Info", className="textSubTitle"),
+                
+                html.Br(),
 
-        # Iterate through the models feature names and add them to modelData
-        for x in model.feature_names_in_:
-            modelInfo.append(str(x))
-            modelInfo.append(", ")
-        modelInfo.pop(len(modelInfo) - 1)
+                html.Div(children=" Model Name", style={"font-weight" : "bold"}),
+                html.Div(modelInfo["modelName"]),
 
-        modelInfo += [html.Br(), html.Br(), "Classes : ", html.Br()]
+                html.Br(),
 
-        # Iterate through the models classifications and add them to modelData
-        for x in model.classes_:
-            modelInfo.append(str(x))
-            modelInfo.append(", ")
-        modelInfo.pop(len(modelInfo) - 1)
+                html.Div(children=" Model Class", style={"font-weight" : "bold"}),
+                html.Div(modelInfo["classifierType"]),
 
-        modelInfo.append(html.Br())
+                html.Br(),
+        ]
+
+        if(hasattr(modelInfo["modelData"], "feature_names_in_")):
+            features = []
+            for feature in modelInfo["modelData"].feature_names_in_:
+                features.append(str(feature))
+                features.append(html.Br())
+            generalInfoChildren += [
+                    html.Div(children=" Features", style={"font-weight" : "bold"}),
+                    html.Div(features),
+                    html.Br(),
+            ]
+
+        if(hasattr(modelInfo["modelData"], "classes_")):
+            classes = []
+            for classification in modelInfo["modelData"].classes_:
+                classes.append(str(classification))
+                classes.append(html.Br())
+            generalInfoChildren += [
+                    html.Div(children=" Classes", style={"font-weight" : "bold"}),
+                    html.Div(classes),
+                    html.Br(),
+                ]
+
+        generalInfoChildren += [
+                    html.Div(children=" Test / Train", style={"font-weight" : "bold"}),
+                    html.Div(modelInfo["testTrainSplit"]),
+                ]
+
+        parameters = []
+        for param in modelInfo["modelArguments"]:
+            parameters.append(html.Div(children=[param + ":"], style={"font-weight" : "bold"}))
+            parameters.append(html.Div(modelInfo["modelArguments"][param]))
+            parameters.append(html.Br())
+
+        # It seperates the model information into two columns, one for general info,
+        # containing things like the classification type, and the other for the 
+        # parameters used to train the model.
+        generalInfo = html.Div(children = generalInfoChildren, className="classifierInfoComponent")
+
+
+        parameterInfo = html.Div(
+            children =[
+                html.Div(children = "Parameter Info", className="textSubTitle"),
+                
+                html.Br(),
+
+                html.Div(parameters),
+            ]
+        ,className="classifierInfoComponent")
+
+
+        modelInfo = html.Div(children = [generalInfo, parameterInfo], className="classifierInfoContainer")
+
+        self.componentTitle = "Model Information"
 
         # Set component layout property to be a div containing modelData
         # Important : className of this div must be "classifierComponent" to format correctly
-        self.componentLayout = html.Div(id = "model-info-component", children = html.P(modelInfo), className = "classifierComponent") 
+        self.componentChildren = modelInfo
+                                        

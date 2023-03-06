@@ -1,11 +1,17 @@
 from callbacks.callbacks.SettingCallbacks import get_callbacks as get_setting_callbacks
 from callbacks.callbacks.DisplayCallbacks import get_callbacks as get_display_callbacks
+from callbacks.callbacks.PredictCallbacks import get_callbacks as get_predict_callbacks
+
+from callbacks.callbacks.ParallelCoordinatesCallbacks import get_callbacks as get_parallelCoordinates_callbacks
+
+from callbacks.callbacks.TreeLoopCallbacks import get_callbacks as get_tree_callbacks
+
 
 """
 AUTHOR: Dominic Cripps
 DATE CREATED: 17/02/2023
-PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 18/02/2023
+PREVIOUS MAINTAINER: Ethan Temple-Betts
+DATE LAST MODIFIED: 04/03/2023
 
 
 This is necessary as getting a reference to the app
@@ -37,3 +43,8 @@ To create a new file that contains callbacks :
 def get_system_callbacks(app):
     get_setting_callbacks(app)
     get_display_callbacks(app)
+    get_predict_callbacks(app)
+    get_parallelCoordinates_callbacks(app)
+    get_tree_callbacks(app)
+
+    

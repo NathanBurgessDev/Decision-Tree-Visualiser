@@ -14,7 +14,7 @@ files containing callbacks using the function 'get_system_callbacks' from
 class SystemCallbacks 
 """
 
-dash_app = dash.Dash(__name__)
+dash_app = dash.Dash(__name__, suppress_callback_exceptions=True)
 get_system_callbacks(dash_app)
 app = dash_app.server
 
