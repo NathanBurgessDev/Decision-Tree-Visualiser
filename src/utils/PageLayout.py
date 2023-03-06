@@ -1,4 +1,5 @@
 import dash_bootstrap_components as dbc
+import traceback
 from dash import html
 from dash import dcc
 
@@ -49,6 +50,13 @@ class PageLayout():
         # Initialises HTML that contains all components
         self.displayInit()
 
+        try:
+            self.app.layout = html.Div(children=[
+            self.sidebarDiv,
+            self.componentsDiv,
+            ])
+        except:
+            traceback.print_exc()
         
 
     """
@@ -177,11 +185,5 @@ class PageLayout():
     Boolean dbg : representing whether the webapp should run in debug mode or not
     """
     def runServer(self, dbg):
-        # Adds all segments to the app layout 
-        self.app.layout = html.Div(children=[
-            self.sidebarDiv,
-            self.componentsDiv,
-            ])
-
         # Run server
         self.app.run_server(debug=dbg)
