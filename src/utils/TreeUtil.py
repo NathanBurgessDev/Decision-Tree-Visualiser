@@ -3,6 +3,7 @@ from sklearn.tree import _tree
 from dash import dcc
 from utils.Util import GraphUtil as GraphUtil
 from igraph import Graph, EdgeSeq
+from igraph import Vertex
 import plotly.graph_objs as go
 
 
@@ -42,8 +43,8 @@ class TreeUtil():
     '''
     AUTHOR: Ethan Temple-Betts
     DATE CREATED: UNKNOWN
-    PREVIOUS MAINTAINER: Dominic Cripps
-    DATE LAST MODIFIED: 18/02/2023
+    PREVIOUS MAINTAINER: Kieran Patel and Dominic Cripps
+    DATE LAST MODIFIED: 6/04/2023
 
     A function to generate the decision tree figure
     using the utility functions from this class.
@@ -81,7 +82,12 @@ class TreeUtil():
         graphComp.add_edges(self.getEdges())
         graphComp.vs["info"] = self.getAnnotations()
         #Generate graph for the tree. 
-        fig = self.generateTreeGraph(graphComp, self.getVerticies())
+        #if tree depth is < certain number then call the generateTreeGraph function
+        if (self.calculateAverageDepth(graphComp, self.getVerticies()) <= 7):
+            fig = self.generateTreeGraph(graphComp, self.getVerticies())
+        #else call the generateTreeGraphLarge function
+        else:
+            fig = self.generateTreeGraphLarge(graphComp, self.getVerticies())
         #Append this object to an array to be used as a child component
         tree.append(dcc.Graph(figure = fig))
         return tree
@@ -308,6 +314,7 @@ class TreeUtil():
         '''
         AUTHOR: Ethan Temple-Betts
         PREVIOUS MAINTAINER: Kieran Patel
+        DATE LAST MODIFIED: 27/03/2023
 
         Used to assign annotations to nodes on the graph.
 
@@ -319,10 +326,6 @@ class TreeUtil():
         INPUTS
         dict pos: 
         list[int] text:
-
-        TO-DO:
-        - Adaptable sizes for text and nodes depending on the size of the tree
-        - Perhaps add a probability distribution for bigger trees
 
         '''
         def make_annotations(pos, text, font_size=7, font_color="#f5f5f5"):
@@ -354,7 +357,7 @@ class TreeUtil():
                         mode='markers',
                         name='bla',
                         marker=dict(symbol='diamond-wide',
-                            size=55, #This can change according to the tree size
+                            size = 90 - nr_vertices / 4, #This can change according to the tree size
                             color=[color if node_degree == 1 else '#6175c1' for node_degree, color in zip(G.degree(), ['#06c258'] * nr_vertices)],
                             line=dict(color='Black', width=2)
                             ),
@@ -383,6 +386,136 @@ class TreeUtil():
         
 
         return fig
+
+    '''
+    AUTHOR: Kieran Patel
+
+    When given an igraph Graph this function will return
+    a plotly graph, which represents a large graphs structure.
+
+    INPUTS
+    igraph.Graph G: The Graph object to be displayed
+    int nr_vertices: The number of verticies in the graph
+    '''
+    def generateTreeGraphLarge(self, G, nr_vertices):
+        
+        lay = G.layout('rt')
+        hover_information = []
+        for i in range(nr_vertices):
+            gini_value = round(self.gini_dict[i], 2)
+            gini_str = "Gini: " + str(gini_value)
+            hover_information.append(gini_str)
+        position = {k: lay[k] for k in range(nr_vertices)}
+        Y = [lay[k][1] for k in range(nr_vertices)]
+        M = max(Y)
+
+        es = EdgeSeq(G)
+        E = [e.tuple for e in G.es]
+
+        L = len(position)
+        Xn = [position[k][0] for k in range(L)]
+        Yn = [2*M-position[k][1] for k in range(L)]
+        Xe = []
+        Ye = []
+        for edge in E:
+            Xe+=[position[edge[0]][0],position[edge[1]][0], None]
+            Ye+=[2*M-position[edge[0]][1],2*M-position[edge[1]][1], None]
+
+
+        '''
+        AUTHOR: Ethan Temple-Betts
+        PREVIOUS MAINTAINER: Kieran Patel
+        DATE LAST MODIFIED: 6/04/2023
+
+        Used to assign annotations to nodes on the graph.
+
+        Additions:
+        - Hover information (Gini value so far) is now displayed on each node.
+        - Markers are now bigger to fit the text.
+        - The colour of leaf nodes is now different to the colour of decision nodes.
+        - Markers and text size are now dependent on the number of nodes in the graph.
+
+        INPUTS
+        dict pos: 
+        list[int] text:
+
+        '''
+        def make_annotations(pos, text, font_size=int(9-nr_vertices/20), font_color="#f5f5f5"):
+            L=len(pos)
+            if len(text)!=L:
+                raise ValueError('The lists pos and text must have the same len')
+            annotations = []
+            for k in range(L):
+                annotations.append(
+                    dict(
+                        # G.vs.info is assigned in the readMLM function #
+                        text=G.vs["info"][k],
+                        x=pos[k][0], y=2*M-position[k][1],
+                        xref='x1', yref='y1',
+                        font=dict(color=font_color, size=font_size),
+                        showarrow=False)
+                )
+            return annotations
+
+        fig = go.Figure()
+        fig.add_trace(go.Scatter(x=Xe,
+                        y=Ye,
+                        mode='lines',
+                        line=dict(color='rgb(210,210,210)', width=1),
+                        hoverinfo='none'
+                        ))
+        fig.add_trace(go.Scatter(x=Xn,
+                        y=Yn,
+                        mode='markers',
+                        name='bla',
+                        marker=dict(symbol='diamond-wide',
+                            size= 65 - nr_vertices / 3,
+                            color=[color if node_degree == 1 else '#6175c1' for node_degree, color in zip(G.degree(), ['#06c258'] * nr_vertices)],
+                            line=dict(color='Black', width=2)
+                            ),
+                        text=hover_information,
+                        hoverinfo='text',
+                        opacity=0.9
+                        ))
+
+        axis = dict(showline=False, # hide axis line, grid, ticklabels and  title
+                    zeroline=False,
+                    showgrid=False,
+                    showticklabels=False,
+                    )
+
+        fig.update_layout(annotations=make_annotations(position, hover_information),
+                    showlegend=False,
+                    xaxis=axis,
+                    yaxis=axis,
+                    hovermode='closest',
+                    plot_bgcolor="#232323",
+                    paper_bgcolor = "#232323",
+                    font_color = "#f5f5f5",
+                    autosize=True, 
+                    margin={'t': 10,'l':10,'b':5,'r':10},
+                    )
+        
+
+        return fig
+
+    """
+    AUTHOR: Kieran Patel
+    PREVIOUS MAINTAINER: Kieran Patel
+    DATE LAST MODIFIED: 5/04/2021
+    
+    Calculates the average depth of a tree represented as a graph.
+
+    INPUTS:
+    - G: the graph representing the tree
+    - nr_vertices: the number of vertices in the graph
+
+    """
+    def calculateAverageDepth(self, G, nr_vertices):
+        depth = 0
+        for i in range(nr_vertices):
+            depth += G.shortest_paths_dijkstra(source=i, target=0)[0][0]
+        return depth / nr_vertices
 
     '''
     AUTHOR: Ethan Temple-Betts

@@ -32,8 +32,8 @@ class ClassifierComponentFactory():
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierDecisionBoundaryComponent],
-                                            [ClassifierTreeComponent, ClassifierConfusionMatrixComponent],
-                                            [ClassifierParallelCoordinatesComponent]
+                                            [ClassifierTreeComponent],
+                                            [ClassifierConfusionMatrixComponent, ClassifierParallelCoordinatesComponent]
                                         ],
             "DecisionTreeRegressor" :
                                         [
