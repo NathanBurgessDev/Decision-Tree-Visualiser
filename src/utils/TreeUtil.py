@@ -44,7 +44,7 @@ class TreeUtil():
     AUTHOR: Ethan Temple-Betts
     DATE CREATED: UNKNOWN
     PREVIOUS MAINTAINER: Kieran Patel and Dominic Cripps
-    DATE LAST MODIFIED: 6/04/2023
+    DATE LAST MODIFIED: 6/03/2023
 
     A function to generate the decision tree figure
     using the utility functions from this class.
@@ -81,9 +81,9 @@ class TreeUtil():
         graphComp.add_vertices(self.getVerticies())
         graphComp.add_edges(self.getEdges())
         graphComp.vs["info"] = self.getAnnotations()
-        #Generate graph for the tree. 
+        #Generate graph for the tree.
         #if tree depth is < certain number then call the generateTreeGraph function
-        if (self.calculateAverageDepth(graphComp, self.getVerticies()) <= 7):
+        if (self.getVerticies() <= 20):
             fig = self.generateTreeGraph(graphComp, self.getVerticies())
         #else call the generateTreeGraphLarge function
         else:
@@ -308,9 +308,6 @@ class TreeUtil():
             Xe+=[position[edge[0]][0],position[edge[1]][0], None]
             Ye+=[2*M-position[edge[0]][1],2*M-position[edge[1]][1], None]
 
-        #below may be redundant
-        #labels = hover_information
-
         '''
         AUTHOR: Ethan Temple-Betts
         PREVIOUS MAINTAINER: Kieran Patel
@@ -328,7 +325,7 @@ class TreeUtil():
         list[int] text:
 
         '''
-        def make_annotations(pos, text, font_size=7, font_color="#f5f5f5"):
+        def make_annotations(pos, text, font_size=int(12-nr_vertices/30), font_color="#f5f5f5"):
             L=len(pos)
             if len(text)!=L:
                 raise ValueError('The lists pos and text must have the same len')
@@ -357,7 +354,7 @@ class TreeUtil():
                         mode='markers',
                         name='bla',
                         marker=dict(symbol='diamond-wide',
-                            size = 90 - nr_vertices / 4, #This can change according to the tree size
+                            size = 90 - nr_vertices / 5, #This can change according to the tree size
                             color=[color if node_degree == 1 else '#6175c1' for node_degree, color in zip(G.degree(), ['#06c258'] * nr_vertices)],
                             line=dict(color='Black', width=2)
                             ),
@@ -384,14 +381,21 @@ class TreeUtil():
                     margin={'t': 10,'l':10,'b':5,'r':10},
                     )
         
-
         return fig
 
     '''
     AUTHOR: Kieran Patel
+    DATE LAST MODIFIED: 5/03/2023
 
     When given an igraph Graph this function will return
     a plotly graph, which represents a large graphs structure.
+
+    TODO: 
+    - Try create a probability distribution using this,
+    if it's not made then this can be removed and
+    the calculation of the font and marker sizes
+    can be adjusted in the generateTreeGraph function instead to make it more efficient
+
 
     INPUTS
     igraph.Graph G: The Graph object to be displayed
@@ -425,7 +429,7 @@ class TreeUtil():
         '''
         AUTHOR: Ethan Temple-Betts
         PREVIOUS MAINTAINER: Kieran Patel
-        DATE LAST MODIFIED: 6/04/2023
+        DATE LAST MODIFIED: 6/03/2023
 
         Used to assign annotations to nodes on the graph.
 
@@ -434,6 +438,11 @@ class TreeUtil():
         - Markers are now bigger to fit the text.
         - The colour of leaf nodes is now different to the colour of decision nodes.
         - Markers and text size are now dependent on the number of nodes in the graph.
+
+        TODO:
+        - When using the built in zoom function the markers and text
+        will remain the same size, which is makes it difficult to read
+        when the markers and text are small.
 
         INPUTS
         dict pos: 
@@ -469,7 +478,7 @@ class TreeUtil():
                         mode='markers',
                         name='bla',
                         marker=dict(symbol='diamond-wide',
-                            size= 65 - nr_vertices / 3,
+                            size= 60 - nr_vertices / 4,
                             color=[color if node_degree == 1 else '#6175c1' for node_degree, color in zip(G.degree(), ['#06c258'] * nr_vertices)],
                             line=dict(color='Black', width=2)
                             ),
@@ -502,7 +511,7 @@ class TreeUtil():
     """
     AUTHOR: Kieran Patel
     PREVIOUS MAINTAINER: Kieran Patel
-    DATE LAST MODIFIED: 5/04/2021
+    DATE LAST MODIFIED: 8/03/2021
     
     Calculates the average depth of a tree represented as a graph.
 
@@ -514,7 +523,7 @@ class TreeUtil():
     def calculateAverageDepth(self, G, nr_vertices):
         depth = 0
         for i in range(nr_vertices):
-            depth += G.shortest_paths_dijkstra(source=i, target=0)[0][0]
+            depth += G.shortest_paths_dijkstra(source=i, target=nr_vertices-1)[0][0]
         return depth / nr_vertices
 
     '''
