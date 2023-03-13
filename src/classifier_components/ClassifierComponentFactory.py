@@ -6,6 +6,8 @@ from classifier_components.components.ClassifierDecisionBoundaryComponent import
 from classifier_components.components.ClassifierConfusionMatrixComponent import ClassifierConfusionMatrixComponent
 from classifier_components.components.ClassifierParallelCoordinatesComponent import ClassifierParallelCoordinatesComponent
 from classifier_components.components.ClassifierUserInputComponent import ClassifierUserInputComponent
+from classifier_components.components.ClassifierMultiTreeComponent import ClassifierMultiTreeComponent
+
 
 from dash import html
 
@@ -30,41 +32,46 @@ class ClassifierComponentFactory():
         components = {
             "DecisionTreeClassifier" : 
                                         [
-                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent],
+                                            [ClassifierClassSplitComponent, ClassifierConfusionMatrixComponent],
                                             [ClassifierDecisionBoundaryComponent],
                                             [ClassifierTreeComponent],
                                             [ClassifierConfusionMatrixComponent, ClassifierParallelCoordinatesComponent]
                                         ],
             "DecisionTreeRegressor" :
                                         [
-                                            [ClassifierInfoComponent],
+                                            [ClassifierInfoComponent]
                                         ],
             "GradientBoostingClassifier" : 
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierParallelCoordinatesComponent]
                                         ],
             "GradientBoostingRegressor" :
                                         [
-                                            [ClassifierInfoComponent],
+                                            [ClassifierInfoComponent]
                                         ],    
             "RandomForestClassifier" : 
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierParallelCoordinatesComponent],
+                                            [ClassifierMultiTreeComponent],
                                         ],
             "RandomForestRegressor" :
                                         [
-                                            [ClassifierInfoComponent],
+                                            [ClassifierInfoComponent]
                                         ],  
             "SVC":
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierParallelCoordinatesComponent]
                                         ], 
             "SVR":
                                         [
-                                            [ClassifierInfoComponent],
+                                            [ClassifierInfoComponent]
                                         ],
                                                            
             None : [ClassifierComponent()]
