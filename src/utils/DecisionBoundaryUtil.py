@@ -75,25 +75,50 @@ class DecisionBoundaryUtil():
     
     """
     AUTHOR: Daniel Ferring
+    DATE CREATED: 13/03/2023
+    PREVIOUS MAINTAINER: Daniel Ferring
+    DATE LAST MODIFIED: 13/03/2023
+
+    Creates and returns a dictionary mapping the classification string names
+    to numerical values.
+
+    Used to maintain consistent colours for each class throught the boundary
+    visualisation.
+    """
+    def createColourKey(self, model):
+        key = {}
+        id = 0
+
+        #Adds an entry to the dictionary for each class. each entry maps the class name
+        #to a unique numerical id.
+        for i in model.classes_:
+            key[str(i)] = id
+            id += 1
+
+        return key
+    
+    """
+    AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 25/02/2023
-    --Uses logic initially implemented by Dominic Cripps--
+    DATE LAST MODIFIED: 13/03/2023
+    --Uses some logic initially implemented by Dominic Cripps--
 
     Creates the heatmap object used to represent the decision boundaries of a given model
 
     INPUTS:
     model: The decision tree model to be represented
     trainingData: The data used to train the model
+    key: a dictionary mapping class strings to numerical values
     """
-    def plotHeatmap(self, model, trainingData):
+    def plotHeatmap(self, model, trainingData, key):
         #creates lists used to create the heatmap
         heatmapValues = self.getHeatmapValues(trainingData)
 
         #List of features used to train the model
         features = model.feature_names_in_
 
-        #Uses the data of the single feature if tree is one-dimensional
+        #Uses the data of a single feature if tree is one-dimensional
         if len(features) == 1:
             predictData = heatmapValues[0]
         #Combines the data of both features if the tree is two-dimensional
@@ -108,20 +133,17 @@ class DecisionBoundaryUtil():
         #Predicts the classifications for the data frame
         predictions = model.predict(predictDF)
 
-        #List containing the numerical representation of each classification
+        #List containing the numerical values for each classification
         classifications = [None] * len(predictions)
         #List containing string names of each classification
         classificationsText = [''] * len(predictions)
-        #Used to assign a numerical value to each class
-        classificationNum = 0
 
         #Gets values for the classifications and clasificationsText lists
         for i in model.classes_:
             for j in range(0, len(predictions)):
                 if predictions[j] == str(i):
-                    classifications[j] = classificationNum
+                    classifications[j] = key[str(i)]
                     classificationsText[j] = str(i)
-            classificationNum += 1
         
         #Regardless of tree dimension the first feature in heatmapValues will be plotted on the x axis
         xData = heatmapValues[0]
@@ -154,21 +176,29 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 25/02/2023
+    DATE LAST MODIFIED: 13/03/2023
 
-    Plots a scatter graph of the training data used to train the model.
+    Plots a scatter graph of the test and training data of the model,
+    used to give an understanding of the accuracy of the decision boundaries
 
     INPUTS:
-    trainingData: the data to be plotted
+    trainingData: the data used to train the model
+    testingData: the data used to test the model
+    key: a dictionary mapping class strings to numerical values
     """
-    def plotScatterGraph(self, trainingData):
-        #Extracts feature values from the training data
-        instances = trainingData[0]
+    def plotScatterGraph(self, trainingData, testingData, key):
+
+        #Combines training and test data for instances and classifications
+        instances = pd.concat([trainingData[0], testingData[0]])
+        classifications = pd.concat([trainingData[1], testingData[1]])
+
+        #Maps the classification strings to numberical values according to the key
+        classificationsNum = classifications.map(key)
 
         #There will alwats be at least one feature, which is used as the x axis
         xPlot = instances.iloc[:, 0]
 
-        #Creates the y axis for a one dimensional tree
+        #Creates the empty y axis for a one dimensional tree
         if len(instances.columns) == 1:
             yPlot = [0] * len(instances)
         #Uses the values of the second feature in the case of a two dimensional tree
@@ -179,11 +209,11 @@ class DecisionBoundaryUtil():
         scatter = go.Scatter(x = xPlot, 
                             y = yPlot, 
                             mode = 'markers',
-                            showlegend = False,
-                            marker = dict(size = 10,
-                                        colorscale = 'sunsetdark',
+                            marker = dict(size = 8,
+                                        colorscale = 'sunset',
+                                        color = classificationsNum,
                                         line = dict(color = 'black', 
-                                        width = 0.5))
+                                        width = 1))
                             )
         
         return scatter
@@ -192,7 +222,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 24/02/2023
+    DATE LAST MODIFIED: 13/03/2023
 
     Combines the heatmap and the scatter plot into a single
     graph object to represent the decision boundaries of a
@@ -200,15 +230,20 @@ class DecisionBoundaryUtil():
 
     INPUTS:
     model: The decision tree model to be represented
-    trainingData: the data used to train the model
+    modelInfo: contains all the information relating to the model 
+               to be represented (Defined in SettingCallbacks.py)
     """
-    def generateDecisionBoundary(self, model, trainingData):
+    def generateDecisionBoundary(self, modelInfo):
+        model = modelInfo["modelData"]
+
         #Stores the created graph object for use in the wider system
         decisionBoundary = []
 
+        key = self.createColourKey(model)
+
         #Creates heatmap and scatter plot objects
-        heatmap = self.plotHeatmap(model, trainingData)
-        scatter = self.plotScatterGraph(trainingData)
+        heatmap = self.plotHeatmap(model, modelInfo["trainingData"], key)
+        scatter = self.plotScatterGraph(modelInfo["trainingData"], modelInfo["testingData"], key)
 
         #Creates the graph object, the heatmap is overlaid with the scatter graph
         graph = go.Figure(data = heatmap)
