@@ -2,6 +2,9 @@ from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
 
+
+
+
 """
 AUTHOR: Daniel Ferring
 DATE CREATED: 19/02/2023
@@ -30,4 +33,5 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
 
         #Sets the values for the component to be displayed within the app
         self.componentTitle = "Decision Boundary Visualisation"
+        
         self.componentChildren = html.Div(id = "decision-boundary-component", children=self.boundary)
