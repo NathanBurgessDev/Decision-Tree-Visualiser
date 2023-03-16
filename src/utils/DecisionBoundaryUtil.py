@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 from dash import dcc
+from plotly.validators.scatter.marker import SymbolValidator
 
 """
 AUTHOR: Daniel Ferring
@@ -72,31 +73,7 @@ class DecisionBoundaryUtil():
             heatmapValues.append(featureValues)
         
         return heatmapValues
-    
-    """
-    AUTHOR: Daniel Ferring
-    DATE CREATED: 13/03/2023
-    PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 13/03/2023
-
-    Creates and returns a dictionary mapping the classification string names
-    to numerical values.
-
-    Used to maintain consistent colours for each class throught the boundary
-    visualisation.
-    """
-    def createColourKey(self, model):
-        key = {}
-        id = 0
-
-        #Adds an entry to the dictionary for each class. each entry maps the class name
-        #to a unique numerical id.
-        for i in model.classes_:
-            key[str(i)] = id
-            id += 1
-
-        return key
-    
+        
     """
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
@@ -186,14 +163,16 @@ class DecisionBoundaryUtil():
     testingData: the data used to test the model
     key: a dictionary mapping class strings to numerical values
     """
-    def plotScatterGraph(self, trainingData, testingData, key):
+    def plotScatterGraph(self, trainingData, testingData, key, shapeKey):
 
         #Combines training and test data for instances and classifications
         instances = pd.concat([trainingData[0], testingData[0]])
         classifications = pd.concat([trainingData[1], testingData[1]])
 
+
         #Maps the classification strings to numberical values according to the key
         classificationsNum = classifications.map(key)
+        classificationShapes = classifications.map(shapeKey)
 
         #There will alwats be at least one feature, which is used as the x axis
         xPlot = instances.iloc[:, 0]
@@ -212,6 +191,7 @@ class DecisionBoundaryUtil():
                             marker = dict(size = 8,
                                         colorscale = 'sunset',
                                         color = classificationsNum,
+                                        symbol = classificationShapes,
                                         line = dict(color = 'black', 
                                         width = 1))
                             )
@@ -235,15 +215,15 @@ class DecisionBoundaryUtil():
     """
     def generateDecisionBoundary(self, modelInfo):
         model = modelInfo["modelData"]
+        colourKey = modelInfo["colourKey"]
+        shapeKey = modelInfo["shapeKey"]
 
         #Stores the created graph object for use in the wider system
         decisionBoundary = []
 
-        key = self.createColourKey(model)
-
         #Creates heatmap and scatter plot objects
-        heatmap = self.plotHeatmap(model, modelInfo["trainingData"], key)
-        scatter = self.plotScatterGraph(modelInfo["trainingData"], modelInfo["testingData"], key)
+        heatmap = self.plotHeatmap(model, modelInfo["trainingData"], colourKey)
+        scatter = self.plotScatterGraph(modelInfo["trainingData"], modelInfo["testingData"], colourKey, shapeKey)
 
         #Creates the graph object, the heatmap is overlaid with the scatter graph
         graph = go.Figure(data = heatmap)

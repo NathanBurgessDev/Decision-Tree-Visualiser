@@ -7,6 +7,7 @@ from sklearn.model_selection import train_test_split
 from UserSession import UserSession
 import pandas as pd
 import numpy as np
+from plotly.validators.scatter.marker import SymbolValidator
 
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
@@ -86,8 +87,8 @@ def get_callbacks(app):
     """
     AUTHOR: Dominic Cripps
     DATE CREATED: 17/02/2023
-    PREVIOUS MAINTAINER: Dominic Cripps
-    DATE LAST MODIFIED: 19/02/2023
+    PREVIOUS MAINTAINER: Daniel Ferring
+    DATE LAST MODIFIED: 16/03/2023
 
     Callback is triggered when the user presses the train button.
 
@@ -184,6 +185,24 @@ def get_callbacks(app):
                 classType = str(type(model)).replace('>', '').replace("'", '').split('.')
                 classType = classType[len(classType) - 1]
 
+                #Dictionaries used to map class names to colours and shapes
+                colourKey = {}
+                shapeKey = {}
+
+                #determines the colour of the class
+                id = 0
+
+                #used to select shapes from the plotly library
+                symbolIndex = 0
+                symbols = SymbolValidator().values
+
+                #Creates an entry in both dictionaries for each class, assigning a unique value for both
+                for i in model.classes_:
+                    colourKey[str(i)] = id
+                    shapeKey[str(i)] = symbols[symbolIndex]
+                    id += 1
+                    symbolIndex += 12
+
                 # The information that will be stored in the 'UserSession' singleton
                 # this will be accessed when a model is selected, any information
                 # needed for a classifier component should be stored here upon training.
@@ -194,7 +213,9 @@ def get_callbacks(app):
                     "modelArguments" : arguments, 
                     "testTrainSplit" : split, 
                     "classifierType" : classType,
-                    "modelName" : str(filename)
+                    "modelName" : str(filename),
+                    "colourKey" : colourKey,
+                    "shapeKey" : shapeKey
                     }
 
                 UserSession().instance.modelInformation[str(filename)] = modelInfo
