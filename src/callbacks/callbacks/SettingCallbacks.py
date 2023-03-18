@@ -7,7 +7,6 @@ from sklearn.model_selection import train_test_split
 from UserSession import UserSession
 import pandas as pd
 import numpy as np
-from plotly.validators.scatter.marker import SymbolValidator
 
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
@@ -194,14 +193,16 @@ def get_callbacks(app):
 
                 #used to select shapes from the plotly library
                 symbolIndex = 0
-                symbols = SymbolValidator().values
+                symbols = [0, 1, 2, 3, 4, 5, 13, 15, 17, 18, 19, 22]
 
                 #Creates an entry in both dictionaries for each class, assigning a unique value for both
                 for i in model.classes_:
                     colourKey[str(i)] = id
                     shapeKey[str(i)] = symbols[symbolIndex]
                     id += 1
-                    symbolIndex += 12
+                    symbolIndex += 1
+                    if symbolIndex > 11:
+                        symbolIndex = 0
 
                 # The information that will be stored in the 'UserSession' singleton
                 # this will be accessed when a model is selected, any information

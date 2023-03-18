@@ -4,7 +4,6 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 from dash import dcc
-from plotly.validators.scatter.marker import SymbolValidator
 
 """
 AUTHOR: Daniel Ferring
@@ -165,6 +164,16 @@ class DecisionBoundaryUtil():
     """
     def plotScatterGraph(self, trainingData, testingData, key, shapeKey):
 
+        #Custom colourscale used to ensure that markers are slightly darker than the boundaries
+        markerColourscale = [[0.0, "rgb(234, 214, 84)"],
+                            [1 / 6, "rgb(249, 178, 95)"],
+                            [(1 / 6) * 2, "rgb(246, 134, 91)"],
+                            [(1 / 6) * 3, "rgb(230, 96, 104)"],
+                            [(1 / 6) * 4, "rgb(196, 69, 124)"],
+                            [(1 / 6) * 5, "rgb(144, 80, 144)"],
+                            [1.0, "rgb(63, 57, 114)"]
+                            ]
+
         #Combines training and test data for instances and classifications
         instances = pd.concat([trainingData[0], testingData[0]])
         classifications = pd.concat([trainingData[1], testingData[1]])
@@ -189,7 +198,7 @@ class DecisionBoundaryUtil():
                             y = yPlot, 
                             mode = 'markers',
                             marker = dict(size = 8,
-                                        colorscale = 'sunset',
+                                        colorscale = markerColourscale,
                                         color = classificationsNum,
                                         symbol = classificationShapes,
                                         line = dict(color = 'black', 
