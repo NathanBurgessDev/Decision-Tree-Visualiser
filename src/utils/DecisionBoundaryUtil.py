@@ -152,7 +152,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 13/03/2023
+    DATE LAST MODIFIED: 19/03/2023
 
     Plots a scatter graph of the test and training data of the model,
     used to give an understanding of the accuracy of the decision boundaries
@@ -197,6 +197,8 @@ class DecisionBoundaryUtil():
         scatter = go.Scatter(x = xPlot, 
                             y = yPlot, 
                             mode = 'markers',
+                            hoverinfo = 'text',
+                            hovertext = classifications,
                             marker = dict(size = 8,
                                         colorscale = markerColourscale,
                                         color = classificationsNum,
