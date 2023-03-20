@@ -3,6 +3,7 @@ from callbacks.callbacks.DisplayCallbacks import get_callbacks as get_display_ca
 from callbacks.callbacks.PredictCallbacks import get_callbacks as get_predict_callbacks
 
 from callbacks.callbacks.ParallelCoordinatesCallbacks import get_callbacks as get_parallelCoordinates_callbacks
+from callbacks.callbacks.FeatureSpaceCallbacks import get_callbacks as get_featureSpace_callbacks
 
 from callbacks.callbacks.TreeLoopCallbacks import get_callbacks as get_tree_callbacks
 
@@ -46,5 +47,6 @@ def get_system_callbacks(app):
     get_predict_callbacks(app)
     get_parallelCoordinates_callbacks(app)
     get_tree_callbacks(app)
+    get_featureSpace_callbacks(app)
 
     
