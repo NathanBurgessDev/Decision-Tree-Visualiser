@@ -86,8 +86,10 @@ class TreeUtil():
         if (self.getVerticies() <= 20):
             fig = self.generateTreeGraph(graphComp, self.getVerticies())
         #else call the generateTreeGraphLarge function
-        else:
+        elif (self.getVerticies() > 20):
             fig = self.generateTreeGraphLarge(graphComp, self.getVerticies())
+        else:
+            print("Error")
         #Append this object to an array to be used as a child component
         tree_.append(dcc.Graph(figure = fig))
         return tree_
@@ -437,7 +439,7 @@ class TreeUtil():
         '''
         AUTHOR: Ethan Temple-Betts
         PREVIOUS MAINTAINER: Kieran Patel
-        DATE LAST MODIFIED: 6/03/2023
+        DATE LAST MODIFIED: 21/03/2023
 
         Used to assign annotations to nodes on the graph.
 
@@ -457,7 +459,17 @@ class TreeUtil():
         list[int] text:
 
         '''
-        def make_annotations(pos, text, font_size=int(9-nr_vertices/20), font_color="#f5f5f5"):
+
+        #Calculates the size of the marker and font for the tree
+        if (9-nr_vertices/20) <= 0:
+            fontS = 5
+            markerS = 10
+        else:
+            fontS = (9-nr_vertices/20)
+            markerS = 60 - (nr_vertices / 4)
+
+
+        def make_annotations(pos, text, font_size=int(fontS), font_color="#f5f5f5"):
             L=len(pos)
             if len(text)!=L:
                 raise ValueError('The lists pos and text must have the same len')
@@ -486,7 +498,7 @@ class TreeUtil():
                         mode='markers',
                         name='bla',
                         marker=dict(symbol='diamond-wide',
-                            size= 60 - nr_vertices / 4,
+                            size= markerS,
                             color=[color if node_degree == 1 else '#6175c1' for node_degree, color in zip(G.degree(), ['#06c258'] * nr_vertices)],
                             line=dict(color='Black', width=2)
                             ),
