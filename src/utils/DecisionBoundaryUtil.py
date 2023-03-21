@@ -204,7 +204,16 @@ class DecisionBoundaryUtil():
                                         color = classificationsNum,
                                         symbol = classificationShapes,
                                         line = dict(color = 'black', 
-                                        width = 1))
+                                        width = 1),
+                                        colorbar=dict(
+                                            title='Classifications',
+                                            tickmode='array',
+                                            tickvals=list(key.values()),
+                                            ticktext=list(key.keys()),
+                                            ticks='outside',
+                                            ticklen=5,
+                                            yanchor='middle',
+                                            xanchor='right'))
                             )
         
         return scatter
