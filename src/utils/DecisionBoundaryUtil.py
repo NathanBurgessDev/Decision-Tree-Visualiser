@@ -20,7 +20,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 24/02/2023
+    DATE LAST MODIFIED: 21/03/2023
 
     Generates the values required to create a heatmap using values from
     the model's training data.
@@ -28,7 +28,7 @@ class DecisionBoundaryUtil():
     INPUTS:
     trainingData: the data used to train the model
     """
-    def getHeatmapValues(self, trainingData):
+    def getHeatmapValues(self, trainingData, testingData):
 
         #Stores minimum values for each feature
         mins = []
@@ -36,7 +36,7 @@ class DecisionBoundaryUtil():
         maxs = []
 
         #Extracts feature values from the training data
-        features = trainingData[0]
+        features = pd.concat([trainingData[0], testingData[0]])
 
         #Finds the minimum and maximum values for each feature
         for i in features:
@@ -77,7 +77,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 13/03/2023
+    DATE LAST MODIFIED: 21/03/2023
     --Uses some logic initially implemented by Dominic Cripps--
 
     Creates the heatmap object used to represent the decision boundaries of a given model
@@ -87,9 +87,7 @@ class DecisionBoundaryUtil():
     trainingData: The data used to train the model
     key: a dictionary mapping class strings to numerical values
     """
-    def plotHeatmap(self, model, trainingData, key):
-        #creates lists used to create the heatmap
-        heatmapValues = self.getHeatmapValues(trainingData)
+    def plotHeatmap(self, model, heatmapValues, key):
 
         #List of features used to train the model
         features = model.feature_names_in_
@@ -171,8 +169,7 @@ class DecisionBoundaryUtil():
                             [(1 / 6) * 3, "rgb(230, 96, 104)"],
                             [(1 / 6) * 4, "rgb(196, 69, 124)"],
                             [(1 / 6) * 5, "rgb(144, 80, 144)"],
-                            [1.0, "rgb(63, 57, 114)"]
-                            ]
+                            [1.0, "rgb(63, 57, 114)"]]
 
         #Combines training and test data for instances and classifications
         instances = pd.concat([trainingData[0], testingData[0]])
@@ -213,7 +210,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 13/03/2023
+    DATE LAST MODIFIED: 21/03/2023
 
     Combines the heatmap and the scatter plot into a single
     graph object to represent the decision boundaries of a
@@ -233,7 +230,8 @@ class DecisionBoundaryUtil():
         decisionBoundary = []
 
         #Creates heatmap and scatter plot objects
-        heatmap = self.plotHeatmap(model, modelInfo["trainingData"], colourKey)
+        heatmapValues = self.getHeatmapValues(modelInfo["trainingData"], modelInfo['testingData'])
+        heatmap = self.plotHeatmap(model, heatmapValues, colourKey)
         scatter = self.plotScatterGraph(modelInfo["trainingData"], modelInfo["testingData"], colourKey, shapeKey)
 
         #Creates the graph object, the heatmap is overlaid with the scatter graph
