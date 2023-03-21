@@ -151,27 +151,34 @@ class DecisionBoundaryUtil():
     """
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
-    PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 19/03/2023
+    PREVIOUS MAINTAINER: Kieran Patel and Daniel Ferring
+    DATE LAST MODIFIED: 21/03/2023
 
     Plots a scatter graph of the test and training data of the model,
     used to give an understanding of the accuracy of the decision boundaries
+
+    ADDITIONS:
+    - A discrete colorbar legend is added to the graph
 
     INPUTS:
     trainingData: the data used to train the model
     testingData: the data used to test the model
     key: a dictionary mapping class strings to numerical values
+
+    NOTE: In markerColourScale, the 'pairs' of values define the discrete colours used in the scale
     """
     def plotScatterGraph(self, trainingData, testingData, key, shapeKey):
 
         #Custom colourscale used to ensure that markers are slightly darker than the boundaries
-        markerColourscale = [[0.0, "rgb(234, 214, 84)"],
-                            [1 / 6, "rgb(249, 178, 95)"],
-                            [(1 / 6) * 2, "rgb(246, 134, 91)"],
-                            [(1 / 6) * 3, "rgb(230, 96, 104)"],
-                            [(1 / 6) * 4, "rgb(196, 69, 124)"],
-                            [(1 / 6) * 5, "rgb(144, 80, 144)"],
-                            [1.0, "rgb(63, 57, 114)"]
+        
+        #NOTE: The 'pairs' of values define the discrete colours used in the scale
+        markerColourscale = [
+                            [0.0, "rgb(249, 178, 95)"],         [1 / 6, "rgb(249, 178, 95)"],
+                            [(1 / 6) * 1, "rgb(249, 178, 95)"], [(1 / 6) * 2, "rgb(249, 178, 95)"],
+                            [(1 / 6) * 2, "rgb(230, 96, 104)"], [(1 / 6) * 3, "rgb(230, 96, 104)"],
+                            [(1 / 6) * 3, "rgb(230, 96, 104)"], [(1 / 6) * 4, "rgb(230, 96, 104)"],
+                            [(1 / 6) * 4, "rgb(144, 80, 144)"], [(1 / 6) * 5, "rgb(144, 80, 144)"],
+                            [(1 / 6) * 5, "rgb(144, 80, 144)"], [1.0, "rgb(144, 80, 144)"]
                             ]
 
         #Combines training and test data for instances and classifications
@@ -179,11 +186,11 @@ class DecisionBoundaryUtil():
         classifications = pd.concat([trainingData[1], testingData[1]])
 
 
-        #Maps the classification strings to numberical values according to the key
+        #Maps the classification strings to numerical values according to the key
         classificationsNum = classifications.map(key)
         classificationShapes = classifications.map(shapeKey)
 
-        #There will alwats be at least one feature, which is used as the x axis
+        #There will always be at least one feature, which is used as the x axis
         xPlot = instances.iloc[:, 0]
 
         #Creates the empty y axis for a one dimensional tree
@@ -193,6 +200,15 @@ class DecisionBoundaryUtil():
         else:
             yPlot = instances.iloc[:, 1]
         
+        #Creates the colorbar legend
+        colorbarLegend = dict(
+            title='Class',
+            tickvals=list(key.values()),
+            ticktext=list(key.keys()),
+            thickness = 25,
+            ypad = 25
+        )
+
         #Creates the scatter graph object
         scatter = go.Scatter(x = xPlot, 
                             y = yPlot, 
@@ -200,20 +216,12 @@ class DecisionBoundaryUtil():
                             hoverinfo = 'text',
                             hovertext = classifications,
                             marker = dict(size = 8,
-                                        colorscale = markerColourscale,
+                                        colorscale = markerColourscale,#This relates to the colorbar legend
                                         color = classificationsNum,
                                         symbol = classificationShapes,
                                         line = dict(color = 'black', 
                                         width = 1),
-                                        colorbar=dict(
-                                            title='Classifications',
-                                            tickmode='array',
-                                            tickvals=list(key.values()),
-                                            ticktext=list(key.keys()),
-                                            ticks='outside',
-                                            ticklen=5,
-                                            yanchor='middle',
-                                            xanchor='right'))
+                                        colorbar = colorbarLegend)
                             )
         
         return scatter
