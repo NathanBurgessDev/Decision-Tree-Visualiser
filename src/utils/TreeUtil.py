@@ -137,7 +137,16 @@ class TreeUtil():
     '''
     def parseTree(self, classifier, model, tree_):
         # An array of feature names used to train the model
-        featureName = tree.feature_names_in_
+        featureName = classifier.feature_names_in_
+            
+        # Creates an array of feature names, indexed by node,
+        # that represent the feature used to split the data at
+        # each node in the tree
+        feature_Names = [
+            featureName[i] if i != _tree.TREE_UNDEFINED else "undefined!"
+            for i in tree_.feature
+        ]
+
         
         
         '''
