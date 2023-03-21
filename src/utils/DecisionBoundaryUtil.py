@@ -72,31 +72,7 @@ class DecisionBoundaryUtil():
             heatmapValues.append(featureValues)
         
         return heatmapValues
-    
-    """
-    AUTHOR: Daniel Ferring
-    DATE CREATED: 13/03/2023
-    PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 13/03/2023
-
-    Creates and returns a dictionary mapping the classification string names
-    to numerical values.
-
-    Used to maintain consistent colours for each class throught the boundary
-    visualisation.
-    """
-    def createColourKey(self, model):
-        key = {}
-        id = 0
-
-        #Adds an entry to the dictionary for each class. each entry maps the class name
-        #to a unique numerical id.
-        for i in model.classes_:
-            key[str(i)] = id
-            id += 1
-
-        return key
-    
+        
     """
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
@@ -176,7 +152,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 13/03/2023
+    DATE LAST MODIFIED: 19/03/2023
 
     Plots a scatter graph of the test and training data of the model,
     used to give an understanding of the accuracy of the decision boundaries
@@ -186,14 +162,26 @@ class DecisionBoundaryUtil():
     testingData: the data used to test the model
     key: a dictionary mapping class strings to numerical values
     """
-    def plotScatterGraph(self, trainingData, testingData, key):
+    def plotScatterGraph(self, trainingData, testingData, key, shapeKey):
+
+        #Custom colourscale used to ensure that markers are slightly darker than the boundaries
+        markerColourscale = [[0.0, "rgb(234, 214, 84)"],
+                            [1 / 6, "rgb(249, 178, 95)"],
+                            [(1 / 6) * 2, "rgb(246, 134, 91)"],
+                            [(1 / 6) * 3, "rgb(230, 96, 104)"],
+                            [(1 / 6) * 4, "rgb(196, 69, 124)"],
+                            [(1 / 6) * 5, "rgb(144, 80, 144)"],
+                            [1.0, "rgb(63, 57, 114)"]
+                            ]
 
         #Combines training and test data for instances and classifications
         instances = pd.concat([trainingData[0], testingData[0]])
         classifications = pd.concat([trainingData[1], testingData[1]])
 
+
         #Maps the classification strings to numberical values according to the key
         classificationsNum = classifications.map(key)
+        classificationShapes = classifications.map(shapeKey)
 
         #There will alwats be at least one feature, which is used as the x axis
         xPlot = instances.iloc[:, 0]
@@ -209,9 +197,12 @@ class DecisionBoundaryUtil():
         scatter = go.Scatter(x = xPlot, 
                             y = yPlot, 
                             mode = 'markers',
+                            hoverinfo = 'text',
+                            hovertext = classifications,
                             marker = dict(size = 8,
-                                        colorscale = 'sunset',
+                                        colorscale = markerColourscale,
                                         color = classificationsNum,
+                                        symbol = classificationShapes,
                                         line = dict(color = 'black', 
                                         width = 1))
                             )
@@ -235,15 +226,15 @@ class DecisionBoundaryUtil():
     """
     def generateDecisionBoundary(self, modelInfo):
         model = modelInfo["modelData"]
+        colourKey = modelInfo["colourKey"]
+        shapeKey = modelInfo["shapeKey"]
 
         #Stores the created graph object for use in the wider system
         decisionBoundary = []
 
-        key = self.createColourKey(model)
-
         #Creates heatmap and scatter plot objects
-        heatmap = self.plotHeatmap(model, modelInfo["trainingData"], key)
-        scatter = self.plotScatterGraph(modelInfo["trainingData"], modelInfo["testingData"], key)
+        heatmap = self.plotHeatmap(model, modelInfo["trainingData"], colourKey)
+        scatter = self.plotScatterGraph(modelInfo["trainingData"], modelInfo["testingData"], colourKey, shapeKey)
 
         #Creates the graph object, the heatmap is overlaid with the scatter graph
         graph = go.Figure(data = heatmap)

@@ -13,8 +13,8 @@ def get_callbacks(app):
     """
     AUTHOR: Dominic Cripps
     DATE CREATED: 23/02/2023
-    PREVIOUS MAINTAINER: Dominic Cripps
-    DATE LAST MODIFIED: 14/03/2023
+    PREVIOUS MAINTAINER: Daniel Ferring
+    DATE LAST MODIFIED: 19/03/2023
 
     Callback is triggered when the button 'predict-button' is pressed.
 
@@ -52,10 +52,13 @@ def get_callbacks(app):
                     scatter = go.Scatter(x = xPoint, 
                                 y = yPoint, 
                                 mode = 'markers',
-                                marker = dict(size = 8,
+                                hoverinfo = 'text',
+                                hovertext = classification + ' (user input)',
+                                marker = dict(size = 10,
                                             colorscale = 'sunset',
                                             color = numFeatures + 1,
-                                            line = dict(color = 'white', 
+                                            symbol = 27,
+                                            line = dict(color = 'black', 
                                             width = 1))
                                 )
 
