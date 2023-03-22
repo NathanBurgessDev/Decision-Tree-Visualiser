@@ -278,3 +278,25 @@ body {
 }
 
 
+
+/*
+.toolTipTitle {
+    font-size: 16px;
+    font-weight: bold;
+}
+
+.toolTipDescription {
+    font-size: 12px;
+}
+
+.toolTipContainer {
+    
+    background-color: rgb(35, 35, 35); 
+    color:rgb(240,240,240);
+    
+
+    overflow-y: auto;
+    max-height: 200px;
+    width: 200px;
+}
+*/

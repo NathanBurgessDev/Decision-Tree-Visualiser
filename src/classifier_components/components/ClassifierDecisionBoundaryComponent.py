@@ -1,7 +1,7 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
-import dash_bootstrap_components as dbc
+from utils.ToolTipUtil import ToolTip
 
 """
 AUTHOR: Daniel Ferring
@@ -34,17 +34,9 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
         if(len(modelInfo["modelData"].feature_names_in_) > 2):
             self.boundary = html.P("Higher Dimensions are not supported for this visualisation")
         else:
-            self.boundary = [html.Div(id = "decision-boundary", children = BoundaryUtil.generateDecisionBoundary(modelInfo)),
-                            dbc.Tooltip(
-                                children = [
-                                    html.Div(children = [
-                                        html.H1(title, style = {'color' : 'blue'}),
-                                        html.P(description, style = {'color' : 'black'})
-                                    ],
-                                style={'background-color' : 'GhostWhite', 'width' : '600px'})],
-                                target = "decision-boundary",
-                                placement = "bottom",
-                )
+            self.boundary = [
+                html.Div(id = "decision-boundary", children = BoundaryUtil.generateDecisionBoundary(modelInfo)),
+                ToolTip().generateToolTip("decision-boundary", title, description)           
             ]
 
         #Sets the values for the component to be displayed within the app
