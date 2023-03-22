@@ -18,9 +18,21 @@ class ToolTip():
             target = componentID,
             children = [
                 html.Div(children = [
-                    html.Div(title, className = "toolTipTitle"),
-                    html.Div(componentText, className = "toolTipDescription")
-                ], className = "toolTipContainer")],
+                    html.Div(title, style = {"font-size" : "16px", "font-weight" : "bold", "margin" : "5px", "text-align" : "left"}),
+                    html.Div(componentText, style = {"font-size" : "12px", "margin" : "5px"})
+                ],
+            style = {
+            "background-color" : "rgb(35, 35, 35)",
+            "color" : "rgb(240, 240, 240)",
+            "overflow-y" : "hidden",
+            "max-height" : "200px",
+            "width" : "500px" ,
+            "border-radius" : "5px",
+            "border-style" : "solid",
+            "border-color" : "rgb(165, 117, 222)",
+            "border-width" : "2px"
+            }
+            )],
             placement = "bottom",
         )
         return tooltip
