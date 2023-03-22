@@ -215,6 +215,7 @@ def get_callbacks(app):
                     "testTrainSplit" : split, 
                     "classifierType" : classType,
                     "modelName" : str(filename),
+                    "selectedSettings" : selectedSettings,
                     "colourKey" : colourKey,
                     "shapeKey" : shapeKey
                     }

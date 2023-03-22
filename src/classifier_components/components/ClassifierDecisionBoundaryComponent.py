@@ -1,7 +1,8 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
-
+import dash_mantine_components as dmc
+import dash_bootstrap_components as dbc
 
 
 
@@ -25,9 +26,23 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
     def __init__(self, modelInfo):
         
         BoundaryUtil = DecisionBoundaryUtil()
+        features = modelInfo["modelData"].feature_names_in_
 
-        if(len(modelInfo["modelData"].feature_names_in_) > 2):
-            self.boundary = html.P("Higher Dimensions are not supported for this visualisation")
+        if(len(features) > 2):
+            self.boundary = html.Div(id = "pairwise-plot",
+                            children = [
+                                html.Div(children = [
+                                    html.H3("Select Features to display"),
+                                    dbc.Checklist(
+                                        id = "pairwise-features",
+                                        options = features,
+                                        value = []
+                                    ),
+                                    html.Button("Plot", id = "pairwise-button", n_clicks=0, className = "trainButton")],
+                                    style = {'width' : '20%'}),
+                                html.Div(id = "pairwise-boundary", style = {'width': '75%'})],
+                                style = {"display" : "flex", "flex-direction" : "row", "column-gap" : "5%", }
+                            )
         else:
             self.boundary = BoundaryUtil.generateDecisionBoundary(modelInfo)
 

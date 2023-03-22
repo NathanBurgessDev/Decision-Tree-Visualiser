@@ -1,6 +1,7 @@
 from callbacks.callbacks.SettingCallbacks import get_callbacks as get_setting_callbacks
 from callbacks.callbacks.DisplayCallbacks import get_callbacks as get_display_callbacks
 from callbacks.callbacks.PredictCallbacks import get_callbacks as get_predict_callbacks
+from callbacks.callbacks.BoundaryCallbacks import get_callbacks as get_boundary_callbacks
 
 from callbacks.callbacks.ParallelCoordinatesCallbacks import get_callbacks as get_parallelCoordinates_callbacks
 
@@ -46,5 +47,6 @@ def get_system_callbacks(app):
     get_predict_callbacks(app)
     get_parallelCoordinates_callbacks(app)
     get_tree_callbacks(app)
+    get_boundary_callbacks(app)
 
     

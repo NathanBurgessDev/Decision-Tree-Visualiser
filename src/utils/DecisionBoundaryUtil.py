@@ -39,7 +39,8 @@ class DecisionBoundaryUtil():
         features = pd.concat([trainingData[0], testingData[0]])
 
         #Finds the minimum and maximum values for each feature
-        for i in features:
+        for i in features.columns:
+            #print(features[i])
             min = features[i].min()
             max = features[i].max()
 
