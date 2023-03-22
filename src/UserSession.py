@@ -17,4 +17,6 @@ class UserSession(object):
 
     modelInformation = {}
     selectedModel = None
+    
     selectedTree = None
+    selectedBoundary = None
