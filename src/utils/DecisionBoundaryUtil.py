@@ -1,7 +1,5 @@
-from sklearn.tree import _tree
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 import numpy as np
 from dash import dcc
 
@@ -40,7 +38,6 @@ class DecisionBoundaryUtil():
 
         #Finds the minimum and maximum values for each feature
         for i in features.columns:
-            #print(features[i])
             min = features[i].min()
             max = features[i].max()
 
