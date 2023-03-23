@@ -80,6 +80,9 @@ class ImportUtil:
     '''
     def unPickle(file):
         return pickle.loads(file.read())
+    
+    def sanitiseData(dataFrame):
+        dataFrame.dropna(inplace = True)
 
 """
 AUTHOR: Ethan Temple-Betts
