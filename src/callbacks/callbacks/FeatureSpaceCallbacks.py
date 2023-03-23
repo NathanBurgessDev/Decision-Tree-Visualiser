@@ -26,17 +26,12 @@ def get_callbacks(app):
         [Output(component_id="fs_plot", component_property="figure")],
         [Input("fs_xfeature_select", component_property="value"),
          Input("fs_yfeature_select", component_property = "value"),
-         Input("fs_zfeature_select", component_property = "value")]
+         Input("fs_zfeature_select", component_property = "value"),
+         Input("trained-models", component_property="value")]
     )
-    def updateFeatureSpace(xFeature, yFeature, zFeature):
-        # Currenttly trained models
-        keys = list((UserSession.modelInformation).keys())
-        
+    def updateFeatureSpace(xFeature, yFeature, zFeature, modelKey):
         # if no model is selected selct the first model trained
-        if UserSession.selectedModel != None:
-            modelInfo = UserSession.modelInformation[UserSession.selectedModel]
-        else:
-            modelInfo = UserSession.modelInformation[keys[0]]
+        modelInfo = (UserSession.instance.modelInformation)[modelKey]
 
         xTest = modelInfo["testingData"][0]
         yTest = (modelInfo["testingData"][1]).to_frame()
@@ -56,14 +51,19 @@ def get_callbacks(app):
             color = data.columns[0]
 
         # Create 3d or 2d plot depending on provided features
-        if xFeature and yFeature and zFeature:
-            fig = px.scatter_3d(data_frame=data,
-                                x=xFeature, y=yFeature, z=zFeature,
-                                color=color)
-        elif xFeature and yFeature:
-            fig = px.scatter(data_frame=data, x=xFeature, y=yFeature, color=color)
-        else:
-            fig = px.scatter()
+        try:
+            if xFeature and yFeature and zFeature:
+                fig = px.scatter_3d(data_frame=data,
+                                    x=xFeature, y=yFeature, z=zFeature,
+                                    color=color)
+            elif xFeature and yFeature:
+                fig = px.scatter(data_frame=data, x=xFeature, y=yFeature, color=color)
+            else:
+                fig = px.scatter()
+        # Except ValueError's caused by feture names not making columns in the data frame
+        # caused when a user changes model and return an empty graph
+        except ValueError:
+                fig = px.scatter()
 
         fig.update_layout(
             paper_bgcolor="#232323",
