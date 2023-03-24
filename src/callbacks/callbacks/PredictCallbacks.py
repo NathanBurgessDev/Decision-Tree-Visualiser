@@ -1,4 +1,4 @@
-from dash.dependencies import Input, Output, State, ALL
+from dash.dependencies import Input, Output, State, ALL, MATCH
 from dash import ctx
 import dash
 from UserSession import UserSession
@@ -34,14 +34,19 @@ def get_callbacks(app):
     """
     @app.callback(
         [Output(component_id="prediction", component_property="children"),
-         Output(component_id="decision-boundary-component", component_property="children"),
-         Output(component_id="decision-tree-component", component_property="children")],
+         Output({'type': 'decision-boundary-component', 'index': ALL}, 'children'),
+         Output({'type': 'decision-tree-component', 'index': ALL}, 'children')
+         ],
         [Input("predict-button", component_property="n_clicks"),
             State(dict(name="prediction-features", idx=ALL), "value"),
             Input("trained-models", component_property="value")]
     )
     def predictInput(clicks, features, modelFilename):
         
+        #Output(component_id="decision-boundary-component", component_property="children"),
+        #Output(component_id="decision-tree-component", component_property="children")
+        #(dict(name="classifier-settings", idx=ALL), "value")
+
         if "predict-button" == ctx.triggered_id:
             #make sure that all features have inputs
             if not None in features:

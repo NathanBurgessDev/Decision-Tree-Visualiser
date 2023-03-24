@@ -24,7 +24,7 @@ class ClassifierTreeComponent(ClassifierComponent):
         self.componentTitle = "Model Decision Tree"
         # Set component layout property to be a div containing the tree graph
         # Important : className of this div must be "classifierComponent" to format correctly
-        self.componentChildren = html.Div(id = "decision-tree-component", children = self.tree)
+        self.componentChildren = html.Div(id = {"type" : "decision-tree-component", "index" : 1}, children = self.tree)
 
 
     

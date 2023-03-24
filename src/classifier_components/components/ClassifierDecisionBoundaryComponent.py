@@ -31,7 +31,11 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
         else:
             self.boundary = BoundaryUtil.generateDecisionBoundary(modelInfo)
 
+
+        #dict(name="classifier-settings-custom", idx="criterion"
+
+
         #Sets the values for the component to be displayed within the app
         self.componentTitle = "Decision Boundary Visualisation"
         
-        self.componentChildren = html.Div(id = "decision-boundary-component", children=self.boundary)
+        self.componentChildren = html.Div(id = {"type" : "decision-boundary-component", "index" : 1}, children=self.boundary)
