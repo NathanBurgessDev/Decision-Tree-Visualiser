@@ -42,19 +42,17 @@ def get_callbacks(app):
             Input("trained-models", component_property="value")]
     )
     def predictInput(clicks, features, modelFilename):
-        
-        #Output(component_id="decision-boundary-component", component_property="children"),
-        #Output(component_id="decision-tree-component", component_property="children")
-        #(dict(name="classifier-settings", idx=ALL), "value")
 
-        if "predict-button" == ctx.triggered_id:
-            #make sure that all features have inputs
-            if not None in features:
-                #get the model info from singleton
-                modelInfo = UserSession().instance.modelInformation[modelFilename]
-                #make a dataframe out of the input features
-                df = pd.DataFrame(data = np.array([features]), 
+        if "predict-button" == ctx.triggered_id and not None in features:
+            modelInfo = UserSession().instance.modelInformation[modelFilename]
+            #get the model info from singleton
+            #make a dataframe out of the input features
+            df = pd.DataFrame(data = np.array([features]), 
                     columns = UserSession().instance.selectedModel.feature_names_in_)
+            classification = UserSession().instance.selectedModel.predict(df)
+
+            #make sure that all features have inputs and there is both a boundary and tree
+            if(modelInfo["classifierType"] == "DecisionTreeClassifier"):                
 
                 #create empty arrays for the new tree and boundary plots
                 dTree = []
@@ -63,92 +61,90 @@ def get_callbacks(app):
                 #tree highlight path behaviour 
                 #only highlight tree if its a decision tree classifier
                 #THIS RE-USES SOME CODE FROM TREEUTIL WHICH IS ATTRIBUTED TO ETHAN
-                if(modelInfo["classifierType"] == "DecisionTreeClassifier"):
-                    #get the tree
-                    tree = modelInfo["modelData"].tree_
-                    #get the feature names of the tree
-                    featureNames = modelInfo["modelData"].feature_names_in_
-                    #create a tree util
-                    treeUtil = TreeUtil()
-                    #generate a tree - same as the original one
-                    treeUtil.generateDecisionTree(modelInfo["modelData"], modelInfo["modelData"], modelInfo["modelData"].tree_)
+                #get the tree
+                tree = modelInfo["modelData"].tree_
+                #get the feature names of the tree
+                featureNames = modelInfo["modelData"].feature_names_in_
+                #create a tree util
+                treeUtil = TreeUtil()
+                #generate a tree - same as the original one
+                treeUtil.generateDecisionTree(modelInfo["modelData"], modelInfo["modelData"], modelInfo["modelData"].tree_)
 
-                    #create a graph and add the correct edges and vertices etc.
-                    graphComp = Graph(directed = "T")
-                    graphComp.add_vertices(treeUtil.getVerticies())
-                    graphComp.add_edges(treeUtil.getEdges())
+                #create a graph and add the correct edges and vertices etc.
+                graphComp = Graph(directed = "T")
+                graphComp.add_vertices(treeUtil.getVerticies())
+                graphComp.add_edges(treeUtil.getEdges())
 
-                    #get an array of the edges between nodes
-                    Edges = [e.tuple for e in graphComp.es]
+                #get an array of the edges between nodes
+                Edges = [e.tuple for e in graphComp.es]
 
-                    #create empty array for the path
-                    path = []
-                    currNode = 0
-                    #iterate until the eval node has no children - it has been classified
-                    while(tree.children_left[currNode] != -1 and tree.children_right[currNode] != -1):
-                        #get the threshold value of the current node
-                        threshold = tree.threshold[currNode]
-                        #set the previous node to be this
-                        previousNode = currNode
+                #create empty array for the path
+                path = []
+                currNode = 0
+                #iterate until the eval node has no children - it has been classified
+                while(tree.children_left[currNode] != -1 and tree.children_right[currNode] != -1):
+                    #get the threshold value of the current node
+                    threshold = tree.threshold[currNode]
+                    #set the previous node to be this
+                    previousNode = currNode
 
-                        #check the correct feature value against the correct threshold
-                        if(float(df[featureNames[tree.feature[currNode]]].iloc[0]) <= float(threshold)):
-                            #go left down the tree
-                            for edge in Edges:
-                                if(edge[0] == previousNode ):
-                                    currNode = edge[1]
+                    #check the correct feature value against the correct threshold
+                    if(float(df[featureNames[tree.feature[currNode]]].iloc[0]) <= float(threshold)):
+                        #go left down the tree
+                        for edge in Edges:
+                            if(edge[0] == previousNode ):
+                                currNode = edge[1]
+                                break
+                    else:
+                        #go right down the tree
+                        count = 0
+                        for edge in Edges:
+                            if(edge[0] == previousNode):
+                                count += 1
+                                currNode = edge[1]
+                                if(count == 2):
                                     break
-                        else:
-                            #go right down the tree
-                            count = 0
-                            for edge in Edges:
-                                if(edge[0] == previousNode):
-                                    count += 1
-                                    currNode = edge[1]
-                                    if(count == 2):
-                                        break
 
-                        #add the previous and current node to the path, a tuple representing the edge it took
-                        path.append((previousNode, currNode))
+                    #add the previous and current node to the path, a tuple representing the edge it took
+                    path.append((previousNode, currNode))
 
-                    #calculate the layout of the tree to match the one used in tree generation
-                    lay = graphComp.layout('rt')
+                #calculate the layout of the tree to match the one used in tree generation
+                lay = graphComp.layout('rt')
 
-                    #make an array of positions given each edge tuple
-                    position = {k: lay[k] for k in range(modelInfo["modelData"].tree_.node_count)}
-                    #calculate an array of the Y values used in the scatter
-                    Y = [lay[k][1] for k in range(modelInfo["modelData"].tree_.node_count)]
-                    #M is the maximum height in Y 
-                    M = max(Y)
+                #make an array of positions given each edge tuple
+                position = {k: lay[k] for k in range(modelInfo["modelData"].tree_.node_count)}
+                #calculate an array of the Y values used in the scatter
+                Y = [lay[k][1] for k in range(modelInfo["modelData"].tree_.node_count)]
+                #M is the maximum height in Y 
+                M = max(Y)
 
-                    #E is set to the path taken in the prediction - this is extracted from the graph
-                    E = path
+                #E is set to the path taken in the prediction - this is extracted from the graph
+                E = path
 
-                    #iterate to create an array of X positions and Y positions for each edge
-                    Xe = []
-                    Ye = []
-                    for edge in E:
-                        Xe+=[position[edge[0]][0],position[edge[1]][0], None]
-                        Ye+=[2*M-position[edge[0]][1],2*M-position[edge[1]][1], None]
+                #iterate to create an array of X positions and Y positions for each edge
+                Xe = []
+                Ye = []
+                for edge in E:
+                    Xe+=[position[edge[0]][0],position[edge[1]][0], None]
+                    Ye+=[2*M-position[edge[0]][1],2*M-position[edge[1]][1], None]
 
-                    #draw the scatter to include the new edges - these are thicker than the original
-                    edges = go.Scatter(x=Xe,
-                        y=Ye,
-                        mode='lines',
-                        line=dict(color='rgb(210,210,210)', width=4),
-                        hoverinfo='none'
-                        )
-        
-                    #get the original tree from singleton class
-                    dTree = UserSession().instance.selectedTree
-                    #add the highlighted edge to this plot
-                    dTree.add_trace(edges)
-                    #set dTree to be the new contents of the tree
-                    dTree = [dcc.Graph(figure = dTree)]
+                #draw the scatter to include the new edges - these are thicker than the original
+                edges = go.Scatter(x=Xe,
+                    y=Ye,
+                    mode='lines',
+                    line=dict(color='rgb(210,210,210)', width=4),
+                    hoverinfo='none'
+                    )
+    
+                #get the original tree from singleton class
+                dTree = UserSession().instance.selectedTree
+                #add the highlighted edge to this plot
+                dTree.add_trace(edges)
+                #set dTree to be the new contents of the tree
+                dTree = [dcc.Graph(figure = dTree)]
                     
                 
                 #boundary plot point behaviour
-                classification = UserSession().instance.selectedModel.predict(df)
                 numFeatures = len(features)
 
                 #if a decision boundary plot exists and it is trained with fewer than 3 features
@@ -186,5 +182,6 @@ def get_callbacks(app):
 
                 #return the classification and updated components.
                 return classification, graph, dTree
-            
-        return dash.no_update, dash.no_update, dash.no_update
+            else:
+                return classification, [], []
+        return dash.no_update
