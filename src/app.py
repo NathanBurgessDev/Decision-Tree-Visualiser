@@ -1,13 +1,13 @@
 import dash
 from utils.PageLayout import PageLayout
-from callbacks.SystemCallbacks import get_system_callbacks
+from AppInstance import AppInstance
 # from DashInstance import dash_app
 
 """
 AUTHOR: Dominic Cripps
 DATE CREATED: 17/02/2023
-PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 18/02/2023
+PREVIOUS MAINTAINER: Ethan Temple-Betts
+DATE LAST MODIFIED: 23/03/2023
 
 --THE MAIN FILE TO RUN--
 
@@ -17,8 +17,13 @@ run it.
 """
 
 dash_app = dash.Dash(__name__, suppress_callback_exceptions=True)
-get_system_callbacks(dash_app)
 app = dash_app.server
+AppInstance().instance.app = dash_app
+import callbacks.callbacks.DisplayCallbacks
+import callbacks.callbacks.PredictCallbacks
+import callbacks.callbacks.SettingCallbacks
+import callbacks.callbacks.ParallelCoordinatesCallbacks
+import callbacks.callbacks.TreeLoopCallbacks
 
 pageLayout = PageLayout("Results visualisation", dash_app)
 
