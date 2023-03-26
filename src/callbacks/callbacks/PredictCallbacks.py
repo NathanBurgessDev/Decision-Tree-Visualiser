@@ -144,6 +144,8 @@ def predictInput(clicks, features, modelFilename):
             
             #boundary plot point behaviour
             numFeatures = len(features)
+            
+
 
             #if a decision boundary plot exists and it is trained with fewer than 3 features
             if(numFeatures < 3 and UserSession().instance.selectedBoundary != None):
@@ -176,10 +178,13 @@ def predictInput(clicks, features, modelFilename):
                 graph.update_layout(showlegend = False)
                 #set the new graph object
                 graph = [dcc.Graph(figure = graph)]
-            
+                #return the classification and updated components.
 
-            #return the classification and updated components.
-            return classification, graph, dTree
+                return classification, graph, dTree
+            else:
+                return classification, [UserSession().instance.selectedBoundary], dTree
+
+            
         else:
             return classification, [], []
     return dash.no_update
