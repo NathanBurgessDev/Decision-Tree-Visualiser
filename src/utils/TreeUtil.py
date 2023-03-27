@@ -5,6 +5,8 @@ from utils.Util import GraphUtil as GraphUtil
 from igraph import Graph, EdgeSeq
 from igraph import Vertex
 import plotly.graph_objs as go
+from UserSession import UserSession
+
 
 
 """
@@ -81,15 +83,9 @@ class TreeUtil():
         graphComp.add_vertices(self.getVerticies())
         graphComp.add_edges(self.getEdges())
         graphComp.vs["info"] = self.getAnnotations()
-        #Generate graph for the tree.
-        #if tree depth is < certain number then call the generateTreeGraph function
-        if (self.getVerticies() <= 20):
-            fig = self.generateTreeGraph(graphComp, self.getVerticies())
-        #else call the generateTreeGraphLarge function
-        elif (self.getVerticies() > 20):
-            fig = self.generateTreeGraphLarge(graphComp, self.getVerticies())
-        else:
-            print("Error")
+        #Generate graph for the tree. 
+        fig = self.generateTreeGraph(graphComp, self.getVerticies())
+        UserSession().instance.selectedTree = fig
         #Append this object to an array to be used as a child component
         tree_.append(dcc.Graph(figure = fig))
         return tree_

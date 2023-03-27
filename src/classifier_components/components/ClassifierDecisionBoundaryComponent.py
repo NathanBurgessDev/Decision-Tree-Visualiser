@@ -1,6 +1,7 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
+from UserSession import UserSession
 
 
 
@@ -28,10 +29,16 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
 
         if(len(modelInfo["modelData"].feature_names_in_) > 2):
             self.boundary = html.P("Higher Dimensions are not supported for this visualisation")
+            UserSession().instance.selectedBoundary = self.boundary
+
         else:
             self.boundary = BoundaryUtil.generateDecisionBoundary(modelInfo)
+
+
+        #dict(name="classifier-settings-custom", idx="criterion"
+
 
         #Sets the values for the component to be displayed within the app
         self.componentTitle = "Decision Boundary Visualisation"
         
-        self.componentChildren = html.Div(id = "decision-boundary-component", children=self.boundary)
+        self.componentChildren = html.Div(id = {"type" : "decision-boundary-component", "index" : 1}, children=self.boundary)

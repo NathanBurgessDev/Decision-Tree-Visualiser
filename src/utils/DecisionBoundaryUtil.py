@@ -4,6 +4,7 @@ import plotly.graph_objects as go
 import plotly.express as px
 import numpy as np
 from dash import dcc
+from UserSession import UserSession
 
 """
 AUTHOR: Daniel Ferring
@@ -258,6 +259,8 @@ class DecisionBoundaryUtil():
                 yaxis_title = str(model.feature_names_in_[1])
             )
         
+
+        UserSession().instance.selectedBoundary = graph
         decisionBoundary.append(dcc.Graph(figure = graph))
 
         return decisionBoundary
