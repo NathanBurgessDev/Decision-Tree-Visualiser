@@ -46,6 +46,7 @@ def readDataframe(filename, contents):
     if(contents):
         if(str(filename[0]).endswith(".csv")):
             df.insert(0, ImportUtil.csvToDataFrame(ImportUtil.readContent(filename, contents[0])))
+            ImportUtil.sanitiseData(df[0])
             return False, "", str(filename[0]), df[0].columns, df[0].columns, [], []
         else:
             return True, "Wrong File Type!", defaultUploadMessage, [], [], [], []

@@ -24,6 +24,8 @@ import callbacks.callbacks.PredictCallbacks
 import callbacks.callbacks.SettingCallbacks
 import callbacks.callbacks.ParallelCoordinatesCallbacks
 import callbacks.callbacks.TreeLoopCallbacks
+import callbacks.callbacks.FeatureSpaceCallbacks
+
 
 pageLayout = PageLayout("Results visualisation", dash_app)
 
