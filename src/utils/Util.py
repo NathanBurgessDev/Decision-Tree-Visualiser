@@ -45,7 +45,7 @@ class ImportUtil:
     Converts a string of csv data into a dataframe object
 
     INPUTS
-    str csv : The contents of a scv file as a string
+    str csv : The contents of a csv file as a string
     '''
     def csvToDataFrame(csv):
         data = StringIO(csv)
