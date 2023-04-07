@@ -15,7 +15,7 @@ import numpy as np
 AUTHOR: Alfred Greenwood
 DATE CREATED: 03/03/2023
 PREVIOUS MAINTAINER: Alfred Greenwood
-DATE LAST MODIFIED: 03/03/2023
+DATE LAST MODIFIED: 07/04/2023
 
 Child of 'ClassifierComponent', this class defines an
 appropriate 'componentLayout' to represent user input.
@@ -45,6 +45,8 @@ class ClassifierSVMDecisionBoundaryComponent(ClassifierComponent):
         
         if(len(modelInfo["modelData"].feature_names_in_) > 3):
             self.graph = html.P("Higher Dimensions are not yet implemented")
+        elif(len(modelInfo["modelData"].feaute_names_in_) <= 1):
+            self.graph = html.P("More than 1 dimension must be implemented")
         elif(len(modelInfo["modelData"].feature_names_in_) == 3):
             features = modelInfo["trainingData"][0]
 
