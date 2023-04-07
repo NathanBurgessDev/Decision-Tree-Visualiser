@@ -45,7 +45,7 @@ class ClassifierSVMDecisionBoundaryComponent(ClassifierComponent):
         
         if(len(modelInfo["modelData"].feature_names_in_) > 3):
             self.graph = html.P("Higher Dimensions are not yet implemented")
-        elif(len(modelInfo["modelData"].feaute_names_in_) <= 1):
+        elif(len(modelInfo["modelData"].feature_names_in_) <= 1):
             self.graph = html.P("More than 1 dimension must be implemented")
         elif(len(modelInfo["modelData"].feature_names_in_) == 3):
             features = modelInfo["trainingData"][0]
