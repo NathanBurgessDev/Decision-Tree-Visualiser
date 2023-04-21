@@ -1,11 +1,7 @@
 from model_settings.classifiers.DecisionTreeClassifierSettings import DecisionTreeClassifierSettings
 from model_settings.classifiers.GradientBoostingClassifierSettings import GradientBoostingClassifierSettings
-from model_settings.regressors.DecisionTreeRegressorSettings import DecisionTreeRegressorSettings
-from model_settings.regressors.GradientBoostingRegressorSettings import GradientBoostingRegressorSettings
-from model_settings.regressors.RandomForestRegressorSettings import RandomForestRegressorSettings
 from model_settings.classifiers.RandomForestClassifierSettings import RandomForestClassifierSettings
 from model_settings.classifiers.SVMClassifierSettings import SVMClassifierSettings
-from model_settings.regressors.SVMRegressorSettings import SVMRegressorSettings
 
 from model_settings.ModelSettings import ClassifierSettings
 
@@ -29,13 +25,9 @@ class ClassifierSettingsFactory():
     def Factory(classifier):
         settings = {
             "Decision Tree Classifier" : DecisionTreeClassifierSettings,
-            "Decision Tree Regressor" : DecisionTreeRegressorSettings,
             "Gradient Boosted Classifier" : GradientBoostingClassifierSettings,
-            "Gradient Boosted Regressor" : GradientBoostingRegressorSettings,
             "Random Forest Classifier" : RandomForestClassifierSettings,
-            "Random Forest Regressor" : RandomForestRegressorSettings,
             "SVM Classifier" : SVMClassifierSettings,
-            "SVM Regressor" : SVMRegressorSettings,
             None : ClassifierSettings
         }
         return settings[classifier]()
