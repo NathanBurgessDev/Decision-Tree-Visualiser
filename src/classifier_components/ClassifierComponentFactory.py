@@ -40,10 +40,6 @@ class ClassifierComponentFactory():
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ],
-            "DecisionTreeRegressor" :
-                                        [
-                                            [ClassifierInfoComponent]
-                                        ],
             "GradientBoostingClassifier" : 
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
@@ -51,10 +47,6 @@ class ClassifierComponentFactory():
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ],
-            "GradientBoostingRegressor" :
-                                        [
-                                            [ClassifierInfoComponent]
-                                        ],    
             "RandomForestClassifier" : 
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
@@ -63,10 +55,6 @@ class ClassifierComponentFactory():
                                             [ClassifierMultiTreeComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ],
-            "RandomForestRegressor" :
-                                        [
-                                            [ClassifierInfoComponent]
-                                        ],  
             "SVC":
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
@@ -74,10 +62,6 @@ class ClassifierComponentFactory():
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ], 
-            "SVR":
-                                        [
-                                            [ClassifierInfoComponent]
-                                        ],
                                                            
             None : [ClassifierComponent()]
         }
