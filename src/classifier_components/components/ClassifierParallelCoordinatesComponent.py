@@ -91,11 +91,20 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
             paper_bgcolor="#232323",
             font_color = "#f5f5f5",
             plot_bgcolor="#232323")
-        image_path = 'assets/my-image.png'
 
         self.componentTitle = html.Span(
             dmc.Tooltip(
-                label = html.Div(html.Img(src='../../assets/parallelCoordinatesDemo.gif')),
+                label = html.Div(children = [
+                    html.Img(src='../../assets/parallelCoordinatesDemo.gif'),
+                    html.P("Use the feature dropdown box to select a feature."),
+                    html.P("The buttons either side can be used to add or remove this feature from the visualisation."),
+                    html.P("Features are ordered based on their correlation to make the graph easier to interpret, "),
+                    html.P("but you can drag them to any position you require."),
+                    html.P("You can select sections of the feature space as demonstrated above."),
+                    html.P("The colour of the lines reflects the classification predicted by the model, "),
+                    html.P("and the 'true class' represents the true value of that data instance."),
+                    html.P("This visualisation uses the models testing data.")
+                    ]),
                 children=[html.P("Parallel Coordinates")],
                 id="pc-tooltip",
                 className ="plotToolTip",
