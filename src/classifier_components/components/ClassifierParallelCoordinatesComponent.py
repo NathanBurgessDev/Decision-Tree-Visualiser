@@ -31,7 +31,7 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
     def __init__(self, modelInfo):
 
         # Extract xTest data, yTest data and the model
-        xTest = modelInfo["testingData"][0]
+        xTest = (modelInfo["testingData"][0]).copy()
         yTest = modelInfo["testingData"][1]
         model = modelInfo['modelData']
 
@@ -81,7 +81,7 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
         # Create the plot and color using predicted class
         fig = go.Figure(data=go.Parcoords(
             line = dict(color = xTest[classifier],
-                        colorscale = 'spectral'),
+                        colorscale = 'sunset'),
             dimensions=dimensions))
         
         # Customise the colours of the plot

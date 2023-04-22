@@ -1,3 +1,4 @@
+import dash
 import dash_bootstrap_components as dbc
 import traceback
 from dash import html
@@ -38,13 +39,9 @@ class PageLayout():
         # A list containing all classifiers that have training support
         self.SUPPORTED_CLASSIFIERS = [
             "Decision Tree Classifier", 
-            "Decision Tree Regressor",
             "Gradient Boosted Classifier",
-            "Gradient Boosted Regressor",
             "Random Forest Classifier",
-            "Random Forest Regressor",
             "SVM Classifier",
-            "SVM Regressor",
         ]
 
         # Initialises HTML that contains all components
