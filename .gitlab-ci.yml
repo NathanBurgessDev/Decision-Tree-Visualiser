@@ -1,5 +1,6 @@
 stages:
     - build
+    - test
 
 before_script:
     - docker info
@@ -8,3 +9,12 @@ build_container:
     stage: build
     script:
     - docker build -t results-vis-image .
+
+run_tests:
+    stage: test
+    image: python:3.9-slim
+    before_script:
+        - pip install -r requirements.txt
+    script:
+        - python -m pytest
+
