@@ -30,11 +30,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
             "max_leaf_nodes",
             "min_impurity_decrease",
             "bootstrap",
-            "oob_score",
-            "n_jobs",
             "random_state",          
-            "verbose",
-            "warm_start",  
             "max_samples",
         ]
 
@@ -194,34 +190,11 @@ class RandomForestClassifierSettings(ClassifierSettings):
                               className = "paramCheckbox"),
             dcc.Dropdown(
                 id=dict(name="classifier-settings", idx="bootstrap"), 
-                options = [True, False], 
+                options = [
+                    {'label': 'True', 'value': True},
+                    {'label': 'False', 'value': False}],
                 value = True,
                 className="dropdown"
-            ),
-
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="oob_score"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "OOB Score",
-                              className = "paramCheckbox"),
-            dcc.Dropdown(
-                id=dict(name="classifier-settings", idx="oob_score"), 
-                options = [True, False], 
-                value = False,
-                className="dropdown"
-            ),
-
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="n_jobs"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Number Of Jobs",
-                              className = "paramCheckbox"),
-            daq.NumericInput(
-                id=dict(name="classifier-settings", idx="n_jobs"), 
-                value=0,
-                className="numericInput"
             ),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="random_state"), 
@@ -237,32 +210,6 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 className="numericInput"
             ),
 
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="verbose"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Verbose",
-                              className = "paramCheckbox"),
-            daq.NumericInput(
-                id=dict(name="classifier-settings", idx="verbose"), 
-                min=0,
-                value=0,
-                className="numericInput"
-            ),
-
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="warm_start"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Warm Start",
-                              className = "paramCheckbox"),
-            dcc.Dropdown(
-                id=dict(name="classifier-settings", idx="warm_start"), 
-                options = [True, False], 
-                value = False,
-                className="dropdown"
-            ),
-
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_samples"), 
                               checked=False,
                               size = "xs",
@@ -271,8 +218,9 @@ class RandomForestClassifierSettings(ClassifierSettings):
                               className = "paramCheckbox"),
             daq.NumericInput(
                 id=dict(name="classifier-settings", idx="max_samples"), 
-                min=1,
-                value=1,
+                min=0.01,
+                max=1,
+                value=0.2,
                 className="numericInput"
             ),
 

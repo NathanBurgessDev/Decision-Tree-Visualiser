@@ -7,6 +7,8 @@ from classifier_components.components.ClassifierConfusionMatrixComponent import 
 from classifier_components.components.ClassifierParallelCoordinatesComponent import ClassifierParallelCoordinatesComponent
 from classifier_components.components.ClassifierUserInputComponent import ClassifierUserInputComponent
 from classifier_components.components.ClassifierSVMDecisionBoundaryComponent import ClassifierSVMDecisionBoundaryComponent
+from classifier_components.components.ClassifierMultiTreeComponent import ClassifierMultiTreeComponent
+from classifier_components.components.ClassifierFeatureSpaceComponent import ClassifierFeatureSpaceComponent
 from dash import html
 
 
@@ -30,44 +32,43 @@ class ClassifierComponentFactory():
         components = {
             "DecisionTreeClassifier" : 
                                         [
-                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent],
+                                            [ClassifierClassSplitComponent, ClassifierConfusionMatrixComponent],
                                             [ClassifierDecisionBoundaryComponent],
-                                            [ClassifierTreeComponent, ClassifierConfusionMatrixComponent],
-                                            [ClassifierParallelCoordinatesComponent]
-                                        ],
-            "DecisionTreeRegressor" :
-                                        [
-                                            [ClassifierInfoComponent],
+                                            [ClassifierTreeComponent],
+                                            [ClassifierParallelCoordinatesComponent],
+                                            [ClassifierFeatureSpaceComponent]
                                         ],
             "GradientBoostingClassifier" : 
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierParallelCoordinatesComponent],
+                                            [ClassifierFeatureSpaceComponent]
                                         ],
-            "GradientBoostingRegressor" :
-                                        [
-                                            [ClassifierInfoComponent],
-                                        ],    
             "RandomForestClassifier" : 
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierParallelCoordinatesComponent],
+                                            [ClassifierMultiTreeComponent],
+                                            [ClassifierFeatureSpaceComponent]
                                         ],
-            "RandomForestRegressor" :
-                                        [
-                                            [ClassifierInfoComponent],
-                                        ],  
             "SVC":
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
                                             [ClassifierSVMDecisionBoundaryComponent],
+                                            [ClassifierParallelCoordinatesComponent],
+                                            [ClassifierFeatureSpaceComponent]
                                         ], 
             "SVR":
                                         [
                                             [ClassifierInfoComponent],
                                             [ClassifierSVMDecisionBoundaryComponent],
-                                        ],
+                                            [ClassifierParallelCoordinatesComponent],
+                                            [ClassifierFeatureSpaceComponent]
+                                        ], 
                                                            
             None : [ClassifierComponent()]
         }

@@ -7,15 +7,15 @@ from dash import dcc
 """
 AUTHOR: Dominic Cripps
 DATE CREATED: 17/02/2023
-PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 18/02/2023
+PREVIOUS MAINTAINER: Daniel Ferring
+DATE LAST MODIFIED: 17/03/2023
 
 Child of 'ClassifierComponent' this class defines 
 an appropriate 'componentLayout' to represent the 
 split between the classifications used to train the
 model.
 
-It does this in the form of a pie chart and can be used to
+It does this in the form of a bar chart and can be used to
 evaluate whether the training data was fair.
 
 """
@@ -24,33 +24,40 @@ class ClassifierClassSplitComponent(ClassifierComponent):
     def __init__(self, modelInfo):
 
         classifiers = modelInfo["trainingData"][1].to_frame()
-        
-        values = []
-        for value in classifiers.values:
-            values.append(value[0])
+        classInstances = classifiers.iloc[:, 0]
 
-        numVals = []
-        for classification in modelInfo["modelData"].classes_:
+        colourKey = modelInfo["colourKey"]
+
+        numInstances = []
+        classNames = []
+        classColours = []
+
+        for key, value in colourKey.items():
+            classNames.append(key)
+            classColours.append(value)
+
             count = 0
-            for val in values:
-                if classification == val:
+            for instance in classInstances:
+                if key == instance:
                     count += 1
-            numVals.append(count)
+            numInstances.append(count)
 
-        fig = px.pie(values = numVals, names = modelInfo["modelData"].classes_)
-        fig.update_layout(
-            {
-            "plot_bgcolor" : "#232323",
-            "paper_bgcolor" : "#232323",
-            "font_color" : "#f5f5f5",
-            }
+        fig = go.Bar(
+            y = numInstances, 
+            x = classNames,
+            marker = dict(
+                        color = classColours,
+                        colorscale = 'sunset'
+                        )
         )
         
         graph = go.Figure(data=fig)
         graph.update_layout(
-            autosize=True, 
-            margin={'t': 10,'l':10,'b':5,'r':10}, 
-            paper_bgcolor="#232323"
+            plot_bgcolor = '#232323',
+            paper_bgcolor = '#232323',
+            font_color = '#f5f5f5',
+            autosize = True, 
+            margin = {'t': 10,'l':10,'b':5,'r':10}
         )
         self.chart = dcc.Graph(figure = graph)
 

@@ -247,3 +247,54 @@ body {
 .checklist {
     accent-color: rgb(165, 117, 222);
 }
+
+.pcControlContainer{
+    padding: 10px;
+    width: 50%;
+    display: flex;
+    margin: auto;
+    margin-top: 2rem;
+}
+
+.pcDimDropdown {
+    width: 30%;
+    color:rgb(71, 71, 71);
+    margin: auto;
+    min-width: 15rem;
+}
+
+.pcButton {
+    text-align: center;
+    background-color: rgb(165, 117, 222);
+    color: rgb(245, 245, 245);
+    width:10%;
+    border-style: hidden;
+    border-radius: 5px;
+    font-size: 16px;
+    height: auto;
+    margin-right: 1rem;
+    margin-left: 1rem;
+    min-height: 2rem;
+}
+
+.fsFeatDropdown{
+    text-align: center;
+    width: 30%;
+    padding: 10px;
+    color:rgb(71, 71, 71);
+    margin: auto;
+    min-width: 15rem;
+}
+
+.fsControlContainer{
+    padding: 10px;
+    width:80%;
+    display: flex;
+    margin: auto;
+    margin-top: 2rem;
+}
+
+
+
+
+
