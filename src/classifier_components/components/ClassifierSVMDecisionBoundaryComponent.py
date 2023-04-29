@@ -9,6 +9,7 @@ from dash import html
 from plotly.graph_objs import *
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
 from sklearn.inspection import DecisionBoundaryDisplay as DBD
+from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
 import numpy as np
 
 """
@@ -50,6 +51,14 @@ class ClassifierSVMDecisionBoundaryComponent(ClassifierComponent):
         else:
             features = modelInfo["trainingData"][0]
 
+            key = modelInfo["colourKey"]
+
+            print(key)
+
+            uniqueClassifiers = list(key.keys())
+            planePairs = [(a, b) for index, a in enumerate(uniqueClassifiers) for b in uniqueClassifiers[index + 1:]]
+
+
             # Need a better name for this variable
             classifiers = modelInfo["trainingData"][1]
             
@@ -72,25 +81,39 @@ class ClassifierSVMDecisionBoundaryComponent(ClassifierComponent):
                     b = self.svc.support_vectors_[-1]
                     yy_up = a * xx + (b[1] - a * b[0])
                     
-                    hyperPlane.append(pd.DataFrame(({"Classifier": i, "yy": yy, "upper": yy_up, "lower": yy_down, "xx": xx})))
+                    hyperPlane.append(pd.DataFrame(({"Classifier": planePairs[i][0]+"/"+planePairs[i][1], "yy": yy, "upper": yy_up, "lower": yy_down, "xx": xx})))
                         
                 hyperPlanes = pd.concat(hyperPlane)
 
-                scatterData = px.scatter(x=modelInfo["trainingData"][0][dataKeys[0]], y=modelInfo["trainingData"][0][dataKeys[1]], color=classifiers)
-                dat = scatterData.data
+                classifiers = classifiers.map(key)
+
+                axes = modelInfo["modelData"].feature_names_in_
+
+                print(axes)
+                boundUtil = DecisionBoundaryUtil()
+                scatterData = boundUtil.plotScatterGraph(modelInfo["trainingData"], modelInfo["testingData"], modelInfo["colourKey"], modelInfo["shapeKey"])
+                scatterData.update(showlegend = False)
+                """
+                scatterData = px.scatter(x=modelInfo["trainingData"][0][dataKeys[0]],
+                                         y=modelInfo["trainingData"][0][dataKeys[1]],
+                                         color=classifiers,
+                                         )"""
 
                 line = px.line(hyperPlanes, x=hyperPlanes["xx"], y=hyperPlanes["yy"], color=hyperPlanes["Classifier"])
 
-                dat += line.data
+                dat = line.data 
                 self.fig=go.Figure(data=dat)
+                self.fig.add_trace(scatterData)
                 
-                minY = float(modelInfo["trainingData"][0][dataKeys[1]].min())
-                maxY = float(modelInfo["trainingData"][0][dataKeys[1]].max())
+                minY = min(float(modelInfo["trainingData"][0][dataKeys[1]].min()), float(modelInfo["testingData"][0][dataKeys[1]].min()))
+                maxY = max(float(modelInfo["trainingData"][0][dataKeys[1]].max()), float(modelInfo["testingData"][0][dataKeys[1]].max()))
                 delta = maxY-minY
                 minY -= delta*0.05
                 maxY += delta*0.05
 
                 self.fig.update_layout(
+                    coloraxis_showscale=False,
+
                     # Configure max values on axis to be 5% of the largest and smallest values on the y axis
                     # to prevent near-vertical Hyperplanes taking up the entire y axis
                     yaxis_range=[minY, maxY],
