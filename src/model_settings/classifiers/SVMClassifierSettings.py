@@ -9,7 +9,7 @@ import dash_mantine_components as dmc
 AUTHOR: Dominic Cripps
 DATE CREATED: 22/02/2023
 PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 22/02/2023
+DATE LAST MODIFIED: 29/04/2023
 
 Child of 'ClassifierSettings' this class defines 
 its attributes to be appropriate for the SVMClassifier
@@ -61,7 +61,7 @@ class SVMClassifierSettings(ClassifierSettings):
             ),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="kernel"), 
-                              checked=False,
+                              checked=True,
                               size = "xs",
                               color = "violet",
                               label = "Kernel",
@@ -69,7 +69,7 @@ class SVMClassifierSettings(ClassifierSettings):
             dcc.Dropdown(
                 id=dict(name="classifier-settings", idx="kernel"), 
                 options = ["linear", "poly", "rbf", "sigmoid", "precomputed"], 
-                value = "rbf",
+                value = "linear",
                 className="dropdown"
             ),
 

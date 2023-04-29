@@ -6,10 +6,9 @@ from classifier_components.components.ClassifierDecisionBoundaryComponent import
 from classifier_components.components.ClassifierConfusionMatrixComponent import ClassifierConfusionMatrixComponent
 from classifier_components.components.ClassifierParallelCoordinatesComponent import ClassifierParallelCoordinatesComponent
 from classifier_components.components.ClassifierUserInputComponent import ClassifierUserInputComponent
+from classifier_components.components.ClassifierSVMDecisionBoundaryComponent import ClassifierSVMDecisionBoundaryComponent
 from classifier_components.components.ClassifierMultiTreeComponent import ClassifierMultiTreeComponent
 from classifier_components.components.ClassifierFeatureSpaceComponent import ClassifierFeatureSpaceComponent
-
-
 from dash import html
 
 
@@ -59,6 +58,14 @@ class ClassifierComponentFactory():
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierSVMDecisionBoundaryComponent],
+                                            [ClassifierParallelCoordinatesComponent],
+                                            [ClassifierFeatureSpaceComponent]
+                                        ], 
+            "SVR":
+                                        [
+                                            [ClassifierInfoComponent],
+                                            [ClassifierSVMDecisionBoundaryComponent],
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ], 
