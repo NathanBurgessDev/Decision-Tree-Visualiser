@@ -49,7 +49,7 @@ class ImportUtil:
     '''
     def csvToDataFrame(csv):
         data = StringIO(csv)
-        df = pd.read_csv(data, sep=",")
+        df = pd.read_csv(data, sep=r'\s*,\s*')
         return df
 
     '''
@@ -79,6 +79,8 @@ class ImportUtil:
     BytesIO file : A pickled file converted to a BytesIO object
     '''
     def unPickle(file):
+        if file.getbuffer().nbytes == 0:
+            return None
         return pickle.loads(file.read())
     
     def sanitiseData(dataFrame):
