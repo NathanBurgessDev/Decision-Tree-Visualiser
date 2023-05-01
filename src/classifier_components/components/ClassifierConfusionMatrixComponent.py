@@ -2,12 +2,13 @@ from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import dcc
 import plotly.graph_objs as go
 import sklearn.metrics as metrics
+import numpy as np
 
 """
 AUTHOR: Dominic Cripps
 DATE CREATED: 20/02/2023
 PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 20/02/2023
+DATE LAST MODIFIED: 1/03/2023
 
 Child of 'ClassifierComponent' this class defines 
 an appropriate 'componentLayout' to represent a confusion
@@ -23,17 +24,20 @@ class ClassifierConfusionMatrixComponent(ClassifierComponent):
         predY = modelInfo["modelData"].predict(testingData[0])
         trueY = testingData[1]
         dataLabels = modelInfo["modelData"].classes_
-        confusion_matrix = metrics.confusion_matrix(trueY, predY)
+        confusion_matrix = metrics.confusion_matrix(predY, trueY, labels=np.flip(dataLabels, 0))
     
         layout = {
         "xaxis": {"title": "Predicted value"}, 
         "yaxis": {"title": "Real value"}
         }
         
-        fig = go.Figure(data=go.Heatmap(z=confusion_matrix,
+        fig = go.Figure(data=go.Heatmap(z=np.flip(confusion_matrix, 0),
                                     x=dataLabels,
-                                    y=dataLabels,
-                                    hoverongaps=False),
+                                    y=np.flip(dataLabels, 0),
+                                    texttemplate="%{text}",
+                                    textfont={"size": 16},
+                                    hoverongaps=False,
+                                    text=np.flip(confusion_matrix, 0)),
                     layout=layout)
         
         fig.update_layout(
