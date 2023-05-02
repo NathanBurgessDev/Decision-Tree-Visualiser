@@ -84,7 +84,14 @@ class TreeUtil():
         graphComp.add_edges(self.getEdges())
         graphComp.vs["info"] = self.getAnnotations()
         #Generate graph for the tree. 
-        fig = self.generateTreeGraph(graphComp, self.getVerticies())
+        #if tree depth is < certain number then call the generateTreeGraph function
+        if (self.getVerticies() <= 20):
+            fig = self.generateTreeGraph(graphComp, self.getVerticies())
+        #else call the generateTreeGraphLarge function
+        elif (self.getVerticies() > 20):
+            fig = self.generateTreeGraphLarge(graphComp, self.getVerticies())
+        else:
+            print("Error")
         UserSession().instance.selectedTree = fig
         #Append this object to an array to be used as a child component
         tree_.append(dcc.Graph(figure = fig))
