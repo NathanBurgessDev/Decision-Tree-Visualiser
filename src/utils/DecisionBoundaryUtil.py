@@ -2,6 +2,7 @@ import pandas as pd
 import plotly.graph_objects as go
 import numpy as np
 from dash import dcc
+from dash import html
 
 """
 AUTHOR: Daniel Ferring
@@ -194,6 +195,7 @@ class DecisionBoundaryUtil():
                             mode = 'markers',
                             hoverinfo = 'text',
                             hovertext = classifications,
+                            showlegend= False,
                             marker = dict(size = 8,
                                         colorscale = markerColourscale,
                                         color = classificationsNum,
@@ -203,12 +205,82 @@ class DecisionBoundaryUtil():
                             )
         
         return scatter
+    
+    """
+    AUTHOR: Daniel Ferring
+    DATE CREATED: 1/05/2023
+    PREVIOUS MAINTAINER: Daniel Ferring
+    DATE LAST MODIFIED: 2/05/2023
+
+    Creates a key for the data instances in the decision boundary visualisation
+
+    INPUTS:
+    modelInfo: contains all the information relating to the model 
+               to be represented (Defined in SettingCallbacks.py)
+    """
+    def createKey(self, modelInfo):
+        #Custom colourscale used for the instances
+        markerColourscale = [[0.0, "rgb(234, 214, 84)"],
+                            [1 / 6, "rgb(249, 178, 95)"],
+                            [(1 / 6) * 2, "rgb(246, 134, 91)"],
+                            [(1 / 6) * 3, "rgb(230, 96, 104)"],
+                            [(1 / 6) * 4, "rgb(196, 69, 124)"],
+                            [(1 / 6) * 5, "rgb(144, 80, 144)"],
+                            [1.0, "rgb(63, 57, 114)"]]
+        
+        colourKey = modelInfo["colourKey"]
+        shapeKey = modelInfo["shapeKey"]
+
+        classifications = []
+        colours = []
+        shapes = []
+
+        #Gets values for each instance symbol to be plotted in the key 
+        for key, value in colourKey.items():
+            classifications.append(key)
+            colours.append(value)
+            shapes.append(shapeKey[key])
+
+        xdata = [0] * len(classifications)
+
+        #Used to represent the key, only has data for the y axis, one point for each class
+        keyScatter = go.Scatter(x = xdata,
+                              y = classifications,
+                              hoverinfo = "none",
+                              mode = "markers",
+                              marker = dict(size = 15,
+                                            colorscale = markerColourscale,
+                                            color = colours,
+                                            symbol = shapes,
+                                            line = dict(color = 'black', 
+                                            width = 1))
+                            )
+        
+        keyFig = go.Figure(data = keyScatter)
+
+        #Updates the key to match the aesthetic of the rest of the program
+        keyFig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font_color = "#f5f5f5",
+            showlegend = False,
+            autosize=True, 
+            margin={'t': 50,'l':10,'b':5,'r':30},
+            title = "Instance Key"
+        )
+
+        #Removes grid lines and hides the x axis
+        keyFig.update_xaxes(showgrid=False, visible = False)
+        keyFig.update_yaxes(showgrid=False)
+        
+        return keyFig
+
 
     """
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 21/03/2023
+    DATE LAST MODIFIED: 2/05/2023
 
     Combines the heatmap and the scatter plot into a single
     graph object to represent the decision boundaries of a
@@ -227,10 +299,11 @@ class DecisionBoundaryUtil():
         #Stores the created graph object for use in the wider system
         decisionBoundary = []
 
-        #Creates heatmap and scatter plot objects
+        #Creates heatmap,scatter plot and key objects
         heatmapValues = self.getHeatmapValues(modelInfo["trainingData"], modelInfo['testingData'])
         heatmap = self.plotHeatmap(model, heatmapValues, colourKey)
         scatter = self.plotScatterGraph(modelInfo["trainingData"], modelInfo["testingData"], colourKey, shapeKey)
+        key = self.createKey(modelInfo)
 
         #Creates the graph object, the heatmap is overlaid with the scatter graph
         graph = go.Figure(data = heatmap)
@@ -253,7 +326,16 @@ class DecisionBoundaryUtil():
             graph.update_layout(
                 yaxis_title = str(model.feature_names_in_[1])
             )
-        
-        decisionBoundary.append(dcc.Graph(figure = graph))
+
+        #Creates a html div where the key and the boundary are placed side by side
+        boundary = html.Div(children=[
+            html.Div(children = [dcc.Graph(figure = graph)],
+                     style = {"width":"90%"}),
+            html.Div(children = [dcc.Graph(figure = key)],
+                     style = {"width":"10%", "padding-top":"2%"})],
+            style = {"display":"flex", "flex-direction":"row", "column-gap":"2%"}
+        )
+
+        decisionBoundary.append(boundary)
 
         return decisionBoundary
