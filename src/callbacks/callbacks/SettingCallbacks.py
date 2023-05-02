@@ -205,20 +205,21 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
                 if symbolIndex > 11:
                     symbolIndex = 0
 
-            # The information that will be stored in the 'UserSession' singleton
-            # this will be accessed when a model is selected, any information
-            # needed for a classifier component should be stored here upon training.
-            modelInfo = {
-                "modelData" : model, 
-                "trainingData" : [xTrain, yTrain],
-                "testingData" : [xTest, yTest],
-                "modelArguments" : arguments, 
-                "testTrainSplit" : split, 
-                "classifierType" : classType,
-                "modelName" : str(filename),
-                "colourKey" : colourKey,
-                "shapeKey" : shapeKey
-                }
+                # The information that will be stored in the 'UserSession' singleton
+                # this will be accessed when a model is selected, any information
+                # needed for a classifier component should be stored here upon training.
+                modelInfo = {
+                    "modelData" : model, 
+                    "trainingData" : [xTrain, yTrain],
+                    "testingData" : [xTest, yTest],
+                    "modelArguments" : arguments, 
+                    "testTrainSplit" : split, 
+                    "classifierType" : classType,
+                    "modelName" : str(filename),
+                    "selectedSettings" : selectedSettings,
+                    "colourKey" : colourKey,
+                    "shapeKey" : shapeKey
+                    }
 
             UserSession().instance.modelInformation[str(filename)] = modelInfo
 
