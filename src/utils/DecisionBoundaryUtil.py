@@ -244,7 +244,7 @@ class DecisionBoundaryUtil():
 
         ydata = [0] * len(classifications)
 
-        #Used to represent the key, only has data for the y axis, one point for each class
+        #Used to represent the key, only has data for the x axis, one point for each class
         keyScatter = go.Scatter(x = classifications,
                               y = ydata,
                               hoverinfo = "none",
@@ -272,7 +272,7 @@ class DecisionBoundaryUtil():
             height = 150
         )
 
-        #Removes grid lines and hides the x axis
+        #Removes grid lines and hides the y axis
         keyFig.update_yaxes(showgrid=False, visible = False)
         keyFig.update_xaxes(showgrid=False)
         
