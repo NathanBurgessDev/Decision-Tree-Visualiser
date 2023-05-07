@@ -30,11 +30,12 @@ graph depending on the provided features
     [Input("fs_xfeature_select", component_property="value"),
         Input("fs_yfeature_select", component_property = "value"),
         Input("fs_zfeature_select", component_property = "value"),
-        Input("trained-models", component_property="value")]
+        Input("trained-models", component_property="value"),
+        State("user-session-name", component_property="value")]
 )
-def updateFeatureSpace(xFeature, yFeature, zFeature, modelKey):
+def updateFeatureSpace(xFeature, yFeature, zFeature, modelKey, userSession):
     # if no model is selected selct the first model trained
-    modelInfo = (UserSession.instance.modelInformation[str(request.remote_addr)])[modelKey]
+    modelInfo = (UserSession.instance.modelInformation[userSession])[modelKey]
 
     xTest = modelInfo["testingData"][0]
     yTest = (modelInfo["testingData"][1]).to_frame()

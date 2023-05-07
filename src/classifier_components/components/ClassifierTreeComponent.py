@@ -14,13 +14,13 @@ visualisation.
 """
 class ClassifierTreeComponent(ClassifierComponent):
 
-    def __init__(self, modelInfo):
+    def __init__(self, modelInfo, sessionID):
         # An instance of 'TreeUtil is created'
         treeUtil = TreeUtil()
 
         # The model is parsed to 'TreeUtil.generateDecisionTree', this will 
         # return a 'dcc.Graph' object containing the tree
-        self.tree = treeUtil.generateDecisionTree(modelInfo["modelData"], modelInfo["modelData"], modelInfo["modelData"].tree_)
+        self.tree = treeUtil.generateDecisionTree(modelInfo["modelData"], modelInfo["modelData"], modelInfo["modelData"].tree_, sessionID)
         self.componentTitle = "Model Decision Tree"
         # Set component layout property to be a div containing the tree graph
         # Important : className of this div must be "classifierComponent" to format correctly

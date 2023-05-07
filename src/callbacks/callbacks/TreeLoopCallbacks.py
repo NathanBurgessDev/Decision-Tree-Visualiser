@@ -1,4 +1,4 @@
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from dash import ctx
 import dash
 from utils.TreeUtil import TreeUtil
@@ -26,15 +26,16 @@ app = AppInstance().instance.app
         Output(component_id="subtree-graph", component_property="children")],
     [Input("back-button-tree", component_property="n_clicks"),
         Input("forward-button-tree", component_property="n_clicks"),
+        State("user-session-name", component_property="value")
         ]
 )
-def circularTree(backClick, forwardClick):
-    classifier = UserSession().instance.selectedModel[str(request.remote_addr)]
+def circularTree(backClick, forwardClick, sessionID):
+    classifier = UserSession().instance.selectedModel[sessionID]
     length = len(classifier.estimators_)
     index  = (forwardClick - backClick) % length
     model = classifier.estimators_[index]
     tree = model.tree_
     treeUtil = TreeUtil()
-    tree = treeUtil.generateDecisionTree(classifier, model, tree)
+    tree = treeUtil.generateDecisionTree(classifier, model, tree, sessionID)
     return "Subtree : " + str(index + 1) + "/" + str(length), tree
 

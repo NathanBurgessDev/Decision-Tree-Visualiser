@@ -55,7 +55,7 @@ class TreeUtil():
     Inputs: 
     DecisionTreeClassifier model : The model to be parsed.
     '''
-    def generateDecisionTree(self, classifier, model, tree):
+    def generateDecisionTree(self, classifier, model, tree, sessionID):
         tree_ = []
         """ 
         The parseTree function changes several member variables
@@ -93,7 +93,7 @@ class TreeUtil():
             fig = self.generateTreeGraphLarge(graphComp, self.getVerticies())
         else:
             print("Error")
-        UserSession().instance.selectedTree[str(request.remote_addr)] = fig
+        UserSession().instance.selectedTree[sessionID] = fig
         #Append this object to an array to be used as a child component
         tree_.append(dcc.Graph(figure = fig))
         return tree_

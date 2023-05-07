@@ -109,7 +109,8 @@ a model with all classifier specific settings as arguments.
     [Output(component_id="training-alert", component_property="displayed"), 
     Output(component_id = "training-alert", component_property = "message"),
     Output(component_id = "trained-models", component_property="options"),
-    Output(component_id = "trained-models", component_property="value")],
+    Output(component_id = "trained-models", component_property="value"),
+    Output(component_id = "session-id-display", component_property="children")],
     [
     Input("train-button", "n_clicks"), 
     State(dict(name="classifier-settings", idx=ALL), "value"),
@@ -118,22 +119,45 @@ a model with all classifier specific settings as arguments.
     State("classifier", "value"),
     State("test-train-split", "value"),
     State("training-filename", "value"),
-    State("training-class", "value")
+    State("training-class", "value"),
+    State("user-session-name", component_property="value"),
+    Input("user-session-button", "n_clicks")
     ] 
 )
-def train(clicks, classifierSettings, customParameters, features, classifier, split, filename, modelClass):
+def train(clicks, classifierSettings, customParameters, features, classifier, split, filename, modelClass, sessionID, sessionClicks):
     errorMessage = ""
     error = False
+    modelFilenames = []
 
-    #check whether the user ip is in the singleton and if not create a dictionary for their models
-    if(not (request.remote_addr in UserSession().instance.modelInformation)):
-        UserSession().instance.modelInformation[str(request.remote_addr)] = {}
+    if(sessionID in UserSession().instance.modelInformation):
+            modelFilenames = [modelName for modelName in UserSession().instance.modelInformation[sessionID]] 
 
-    modelFilenames = [modelName for modelName in UserSession().instance.modelInformation[str(request.remote_addr)]]
+
+    if "user-session-button" == ctx.triggered_id:
+        if (sessionID == None or sessionID == ""):
+            errorMessage += " \n Error : Please Enter A Session ID"
+            error = True 
+            return error, errorMessage, dash.no_update, dash.no_update, dash.no_update
+        
+        
+        if(sessionID in UserSession().instance.modelInformation):
+            modelFilenames = [modelName for modelName in UserSession().instance.modelInformation[sessionID]] 
+
+        return False, "", modelFilenames, dash.no_update, "Current Session : " + sessionID
+
     if "train-button" == ctx.triggered_id:
+        if (sessionID == None or sessionID == ""):
+            errorMessage += " \n Error : Please Enter A Session ID"
+            error = True 
+            return error, errorMessage, dash.no_update, dash.no_update, dash.no_update
+
+        if(sessionID in UserSession().instance.modelInformation):
+            modelFilenames = [modelName for modelName in UserSession().instance.modelInformation[sessionID]] 
+        else:
+            UserSession().instance.modelInformation[sessionID] = {}
 
         if(len(df) == 0):
-            return False, "", modelFilenames, dash.no_update
+            return False, "", modelFilenames, dash.no_update, "Current Session : " + sessionID
 
         if(modelClass == None):
             errorMessage += " \n Error : You Must Select A Model Class"
@@ -142,7 +166,7 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
         if(len(classifier) == 0 or len(features) == 0):
             errorMessage += " \n Error : You Must Select At Least One Classifier And Feature"
             error = True 
-            return error, errorMessage, modelFilenames, dash.no_update
+            return error, errorMessage, modelFilenames, dash.no_update, "Current Session : " + sessionID
 
         if(len(classifier) > 1):
             errorMessage += " \n Error : You Cannot Select More Than One Classifier"
@@ -156,7 +180,7 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
         if(filename == None):
             errorMessage += " \n Error : You Need To Provide A Filename"
             error = True
-            return error, errorMessage, modelFilenames, dash.no_update
+            return error, errorMessage, modelFilenames, dash.no_update, "Current Session : " + sessionID
         
 
 
@@ -183,7 +207,7 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
                     else:
                         errorMessage += " \n Error : A Selected Parameter Has No Value"
                         error = True
-                        return error, errorMessage, modelFilenames, dash.no_update
+                        return error, errorMessage, modelFilenames, dash.no_update, "Current Session : " + sessionID
 
 
             model = selectedSettings.classifier(**arguments).fit(xTrain, yTrain)
@@ -227,10 +251,10 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
                     "shapeKey" : shapeKey
                     }
 
-            UserSession().instance.modelInformation[str(request.remote_addr)][str(filename)] = modelInfo
+            UserSession().instance.modelInformation[sessionID][str(filename)] = modelInfo
 
-            modelFilenames = [modelName for modelName in UserSession().instance.modelInformation[str(request.remote_addr)]]
+            modelFilenames = [modelName for modelName in UserSession().instance.modelInformation[sessionID]]
 
-            return error, errorMessage, modelFilenames, filename
+            return error, errorMessage, modelFilenames, filename, "Current Session : " + sessionID
         
-    return error, errorMessage, modelFilenames, dash.no_update
+    return error, errorMessage, modelFilenames, dash.no_update, dash.no_update

@@ -32,9 +32,10 @@ displayed, informing the user why their input is invalid
         Output(component_id = "feature-error", component_property = "message")],
     [Input("pairwise-button", "n_clicks"),
         State("trained-models", "value"),
-        State("pairwise-features", "value")]
+        State("pairwise-features", "value"),
+        State("user-session-name", component_property="value")]
 )
-def pairwisePlot(clicks, modelName, features):
+def pairwisePlot(clicks, modelName, features, sessionID):
     error = False
     errorMessage = ""
 
@@ -51,7 +52,7 @@ def pairwisePlot(clicks, modelName, features):
             return dash.no_update, error, errorMessage
 
         #Creates a copy of modelInfo so that it can be modified without impacting the orginal
-        modelInfo = copy.deepcopy(UserSession().instance.modelInformation[str(request.remote_addr)][modelName])
+        modelInfo = copy.deepcopy(UserSession().instance.modelInformation[sessionID][modelName])
         trainingData = modelInfo['trainingData'][0]
         testingData = modelInfo['testingData'][0]
         
@@ -72,7 +73,7 @@ def pairwisePlot(clicks, modelName, features):
         modelInfo['modelData'] = model
 
         #Plots a decision boundary using the modified modelInfo object
-        return BoundaryUtil.generateDecisionBoundary(modelInfo), error, errorMessage
+        return BoundaryUtil.generateDecisionBoundary(modelInfo, sessionID), error, errorMessage
 
     return dash.no_update, error, errorMessage
 
