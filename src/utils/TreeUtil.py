@@ -6,6 +6,7 @@ from igraph import Graph, EdgeSeq
 from igraph import Vertex
 import plotly.graph_objs as go
 from UserSession import UserSession
+from flask import request
 
 
 
@@ -92,7 +93,7 @@ class TreeUtil():
             fig = self.generateTreeGraphLarge(graphComp, self.getVerticies())
         else:
             print("Error")
-        UserSession().instance.selectedTree = fig
+        UserSession().instance.selectedTree[str(request.remote_addr)] = fig
         #Append this object to an array to be used as a child component
         tree_.append(dcc.Graph(figure = fig))
         return tree_

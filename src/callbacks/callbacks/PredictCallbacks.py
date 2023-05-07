@@ -9,7 +9,7 @@ from igraph import Graph
 from AppInstance import AppInstance
 import plotly.graph_objects as go
 from dash import dcc
-
+from flask import request
 """
 AUTHOR: Dominic Cripps
 DATE CREATED: 23/02/2023
@@ -42,12 +42,12 @@ app = AppInstance().instance.app
 def predictInput(clicks, features, modelFilename):
 
     if "predict-button" == ctx.triggered_id and not None in features:
-        modelInfo = UserSession().instance.modelInformation[modelFilename]
+        modelInfo = UserSession().instance.modelInformation[str(request.remote_addr)][modelFilename]
         #get the model info from singleton
         #make a dataframe out of the input features
         df = pd.DataFrame(data = np.array([features]), 
-                columns = UserSession().instance.selectedModel.feature_names_in_)
-        classification = UserSession().instance.selectedModel.predict(df)
+                columns = UserSession().instance.selectedModel[str(request.remote_addr)].feature_names_in_)
+        classification = UserSession().instance.selectedModel[str(request.remote_addr)].predict(df)
 
         #make sure that all features have inputs and there is both a boundary and tree
         if((modelInfo["classifierType"] == "DecisionTreeClassifier")):                
@@ -135,7 +135,7 @@ def predictInput(clicks, features, modelFilename):
                 )
 
             #get the original tree from singleton class
-            dTree = UserSession().instance.selectedTree
+            dTree = UserSession().instance.selectedTree[str(request.remote_addr)]
             #add the highlighted edge to this plot
             dTree.add_trace(edges)
             #set dTree to be the new contents of the tree
@@ -148,7 +148,7 @@ def predictInput(clicks, features, modelFilename):
 
 
             #if a decision boundary plot exists and it is trained with fewer than 3 features
-            if(numFeatures < 3 and UserSession().instance.selectedBoundary != None):
+            if(numFeatures < 3 and UserSession().instance.selectedBoundary[str(request.remote_addr)] != None):
                 #determine whether it is 1D or 2D and set the x and y appropriately
                 xPoint = [features[0]]
                 if(numFeatures == 1):
@@ -171,7 +171,7 @@ def predictInput(clicks, features, modelFilename):
                             )
 
                 #get the original graph from the singleton class
-                graph = UserSession().instance.selectedBoundary
+                graph = UserSession().instance.selectedBoundary[str(request.remote_addr)]
                 #overlay the new scatter
                 graph.add_trace(scatter)
                 #remove legends
@@ -182,7 +182,7 @@ def predictInput(clicks, features, modelFilename):
 
                 return classification, graph, dTree
             else:
-                return classification, [UserSession().instance.selectedBoundary], dTree
+                return classification, [UserSession().instance.selectedBoundary[str(request.remote_addr)]], dTree
 
             
         else:

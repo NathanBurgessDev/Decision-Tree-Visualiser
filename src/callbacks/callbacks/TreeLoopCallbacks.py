@@ -4,7 +4,7 @@ import dash
 from utils.TreeUtil import TreeUtil
 from AppInstance import AppInstance
 from UserSession import UserSession
-
+from flask import request
 """
 AUTHOR: Dominic Cripps
 DATE CREATED: 23/02/2023
@@ -29,7 +29,7 @@ app = AppInstance().instance.app
         ]
 )
 def circularTree(backClick, forwardClick):
-    classifier = UserSession().instance.selectedModel
+    classifier = UserSession().instance.selectedModel[str(request.remote_addr)]
     length = len(classifier.estimators_)
     index  = (forwardClick - backClick) % length
     model = classifier.estimators_[index]

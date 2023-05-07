@@ -6,6 +6,7 @@ from UserSession import UserSession
 from AppInstance import AppInstance
 import pandas as pd
 import numpy as np
+from flask import request
 
 app = AppInstance().instance.app
 
@@ -33,7 +34,7 @@ graph depending on the provided features
 )
 def updateFeatureSpace(xFeature, yFeature, zFeature, modelKey):
     # if no model is selected selct the first model trained
-    modelInfo = (UserSession.instance.modelInformation)[modelKey]
+    modelInfo = (UserSession.instance.modelInformation[str(request.remote_addr)])[modelKey]
 
     xTest = modelInfo["testingData"][0]
     yTest = (modelInfo["testingData"][1]).to_frame()

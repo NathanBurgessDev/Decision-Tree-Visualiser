@@ -4,6 +4,7 @@ import numpy as np
 from dash import dcc
 from UserSession import UserSession
 from dash import html
+from flask import request
 
 """
 AUTHOR: Daniel Ferring
@@ -330,7 +331,7 @@ class DecisionBoundaryUtil():
                 yaxis_title = str(model.feature_names_in_[1])
             )        
 
-        UserSession().instance.selectedBoundary = graph
+        UserSession().instance.selectedBoundary[str(request.remote_addr)] = graph
 
         #Creates a html div where the key and the boundary are placed side by side
         boundary = html.Div(children=[

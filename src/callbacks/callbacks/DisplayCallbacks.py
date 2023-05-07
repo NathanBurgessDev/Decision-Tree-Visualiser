@@ -2,7 +2,7 @@ from dash.dependencies import Input, Output
 from classifier_components.ClassifierComponentFactory import ClassifierComponentFactory
 from UserSession import UserSession
 from AppInstance import AppInstance
-
+from flask import request
 
 """
 AUTHOR: Dominic Cripps
@@ -33,8 +33,8 @@ app = AppInstance().instance.app
 def modelSelected(modelFilename):
     classifierComponents = [()]
     if(modelFilename):
-        modelInfo = UserSession().instance.modelInformation[modelFilename]
+        modelInfo = UserSession().instance.modelInformation[str(request.remote_addr)][modelFilename]
         classifierComponents = ClassifierComponentFactory.Factory(modelInfo)
-        UserSession().instance.selectedModel = modelInfo["modelData"]
+        UserSession().instance.selectedModel[str(request.remote_addr)] = modelInfo["modelData"]
         
     return classifierComponents

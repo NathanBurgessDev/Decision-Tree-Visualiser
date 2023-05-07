@@ -8,6 +8,7 @@ from UserSession import UserSession
 import pandas as pd
 import numpy as np
 from AppInstance import AppInstance
+from flask import request
 
 df = []
 selectedSettings = ClassifierSettingsFactory.Factory(None)
@@ -124,7 +125,11 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
     errorMessage = ""
     error = False
 
-    modelFilenames = [modelName for modelName in UserSession().instance.modelInformation]
+    #check whether the user ip is in the singleton and if not create a dictionary for their models
+    if(not (request.remote_addr in UserSession().instance.modelInformation)):
+        UserSession().instance.modelInformation[str(request.remote_addr)] = {}
+
+    modelFilenames = [modelName for modelName in UserSession().instance.modelInformation[str(request.remote_addr)]]
     if "train-button" == ctx.triggered_id:
 
         if(len(df) == 0):
@@ -153,6 +158,7 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
             error = True
             return error, errorMessage, modelFilenames, dash.no_update
         
+
 
         '''
         if(isinstance(df[0][classifier[0]][0], float)):
@@ -221,9 +227,9 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
                     "shapeKey" : shapeKey
                     }
 
-            UserSession().instance.modelInformation[str(filename)] = modelInfo
+            UserSession().instance.modelInformation[str(request.remote_addr)][str(filename)] = modelInfo
 
-            modelFilenames = [modelName for modelName in UserSession().instance.modelInformation]
+            modelFilenames = [modelName for modelName in UserSession().instance.modelInformation[str(request.remote_addr)]]
 
             return error, errorMessage, modelFilenames, filename
         

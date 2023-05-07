@@ -5,6 +5,7 @@ from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
 import dash
 import copy
 from AppInstance import AppInstance
+from flask import request
 app = AppInstance().instance.app
 
 
@@ -50,7 +51,7 @@ def pairwisePlot(clicks, modelName, features):
             return dash.no_update, error, errorMessage
 
         #Creates a copy of modelInfo so that it can be modified without impacting the orginal
-        modelInfo = copy.deepcopy(UserSession().instance.modelInformation[modelName])
+        modelInfo = copy.deepcopy(UserSession().instance.modelInformation[str(request.remote_addr)][modelName])
         trainingData = modelInfo['trainingData'][0]
         testingData = modelInfo['testingData'][0]
         
