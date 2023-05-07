@@ -23,7 +23,7 @@ modelInfo : contains all the information relating to the model
 """
 class ClassifierDecisionBoundaryComponent(ClassifierComponent):
 
-    def __init__(self, modelInfo):
+    def __init__(self, modelInfo, sessionID):
         
         BoundaryUtil = DecisionBoundaryUtil()
         features = modelInfo["modelData"].feature_names_in_
@@ -48,7 +48,7 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
                             )
         #For one or two features, the system displays the standard decision boundary visualisation
         else:
-            self.boundary = BoundaryUtil.generateDecisionBoundary(modelInfo)
+            self.boundary = BoundaryUtil.generateDecisionBoundary(modelInfo, sessionID)
 
         self.componentTitle = "Decision Boundary Visualisation"
         

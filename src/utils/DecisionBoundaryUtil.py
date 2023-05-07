@@ -4,6 +4,7 @@ import numpy as np
 from dash import dcc
 from UserSession import UserSession
 from dash import html
+from flask import request
 
 """
 AUTHOR: Daniel Ferring
@@ -294,7 +295,7 @@ class DecisionBoundaryUtil():
     modelInfo: contains all the information relating to the model 
                to be represented (Defined in SettingCallbacks.py)
     """
-    def generateDecisionBoundary(self, modelInfo):
+    def generateDecisionBoundary(self, modelInfo, sessionID):
         model = modelInfo["modelData"]
         colourKey = modelInfo["colourKey"]
         shapeKey = modelInfo["shapeKey"]
@@ -330,7 +331,7 @@ class DecisionBoundaryUtil():
                 yaxis_title = str(model.feature_names_in_[1])
             )        
 
-        UserSession().instance.selectedBoundary = graph
+        UserSession().instance.selectedBoundary[sessionID] = graph
 
         #Creates a html div where the key and the boundary are placed side by side
         boundary = html.Div(children=[

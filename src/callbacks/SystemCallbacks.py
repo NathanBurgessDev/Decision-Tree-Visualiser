@@ -42,6 +42,7 @@ To create a new file that contains callbacks :
 
 
 def get_system_callbacks(app):
+    
     get_setting_callbacks(app)
     get_display_callbacks(app)
     get_predict_callbacks(app)

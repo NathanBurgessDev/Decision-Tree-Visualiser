@@ -1,8 +1,8 @@
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from classifier_components.ClassifierComponentFactory import ClassifierComponentFactory
 from UserSession import UserSession
 from AppInstance import AppInstance
-
+from flask import request
 
 """
 AUTHOR: Dominic Cripps
@@ -27,14 +27,20 @@ generate the necessary model components. e.g. info, tree, boundary etc.
 app = AppInstance().instance.app
 @app.callback(
     [Output(component_id="model-components", component_property="children")],
-    [Input("trained-models", component_property="value")],
+    [Input("trained-models", component_property="value"),
+    State("user-session-name", component_property="value")],
     
 )
-def modelSelected(modelFilename):
+def modelSelected(modelFilename, sessionID):
+
+    print("model selected")
+    if sessionID == None or sessionID == "" or modelFilename == None or modelFilename == "":
+        return [()]
+
     classifierComponents = [()]
     if(modelFilename):
-        modelInfo = UserSession().instance.modelInformation[modelFilename]
-        classifierComponents = ClassifierComponentFactory.Factory(modelInfo)
-        UserSession().instance.selectedModel = modelInfo["modelData"]
+        modelInfo = UserSession().instance.modelInformation[sessionID][modelFilename]
+        classifierComponents = ClassifierComponentFactory.Factory(modelInfo, sessionID)
+        UserSession().instance.selectedModel[sessionID] = modelInfo["modelData"]
         
     return classifierComponents
