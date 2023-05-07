@@ -10,4 +10,5 @@ build_container:
     rules:
        - if: $CI_COMMIT_BRANCH == "main"
     script:
+    - docker image rm results-vis-image
     - docker build -t results-vis-image .
