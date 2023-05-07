@@ -242,11 +242,11 @@ class DecisionBoundaryUtil():
             colours.append(value)
             shapes.append(shapeKey[key])
 
-        xdata = [0] * len(classifications)
+        ydata = [0] * len(classifications)
 
-        #Used to represent the key, only has data for the y axis, one point for each class
-        keyScatter = go.Scatter(x = xdata,
-                              y = classifications,
+        #Used to represent the key, only has data for the x axis, one point for each class
+        keyScatter = go.Scatter(x = classifications,
+                              y = ydata,
                               hoverinfo = "none",
                               mode = "markers",
                               marker = dict(size = 15,
@@ -254,7 +254,7 @@ class DecisionBoundaryUtil():
                                             color = colours,
                                             symbol = shapes,
                                             line = dict(color = 'black', 
-                                            width = 1))
+                                            width = 2))
                             )
         
         keyFig = go.Figure(data = keyScatter)
@@ -267,12 +267,14 @@ class DecisionBoundaryUtil():
             showlegend = False,
             autosize=True, 
             margin={'t': 50,'l':10,'b':5,'r':30},
-            title = "Instance Key"
+            title = "Instance Key",
+            title_x = 0.5,
+            height = 150
         )
 
-        #Removes grid lines and hides the x axis
-        keyFig.update_xaxes(showgrid=False, visible = False)
-        keyFig.update_yaxes(showgrid=False)
+        #Removes grid lines and hides the y axis
+        keyFig.update_yaxes(showgrid=False, visible = False)
+        keyFig.update_xaxes(showgrid=False)
         
         return keyFig
 
@@ -333,10 +335,10 @@ class DecisionBoundaryUtil():
         #Creates a html div where the key and the boundary are placed side by side
         boundary = html.Div(children=[
             html.Div(children = [dcc.Graph(figure = graph)],
-                     style = {"width":"90%"}),
+                     style = {"width":"100%", "height":"80%"}),
             html.Div(children = [dcc.Graph(figure = key)],
-                     style = {"width":"10%", "padding-top":"2%"})],
-            style = {"display":"flex", "flex-direction":"row", "column-gap":"2%"}
+                     style = {"width":"80%", "padding-top":"2%", "margin":"auto"})],
+            style = {"display":"flex", "flex-direction":"column", "column-gap":"2%"}
         )
 
         decisionBoundary.append(boundary)
