@@ -8,7 +8,7 @@ from dash import dcc
 AUTHOR: Alfred Greenwood
 DATE CREATED: 8/02/2023
 PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 18/02/2023
+DATE LAST MODIFIED: 07/05/2023
 
 Used to simplify dash commands for the website, this class sets out the layout for the website so the
 to simplify code usage of the main program
@@ -60,7 +60,7 @@ class PageLayout():
     AUTHOR: Alfred Greenwood
     DATE CREATED: 14/02/2023
     PREVIOUS MAINTAINER: Dominic Cripps
-    DATE LAST MODIFIED: 18/02/2023
+    DATE LAST MODIFIED: 07/05/2023
 
     Defines the HTML divs that contain both the sidebar div and main body div.
     """
@@ -90,8 +90,21 @@ class PageLayout():
                 message="Error!"
             ),
 
+            # New Section for user session UI components
+            html.H3(children="Session", style = {"border-top" : "2px solid rgb(200,200,200)", "padding" : "4px", "padding-top" : "10px"}),
+
+            html.H4(id = "session-id-display", children="Current Session : "),
+            # Input component to take a session name
+            dcc.Input(
+                id="user-session-name",
+                placeholder="Input Session ID",
+                className = "textInput"
+            ),
+            html.Button("Enter User Session", id="user-session-button", n_clicks = 0, className = "trainButton"),
+
             # New section indicated the heading 'Train'
             html.H3(children="Train", style = {"border-top" : "2px solid rgb(200,200,200)", "padding" : "4px", "padding-top" : "10px"}),
+
             # Upload component used for dataframes
             dcc.Upload(
                 id="upload-dataset",

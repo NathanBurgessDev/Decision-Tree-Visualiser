@@ -6,6 +6,7 @@ from igraph import Graph, EdgeSeq
 from igraph import Vertex
 import plotly.graph_objs as go
 from UserSession import UserSession
+from flask import request
 
 
 
@@ -54,7 +55,7 @@ class TreeUtil():
     Inputs: 
     DecisionTreeClassifier model : The model to be parsed.
     '''
-    def generateDecisionTree(self, classifier, model, tree):
+    def generateDecisionTree(self, classifier, model, tree, sessionID):
         tree_ = []
         """ 
         The parseTree function changes several member variables
@@ -84,8 +85,15 @@ class TreeUtil():
         graphComp.add_edges(self.getEdges())
         graphComp.vs["info"] = self.getAnnotations()
         #Generate graph for the tree. 
-        fig = self.generateTreeGraph(graphComp, self.getVerticies())
-        UserSession().instance.selectedTree = fig
+        #if tree depth is < certain number then call the generateTreeGraph function
+        if (self.getVerticies() <= 20):
+            fig = self.generateTreeGraph(graphComp, self.getVerticies())
+        #else call the generateTreeGraphLarge function
+        elif (self.getVerticies() > 20):
+            fig = self.generateTreeGraphLarge(graphComp, self.getVerticies())
+        else:
+            print("Error")
+        UserSession().instance.selectedTree[sessionID] = fig
         #Append this object to an array to be used as a child component
         tree_.append(dcc.Graph(figure = fig))
         return tree_

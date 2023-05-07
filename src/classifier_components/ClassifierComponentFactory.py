@@ -6,10 +6,9 @@ from classifier_components.components.ClassifierDecisionBoundaryComponent import
 from classifier_components.components.ClassifierConfusionMatrixComponent import ClassifierConfusionMatrixComponent
 from classifier_components.components.ClassifierParallelCoordinatesComponent import ClassifierParallelCoordinatesComponent
 from classifier_components.components.ClassifierUserInputComponent import ClassifierUserInputComponent
+from classifier_components.components.ClassifierSVMDecisionBoundaryComponent import ClassifierSVMDecisionBoundaryComponent
 from classifier_components.components.ClassifierMultiTreeComponent import ClassifierMultiTreeComponent
 from classifier_components.components.ClassifierFeatureSpaceComponent import ClassifierFeatureSpaceComponent
-
-
 from dash import html
 
 
@@ -25,7 +24,7 @@ correct child components determined by the classifier type.
 """
 class ClassifierComponentFactory():
 
-    def Factory(modelInfo):
+    def Factory(modelInfo, sessionID):
 
         # The value of each dictionary entry represents all rows containing components,
         # if you want multiple components on a row, place them within the same array as
@@ -59,6 +58,14 @@ class ClassifierComponentFactory():
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
                                             [ClassifierConfusionMatrixComponent],
+                                            [ClassifierSVMDecisionBoundaryComponent],
+                                            [ClassifierParallelCoordinatesComponent],
+                                            [ClassifierFeatureSpaceComponent]
+                                        ], 
+            "SVR":
+                                        [
+                                            [ClassifierInfoComponent],
+                                            [ClassifierSVMDecisionBoundaryComponent],
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ], 
@@ -76,7 +83,10 @@ class ClassifierComponentFactory():
 
             children = []
             for i in range (0, len(x)):
-                modelComponent = x[i](modelInfo)
+                if x[i] == ClassifierTreeComponent or x[i] == ClassifierDecisionBoundaryComponent:
+                    modelComponent = x[i](modelInfo, sessionID)
+                else:
+                    modelComponent = x[i](modelInfo)
                 titleDiv = html.Div(children = modelComponent.componentTitle, className = "componentTitle")
                 layout = html.Div(children = [titleDiv, modelComponent.componentChildren], className="classifierComponent")
                 children.append(html.Div(children = layout, style = {"width" : split, "margin-right" : "25px", "overflow": "hidden", "position": "relative"}))

@@ -24,6 +24,7 @@ import callbacks.callbacks.PredictCallbacks
 import callbacks.callbacks.SettingCallbacks
 import callbacks.callbacks.ParallelCoordinatesCallbacks
 import callbacks.callbacks.TreeLoopCallbacks
+import callbacks.callbacks.BoundaryCallbacks
 import callbacks.callbacks.FeatureSpaceCallbacks
 
 
