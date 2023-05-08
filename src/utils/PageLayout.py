@@ -70,7 +70,8 @@ class PageLayout():
         self.sidebarDiv = html.Div([   
             # Adds a title
             html.H1(children="Results Visualisation", className="title"),
-            # Prompts use to select a model
+            # Adds a link to the user manual
+            html.A("View User Manual", href='https://team44usermanual.netlify.app/', className="link"),
             html.H3(children = "Select A Model"),
             # A dropdown containing all available / trained models
             html.Div(id = "drop-down-parent", children = [dcc.Dropdown(id="trained-models", options = [], className = "dropdown")]),
