@@ -12,7 +12,7 @@ class test_readDataframe(unittest.TestCase):
     """
 
     def test_modelSelected_000(self):
-        result = DisplayCallbacks.modelSelected(None)
+        result = DisplayCallbacks.modelSelected(None,0)
         self.assertEqual(result, [()])
         
 if __name__ == '__main__':
