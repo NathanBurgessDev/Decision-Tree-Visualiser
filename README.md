@@ -1,4 +1,4 @@
-Installation Guide: 
+# Installation Guide: 
 
 To run the program, you will need docker installed. 
 
@@ -16,9 +16,11 @@ https://docs.docker.com/engine/install/
 
 ```docker build -t aiVis . ```
 
-If you get a permission denied you can either run the command with sudo or add docker to the appropriate user group. Instructions can be found here: 
+If you get a permission denied you can either run the command with sudo or add docker to the appropriate user group.
 
- https://docs.docker.com/engine/install/linux-postinstall/ 
+Instructions can be found here: 
+
+https://docs.docker.com/engine/install/linux-postinstall/ 
 
 3. You can view your currently built images by running: 
 
