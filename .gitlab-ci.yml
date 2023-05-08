@@ -19,5 +19,5 @@ unit_tests:
     before_script:
         - pip install -r requirements.txt
     script:
-        - pytest -V
+        - python -m pytest
     
