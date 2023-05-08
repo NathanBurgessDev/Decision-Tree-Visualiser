@@ -17,6 +17,6 @@ unit_tests:
     stage: test
     image: python:3.9
     before_script:
-    - python pip install -r requirements.txt
+    - python3.9 pip install -r requirements.txt
     script:
     - pytest -v
