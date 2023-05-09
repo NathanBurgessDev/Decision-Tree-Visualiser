@@ -41,23 +41,23 @@ class ClassifierComponentFactory():
                                         ],
             "GradientBoostingClassifier" : 
                                         [
-                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
-                                            [ClassifierConfusionMatrixComponent],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent],
+                                            [ClassifierClassSplitComponent, ClassifierConfusionMatrixComponent],
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ],
             "RandomForestClassifier" : 
                                         [
-                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
-                                            [ClassifierConfusionMatrixComponent],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent],
+                                            [ClassifierClassSplitComponent, ClassifierConfusionMatrixComponent],
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierMultiTreeComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ],
             "SVC":
                                         [
-                                            [ClassifierInfoComponent, ClassifierUserInputComponent, ClassifierClassSplitComponent],
-                                            [ClassifierConfusionMatrixComponent],
+                                            [ClassifierInfoComponent, ClassifierUserInputComponent],
+                                            [ClassifierClassSplitComponent, ClassifierConfusionMatrixComponent],
                                             [ClassifierSVMDecisionBoundaryComponent],
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
