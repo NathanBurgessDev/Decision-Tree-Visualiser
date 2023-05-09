@@ -33,3 +33,7 @@ https://docs.docker.com/engine/install/linux-postinstall/
 5. Navigate to: `localhost:8080` In your internet browser URL bar 
 
  
+## Test CSV
+
+We have provided a CSV in `Example-CSV` to allow you to play around with the website without
+needing your own dataset.
