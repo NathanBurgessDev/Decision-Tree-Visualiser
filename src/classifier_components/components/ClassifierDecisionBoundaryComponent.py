@@ -1,10 +1,10 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
+from utils.ToolTipUtil import ToolTip
 import dash_mantine_components as dmc
 import dash_bootstrap_components as dbc
 from dash import dcc
-
 
 """
 AUTHOR: Daniel Ferring
@@ -24,6 +24,13 @@ modelInfo : contains all the information relating to the model
 class ClassifierDecisionBoundaryComponent(ClassifierComponent):
 
     def __init__(self, modelInfo, sessionID):
+        
+        title = 'Decision Boundary'
+        description = 'This visualisation represents the decisions made by the tree. '\
+        'The axes are the features used to train the model and the data instances are plotted within the feature space as markers. '\
+        'The colours of the instances represent their true class (taken from the data set). The colour of the section that they are plotted in '\
+        'represents the class that the model would predict them to be. It should be noted that the colour of the markers is slightly darker than '\
+        'that of their predicted class, this is done to make them more distinguishable from the background.'
         
         BoundaryUtil = DecisionBoundaryUtil()
         features = modelInfo["modelData"].feature_names_in_
@@ -48,7 +55,10 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
                             )
         #For one or two features, the system displays the standard decision boundary visualisation
         else:
-            self.boundary = BoundaryUtil.generateDecisionBoundary(modelInfo, sessionID)
+            self.boundary = [
+                html.Div(id = "decision-boundary", children = BoundaryUtil.generateDecisionBoundary(modelInfo)),
+                ToolTip().generateToolTip("decision-boundary", title, description)           
+            ]
 
         self.componentTitle = "Decision Boundary Visualisation"
         

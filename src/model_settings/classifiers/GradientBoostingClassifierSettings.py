@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 from model_settings.ModelSettings import ClassifierSettings
 from sklearn.ensemble import GradientBoostingClassifier
 import dash_mantine_components as dmc
+from utils.ToolTipUtil import ToolTip
 
 """
 AUTHOR: Dominic Cripps
@@ -59,6 +60,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value = "log_loss",
                 className="dropdown"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="loss"), "Loss", self.loss),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="learning_rate"), 
                               checked=False,
@@ -74,6 +76,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 step = 0.1,
                 className="floatInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="learning_rate"), "Learning Rate", self.learning_rate),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="n_estimators"), 
                               checked=False,
@@ -87,6 +90,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value=100,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="n_estimators"), "N Estimators", self.n_estimators),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="subsample"), 
                               checked=False,
@@ -108,6 +112,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="subsample"), "Subsample", self.subsample),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="criterion"), 
                               checked=False,
@@ -121,6 +126,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value = "friedman_mse",
                 className="dropdown"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="criterion"), "Criterion", self.criterion),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_samples_split"), 
                               checked=False,
@@ -134,6 +140,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value=2,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_samples_split"), "Min Samples Split", self.min_samples_split),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_samples_leaf"), 
                               checked=False,
@@ -147,6 +154,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value=1,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_samples_leaf"), "Min Samples Leaf", self.min_samples_leaf),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_weight_fraction_leaf"), 
                               checked=False,
@@ -168,7 +176,8 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
-            
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_weight_fraction_leaf"), "Min Weight Fraction Leaf", self.min_weight_fraction_leaf),
+
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_depth"), 
                               checked=False,
                               size = "xs",
@@ -181,6 +190,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value=5,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_depth"), "Max Depth", self.max_depth),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_impurity_decrease"), 
                               checked=False,
@@ -202,6 +212,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_impurity_decrease"), "Min Impurity Decrease", self.min_impurity_decrease),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="random_state"), 
                               checked=False,
@@ -215,6 +226,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value=0,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="random_state"), "Random State", self.random_state),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_features"), 
                               checked=False,
@@ -228,6 +240,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value=1,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_features"), "Max Features", self.max_features),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_leaf_nodes"), 
                               checked=False,
@@ -241,7 +254,8 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value=10,
                 className="numericInput"
             ),
-            
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_leaf_nodes"), "Max Leaf Nodes", self.max_leaf_nodes),
+
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="validation_fraction"), 
                               checked=False,
                               size = "xs",
@@ -262,6 +276,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="validation_fraction"), "Validation Fraction", self.validation_fraction),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="n_iter_no_change"), 
                               checked=False,
@@ -275,6 +290,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 value=None,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="n_iter_no_change"), "N Iter No Change", self.n_iter_no_change),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="tol"), 
                               checked=False,
@@ -290,6 +306,7 @@ class GradientBoostingClassifierSettings(ClassifierSettings):
                 step = 0.01,
                 className="floatInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="tol"), "Tolerance", self.tol),
 
         ])]
 

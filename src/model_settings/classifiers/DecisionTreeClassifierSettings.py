@@ -3,6 +3,8 @@ import dash_daq as daq
 from model_settings.ModelSettings import ClassifierSettings
 from sklearn.tree import DecisionTreeClassifier
 import dash_mantine_components as dmc
+from utils.ToolTipUtil import ToolTip
+
 
 """
 AUTHOR: Dominic Cripps
@@ -52,6 +54,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value = "gini",
                 className="dropdown"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="criterion"), "Criterion", self.criterion),
                             
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="splitter"), 
                               checked=False,
@@ -65,7 +68,8 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value = "best",
                 className="dropdown"
             ),
-            
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="splitter"), "Splitter", self.splitter),
+
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_depth"), 
                               checked=False,
                               size = "xs",
@@ -78,6 +82,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value=5,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_depth"), "Max Depth", self.max_depth),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_samples_split"), 
                               checked=False,
@@ -91,6 +96,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value=2,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_samples_split"), "Min Samples Split", self.min_samples_split),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_samples_leaf"), 
                               checked=False,
@@ -104,6 +110,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value=1,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_samples_leaf"), "Min Samples Leaf", self.min_samples_leaf),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_weight_fraction_leaf"), 
                               checked=False,
@@ -125,6 +132,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_weight_fraction_leaf"), "Min Weight Fraction Leaf", self.min_weight_fraction_leaf),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_features"), 
                               checked=False,
@@ -138,6 +146,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value=1,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_features"), "Max Features", self.max_features),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="random_state"), 
                               checked=False,
@@ -151,6 +160,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value=0,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="random_state"), "Random State", self.random_state),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_leaf_nodes"), 
                               checked=False,
@@ -164,6 +174,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                 value=10,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_leaf_nodes"), "Max Leaf Nodes", self.max_leaf_nodes),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_impurity_decrease"), 
                               checked=False,
@@ -185,6 +196,7 @@ class DecisionTreeClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_impurity_decrease"), "Min Impurity Decrease", self.min_impurity_decrease),
         ])]
 
         

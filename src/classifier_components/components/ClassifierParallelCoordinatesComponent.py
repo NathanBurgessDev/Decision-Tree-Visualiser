@@ -1,7 +1,9 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
 import plotly.express as px
+import dash_bootstrap_components as dbc
 import pandas as pd
+import dash_mantine_components as dmc
 from dash import dcc
 import numpy as np
 import plotly.graph_objects as go
@@ -89,36 +91,53 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
             paper_bgcolor="#232323",
             font_color = "#f5f5f5",
             plot_bgcolor="#232323")
-        
-        self.componentTitle = "Parallel Coordinates"
+
+        self.componentTitle = html.Span(
+            dmc.Tooltip(
+                label = html.Div(children = [
+                    html.Img(src='../../assets/parallelCoordinatesDemo.gif'),
+                    html.P("Use the feature dropdown box to select a feature."),
+                    html.P("The buttons either side can be used to add or remove this feature from the visualisation."),
+                    html.P("Features are ordered based on their correlation to make the graph easier to interpret, "),
+                    html.P("but you can drag them to any position you require."),
+                    html.P("You can select sections of the feature space as demonstrated above."),
+                    html.P("The colour of the lines reflects the classification predicted by the model, "),
+                    html.P("and the 'true class' represents the true value of that data instance."),
+                    html.P("This visualisation uses the models testing data.")
+                    ]),
+                children=[html.P("Parallel Coordinates")],
+                id="pc-tooltip",
+                className ="plotToolTip",
+                withArrow = True,
+            ))
 
         # Update the componentChildren property to be a html div
         # containing a seperate div for dimension controls;
         # div[('-' button), (feature dropdown), ('+' button)]
         # and below this the parallel coordinates plot
-        self.componentChildren = html.Div(
-            [html.Div(children=[
-            html.Button(
-            "-",
-            id="pc_del_dim",
-            className="pcButton"),
+        self.componentChildren = html.Div(children = [
+            html.Div(children=[
+                html.Button(
+                "-",
+                id="pc_del_dim",
+                className="pcButton"),
 
-            dcc.Dropdown(
-            options=dropDownOrder,
-            value = dropDownOrder[0],
-            id='pc_dim_select',
-            className = "pcDimDropdown"),
+                dcc.Dropdown(
+                options=dropDownOrder,
+                value = dropDownOrder[0],
+                id='pc_dim_select',
+                className = "pcDimDropdown"),
 
-            html.Button(
-            "+",
-            id="pc_add_dim",
-            className="pcButton")],
+                html.Button(
+                "+",
+                id="pc_add_dim",
+                className="pcButton")],
+
             className = "pcControlContainer"),
-            
+                
             dcc.Graph(
             figure = fig,
             id="pc_plot")])
-        
     
     ''' 
     AUTHOR: Ethan Temple-Betts

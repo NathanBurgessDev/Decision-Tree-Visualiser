@@ -3,6 +3,7 @@ import dash_daq as daq
 from model_settings.ModelSettings import ClassifierSettings
 from sklearn.ensemble import RandomForestClassifier
 import dash_mantine_components as dmc
+from utils.ToolTipUtil import ToolTip
 
 """
 AUTHOR: Dominic Cripps
@@ -54,6 +55,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value=10,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="n_estimators"), "Number Estimators", self.n_estimators),
 
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="criterion"), 
@@ -68,6 +70,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value = "gini",
                 className="dropdown"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="criterion"), "Criterion", self.criterion),
 
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_depth"), 
@@ -82,6 +85,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value=5,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_depth"), "Max Depth", self.max_depth),
 
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_samples_split"), 
@@ -96,6 +100,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value=2,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_samples_split"), "Min Samples Split", self.min_samples_split),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_samples_leaf"), 
                               checked=False,
@@ -109,6 +114,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value=1,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_samples_leaf"), "Min Samples Leaf", self.min_samples_leaf),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_weight_fraction_leaf"), 
                               checked=False,
@@ -130,7 +136,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
-            
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_weight_fraction_leaf"), "Min Weight Fraction Leaf", self.min_weight_fraction_leaf),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_features"), 
                               checked=False,
@@ -144,7 +150,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value=1,
                 className="numericInput"
             ),
-
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_features"), "Max Features", self.max_features),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_leaf_nodes"), 
                               checked=False,
@@ -158,7 +164,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value=10,
                 className="numericInput"
             ),
-            
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_leaf_nodes"), "Max Leaf Nodes", self.max_leaf_nodes),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="min_impurity_decrease"), 
                               checked=False,
@@ -180,7 +186,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                     1 : {"label": "1"}
                 },
             ),
-
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="min_impurity_decrease"), "Min Impurity Decrease", self.min_impurity_decrease),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="bootstrap"), 
                               checked=False,
@@ -196,6 +202,34 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value = True,
                 className="dropdown"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="bootstrap"), "Bootstrap", self.bootstrap),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="oob_score"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "OOB Score",
+                              className = "paramCheckbox"),
+            dcc.Dropdown(
+                id=dict(name="classifier-settings", idx="oob_score"), 
+                options = [True, False], 
+                value = False,
+                className="dropdown"
+            ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="oob_score"), "OOB Score", self.oob_score),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="n_jobs"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Number Of Jobs",
+                              className = "paramCheckbox"),
+            daq.NumericInput(
+                id=dict(name="classifier-settings", idx="n_jobs"), 
+                value=0,
+                className="numericInput"
+            ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="n_jobs"), "N Jobs", self.n_jobs),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="random_state"), 
                               checked=False,
@@ -209,6 +243,35 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value=0,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="random_state"), "Random State", self.random_state),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="verbose"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Verbose",
+                              className = "paramCheckbox"),
+            daq.NumericInput(
+                id=dict(name="classifier-settings", idx="verbose"), 
+                min=0,
+                value=0,
+                className="numericInput"
+            ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="verbose"), "Verbose", self.verbose),
+
+            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="warm_start"), 
+                              checked=False,
+                              size = "xs",
+                              color = "violet",
+                              label = "Warm Start",
+                              className = "paramCheckbox"),
+            dcc.Dropdown(
+                id=dict(name="classifier-settings", idx="warm_start"), 
+                options = [True, False], 
+                value = False,
+                className="dropdown"
+            ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="warm_start"), "Warm Start", self.warm_start),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_samples"), 
                               checked=False,
@@ -223,6 +286,7 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 value=0.2,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_samples"), "Max Samples", self.max_samples),
 
         ])]
 
