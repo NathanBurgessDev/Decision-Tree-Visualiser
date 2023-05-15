@@ -197,4 +197,4 @@ class PageLayout():
     """
     def runServer(self, dbg):
         # Run server
-        self.app.run_server(debug=dbg)
+        self.app.run_server(host = '0.0.0.0', port=80,debug=dbg)
