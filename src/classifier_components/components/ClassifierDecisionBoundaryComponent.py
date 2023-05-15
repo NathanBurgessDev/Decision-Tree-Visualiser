@@ -2,12 +2,15 @@ from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
 from utils.ToolTipUtil import ToolTip
+import dash_mantine_components as dmc
+import dash_bootstrap_components as dbc
+from dash import dcc
 
 """
 AUTHOR: Daniel Ferring
 DATE CREATED: 19/02/2023
 PREVIOUS MAINTAINER: Daniel Ferring
-DATE LAST MODIFIED: 21/03/2023
+DATE LAST MODIFIED: 23/03/2023
 
 Child of 'ClassifierComponent', this class defines an
 appropriate 'componentLayout' to represent decision boundaries
@@ -20,7 +23,7 @@ modelInfo : contains all the information relating to the model
 """
 class ClassifierDecisionBoundaryComponent(ClassifierComponent):
 
-    def __init__(self, modelInfo):
+    def __init__(self, modelInfo, sessionID):
         
         title = 'Decision Boundary'
         description = 'This visualisation represents the decisions made by the tree. '\
@@ -30,16 +33,33 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
         'that of their predicted class, this is done to make them more distinguishable from the background.'
         
         BoundaryUtil = DecisionBoundaryUtil()
+        features = modelInfo["modelData"].feature_names_in_
 
-        if(len(modelInfo["modelData"].feature_names_in_) > 2):
-            self.boundary = html.P("Higher Dimensions are not supported for this visualisation")
+        #If the model contains more than two features, the system will display the pairwise plot visualisation
+        if(len(features) > 2):
+            self.boundary = html.Div(id = "pairwise-plot",
+                            children = [
+                                html.Div(children = [
+                                    html.H3("Select Features to display"),
+                                    dbc.Checklist(
+                                        id = "pairwise-features",
+                                        options = features,
+                                        value = [],
+                                        style = {"text-align":"left", "margin-left":"20%", "padding-bottom":"5%"}
+                                    ),
+                                    html.Button("Plot", id = "pairwise-button", n_clicks=0, className = "trainButton")],
+                                    style = {"width":"20%", "padding-top":"2%"}),
+                                html.Div(id = "pairwise-boundary", style = {'width':'75%'},),
+                                dcc.ConfirmDialog(id = "feature-error", message = "")],
+                                style = {"display":"flex", "flex-direction":"row", "column-gap":"2%"}
+                            )
+        #For one or two features, the system displays the standard decision boundary visualisation
         else:
             self.boundary = [
                 html.Div(id = "decision-boundary", children = BoundaryUtil.generateDecisionBoundary(modelInfo)),
                 ToolTip().generateToolTip("decision-boundary", title, description)           
             ]
 
-        #Sets the values for the component to be displayed within the app
         self.componentTitle = "Decision Boundary Visualisation"
         
-        self.componentChildren = html.Div(id = "decision-boundary-component", children=self.boundary)
+        self.componentChildren = html.Div(id = {"type" : "decision-boundary-component", "index" : 1}, children=self.boundary)

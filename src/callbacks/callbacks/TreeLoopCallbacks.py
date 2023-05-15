@@ -1,41 +1,41 @@
-from dash.dependencies import Input, Output
+from dash.dependencies import Input, Output, State
 from dash import ctx
 import dash
 from utils.TreeUtil import TreeUtil
-
+from AppInstance import AppInstance
 from UserSession import UserSession
+from flask import request
+"""
+AUTHOR: Dominic Cripps
+DATE CREATED: 23/02/2023
+PREVIOUS MAINTAINER: Dominic Cripps
+DATE LAST MODIFIED: 23/02/2023
 
-def get_callbacks(app):
+Callback is triggered when the button 'predict-button' is pressed.
 
-    """
-    AUTHOR: Dominic Cripps
-    DATE CREATED: 23/02/2023
-    PREVIOUS MAINTAINER: Dominic Cripps
-    DATE LAST MODIFIED: 23/02/2023
+Callback output is the children of the html div 'prediction'.
 
-    Callback is triggered when the button 'predict-button' is pressed.
+The function 'predictInput' will form a data frame out of the
+inputted feature values, it will then use the selected model
+to make a prediction and return that to the user.
 
-    Callback output is the children of the html div 'prediction'.
+"""
+app = AppInstance().instance.app
+@app.callback(
+    [Output(component_id="subtree-label", component_property="children"),
+        Output(component_id="subtree-graph", component_property="children")],
+    [Input("back-button-tree", component_property="n_clicks"),
+        Input("forward-button-tree", component_property="n_clicks"),
+        State("user-session-name", component_property="value")
+        ]
+)
+def circularTree(backClick, forwardClick, sessionID):
+    classifier = UserSession().instance.selectedModel[sessionID]
+    length = len(classifier.estimators_)
+    index  = (forwardClick - backClick) % length
+    model = classifier.estimators_[index]
+    tree = model.tree_
+    treeUtil = TreeUtil()
+    tree = treeUtil.generateDecisionTree(classifier, model, tree, sessionID)
+    return "Subtree : " + str(index + 1) + "/" + str(length), tree
 
-    The function 'predictInput' will form a data frame out of the
-    inputted feature values, it will then use the selected model
-    to make a prediction and return that to the user.
-
-    """
-    @app.callback(
-        [Output(component_id="subtree-label", component_property="children"),
-         Output(component_id="subtree-graph", component_property="children")],
-        [Input("back-button-tree", component_property="n_clicks"),
-         Input("forward-button-tree", component_property="n_clicks"),
-         ]
-    )
-    def circularTree(backClick, forwardClick):
-        classifier = UserSession().instance.selectedModel
-        length = len(classifier.estimators_)
-        index  = (forwardClick - backClick) % length
-        model = classifier.estimators_[index]
-        tree = model.tree_
-        treeUtil = TreeUtil()
-        tree = treeUtil.generateDecisionTree(classifier, model, tree)
-        return "Subtree : " + str(index + 1) + "/" + str(length), tree
-    

@@ -1,9 +1,10 @@
-from sklearn.tree import _tree
 import pandas as pd
 import plotly.graph_objects as go
-import plotly.express as px
 import numpy as np
 from dash import dcc
+from UserSession import UserSession
+from dash import html
+from flask import request
 
 """
 AUTHOR: Daniel Ferring
@@ -20,7 +21,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 24/02/2023
+    DATE LAST MODIFIED: 21/03/2023
 
     Generates the values required to create a heatmap using values from
     the model's training data.
@@ -28,7 +29,7 @@ class DecisionBoundaryUtil():
     INPUTS:
     trainingData: the data used to train the model
     """
-    def getHeatmapValues(self, trainingData):
+    def getHeatmapValues(self, trainingData, testingData):
 
         #Stores minimum values for each feature
         mins = []
@@ -36,10 +37,10 @@ class DecisionBoundaryUtil():
         maxs = []
 
         #Extracts feature values from the training data
-        features = trainingData[0]
+        features = pd.concat([trainingData[0], testingData[0]])
 
         #Finds the minimum and maximum values for each feature
-        for i in features:
+        for i in features.columns:
             min = features[i].min()
             max = features[i].max()
 
@@ -77,7 +78,7 @@ class DecisionBoundaryUtil():
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 13/03/2023
+    DATE LAST MODIFIED: 21/03/2023
     --Uses some logic initially implemented by Dominic Cripps--
 
     Creates the heatmap object used to represent the decision boundaries of a given model
@@ -87,9 +88,7 @@ class DecisionBoundaryUtil():
     trainingData: The data used to train the model
     key: a dictionary mapping class strings to numerical values
     """
-    def plotHeatmap(self, model, trainingData, key):
-        #creates lists used to create the heatmap
-        heatmapValues = self.getHeatmapValues(trainingData)
+    def plotHeatmap(self, model, heatmapValues, key):
 
         #List of features used to train the model
         features = model.feature_names_in_
@@ -171,8 +170,7 @@ class DecisionBoundaryUtil():
                             [(1 / 6) * 3, "rgb(230, 96, 104)"],
                             [(1 / 6) * 4, "rgb(196, 69, 124)"],
                             [(1 / 6) * 5, "rgb(144, 80, 144)"],
-                            [1.0, "rgb(63, 57, 114)"]
-                            ]
+                            [1.0, "rgb(63, 57, 114)"]]
 
         #Combines training and test data for instances and classifications
         instances = pd.concat([trainingData[0], testingData[0]])
@@ -199,6 +197,7 @@ class DecisionBoundaryUtil():
                             mode = 'markers',
                             hoverinfo = 'text',
                             hovertext = classifications,
+                            showlegend= False,
                             marker = dict(size = 8,
                                         colorscale = markerColourscale,
                                         color = classificationsNum,
@@ -208,12 +207,84 @@ class DecisionBoundaryUtil():
                             )
         
         return scatter
+    
+    """
+    AUTHOR: Daniel Ferring
+    DATE CREATED: 1/05/2023
+    PREVIOUS MAINTAINER: Daniel Ferring
+    DATE LAST MODIFIED: 2/05/2023
+
+    Creates a key for the data instances in the decision boundary visualisation
+
+    INPUTS:
+    modelInfo: contains all the information relating to the model 
+               to be represented (Defined in SettingCallbacks.py)
+    """
+    def createKey(self, modelInfo):
+        #Custom colourscale used for the instances
+        markerColourscale = [[0.0, "rgb(234, 214, 84)"],
+                            [1 / 6, "rgb(249, 178, 95)"],
+                            [(1 / 6) * 2, "rgb(246, 134, 91)"],
+                            [(1 / 6) * 3, "rgb(230, 96, 104)"],
+                            [(1 / 6) * 4, "rgb(196, 69, 124)"],
+                            [(1 / 6) * 5, "rgb(144, 80, 144)"],
+                            [1.0, "rgb(63, 57, 114)"]]
+        
+        colourKey = modelInfo["colourKey"]
+        shapeKey = modelInfo["shapeKey"]
+
+        classifications = []
+        colours = []
+        shapes = []
+
+        #Gets values for each instance symbol to be plotted in the key 
+        for key, value in colourKey.items():
+            classifications.append(key)
+            colours.append(value)
+            shapes.append(shapeKey[key])
+
+        ydata = [0] * len(classifications)
+
+        #Used to represent the key, only has data for the x axis, one point for each class
+        keyScatter = go.Scatter(x = classifications,
+                              y = ydata,
+                              hoverinfo = "none",
+                              mode = "markers",
+                              marker = dict(size = 15,
+                                            colorscale = markerColourscale,
+                                            color = colours,
+                                            symbol = shapes,
+                                            line = dict(color = 'black', 
+                                            width = 2))
+                            )
+        
+        keyFig = go.Figure(data = keyScatter)
+
+        #Updates the key to match the aesthetic of the rest of the program
+        keyFig.update_layout(
+            paper_bgcolor='rgba(0,0,0,0)',
+            plot_bgcolor='rgba(0,0,0,0)',
+            font_color = "#f5f5f5",
+            showlegend = False,
+            autosize=True, 
+            margin={'t': 50,'l':10,'b':5,'r':30},
+            title = "Instance Key",
+            title_x = 0.5,
+            height = 150
+        )
+
+        #Removes grid lines and hides the y axis
+        keyFig.update_yaxes(showgrid=False, visible = False)
+        keyFig.update_xaxes(showgrid=False)
+        
+        return keyFig
+
 
     """
     AUTHOR: Daniel Ferring
     DATE CREATED: 24/02/2023
     PREVIOUS MAINTAINER: Daniel Ferring
-    DATE LAST MODIFIED: 13/03/2023
+    DATE LAST MODIFIED: 2/05/2023
 
     Combines the heatmap and the scatter plot into a single
     graph object to represent the decision boundaries of a
@@ -224,7 +295,7 @@ class DecisionBoundaryUtil():
     modelInfo: contains all the information relating to the model 
                to be represented (Defined in SettingCallbacks.py)
     """
-    def generateDecisionBoundary(self, modelInfo):
+    def generateDecisionBoundary(self, modelInfo, sessionID):
         model = modelInfo["modelData"]
         colourKey = modelInfo["colourKey"]
         shapeKey = modelInfo["shapeKey"]
@@ -232,9 +303,11 @@ class DecisionBoundaryUtil():
         #Stores the created graph object for use in the wider system
         decisionBoundary = []
 
-        #Creates heatmap and scatter plot objects
-        heatmap = self.plotHeatmap(model, modelInfo["trainingData"], colourKey)
+        #Creates heatmap,scatter plot and key objects
+        heatmapValues = self.getHeatmapValues(modelInfo["trainingData"], modelInfo['testingData'])
+        heatmap = self.plotHeatmap(model, heatmapValues, colourKey)
         scatter = self.plotScatterGraph(modelInfo["trainingData"], modelInfo["testingData"], colourKey, shapeKey)
+        key = self.createKey(modelInfo)
 
         #Creates the graph object, the heatmap is overlaid with the scatter graph
         graph = go.Figure(data = heatmap)
@@ -256,8 +329,18 @@ class DecisionBoundaryUtil():
         else:
             graph.update_layout(
                 yaxis_title = str(model.feature_names_in_[1])
-            )
-        
-        decisionBoundary.append(dcc.Graph(figure = graph))
+            )        
 
+        UserSession().instance.selectedBoundary[sessionID] = graph
+
+        #Creates a html div where the key and the boundary are placed side by side
+        boundary = html.Div(children=[
+            html.Div(children = [dcc.Graph(figure = graph)],
+                     style = {"width":"100%", "height":"80%"}),
+            html.Div(children = [dcc.Graph(figure = key)],
+                     style = {"width":"80%", "padding-top":"2%", "margin":"auto"})],
+            style = {"display":"flex", "flex-direction":"column", "column-gap":"2%"}
+        )
+
+        decisionBoundary.append(boundary)
         return decisionBoundary

@@ -33,7 +33,7 @@ class ClassifierParallelCoordinatesComponent(ClassifierComponent):
     def __init__(self, modelInfo):
 
         # Extract xTest data, yTest data and the model
-        xTest = modelInfo["testingData"][0]
+        xTest = (modelInfo["testingData"][0]).copy()
         yTest = modelInfo["testingData"][1]
         model = modelInfo['modelData']
 

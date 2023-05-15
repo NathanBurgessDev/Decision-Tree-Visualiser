@@ -45,11 +45,11 @@ class ImportUtil:
     Converts a string of csv data into a dataframe object
 
     INPUTS
-    str csv : The contents of a scv file as a string
+    str csv : The contents of a csv file as a string
     '''
     def csvToDataFrame(csv):
         data = StringIO(csv)
-        df = pd.read_csv(data, sep=",")
+        df = pd.read_csv(data, sep=r'\s*,\s*')
         return df
 
     '''
@@ -79,7 +79,12 @@ class ImportUtil:
     BytesIO file : A pickled file converted to a BytesIO object
     '''
     def unPickle(file):
+        if file.getbuffer().nbytes == 0:
+            return None
         return pickle.loads(file.read())
+    
+    def sanitiseData(dataFrame):
+        dataFrame.dropna(inplace = True)
 
 """
 AUTHOR: Ethan Temple-Betts
