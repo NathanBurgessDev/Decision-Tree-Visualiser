@@ -56,7 +56,7 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
         #For one or two features, the system displays the standard decision boundary visualisation
         else:
             self.boundary = [
-                html.Div(id = "decision-boundary", children = BoundaryUtil.generateDecisionBoundary(modelInfo)),
+                html.Div(id = "decision-boundary", children = BoundaryUtil.generateDecisionBoundary(modelInfo, sessionID)),
                 ToolTip().generateToolTip("decision-boundary", title, description)           
             ]
 
