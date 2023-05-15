@@ -2,7 +2,8 @@ from classifier_components.ClassifierComponent import ClassifierComponent
 import plotly.graph_objects as go 
 import plotly.express as px
 from dash import dcc
-
+from dash import html
+from utils.ToolTipUtil import ToolTip
 
 """
 AUTHOR: Dominic Cripps
@@ -63,4 +64,6 @@ class ClassifierClassSplitComponent(ClassifierComponent):
 
         self.componentTitle = "Training Data Class Split"
 
-        self.componentChildren =self.chart
+        self.componentChildren = html.Div(id = "class-split-component", children = [
+            self.chart,
+            ToolTip().generateToolTip("class-split-component", "Class Split", "This component shows the number of samples belonging to each classifier used in training. An uneven split of this could lead to a low accuracy, and as such you may want to reconsider the values of the training parameters or the dataset in question.")])

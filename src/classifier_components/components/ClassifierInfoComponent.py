@@ -1,5 +1,6 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
+from utils.ToolTipUtil import ToolTip
 
 """
 AUTHOR: Dominic Cripps
@@ -82,7 +83,13 @@ class ClassifierInfoComponent(ClassifierComponent):
         ,className="classifierInfoComponent")
 
 
-        modelInfo = html.Div(children = [generalInfo, parameterInfo], className="classifierInfoContainer")
+        modelInfo = html.Div( id = "model-information-component",
+            children = [
+            generalInfo, 
+            parameterInfo,
+            ToolTip().generateToolTip("model-information-component", "Model Information", "Displays information about the trained model. Useful when comparing and identifying how models have been trained."),
+        ], className="classifierInfoContainer")
+
 
         self.componentTitle = "Model Information"
 

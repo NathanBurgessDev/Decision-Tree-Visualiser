@@ -3,6 +3,8 @@ from dash import dcc
 import plotly.graph_objs as go
 import sklearn.metrics as metrics
 import numpy as np
+from dash import html
+from utils.ToolTipUtil import ToolTip
 
 """
 AUTHOR: Dominic Cripps
@@ -57,4 +59,6 @@ class ClassifierConfusionMatrixComponent(ClassifierComponent):
         self.matrix = dcc.Graph(figure = graph)
 
         self.componentTitle = "Confusion Matrix"
-        self.componentChildren = self.matrix
+        self.componentChildren = html.Div(id = "confusion-matrix-component", children = [
+            self.matrix,
+            ToolTip().generateToolTip("confusion-matrix-component", "Confusion Matrix", "A more in-depth visualisation of model performance. It compares the true values of each samples classification to values predicted by the model itself. A bright diagonal from the top left to the bottom right is an indication of an accurate model.")] )
