@@ -12,7 +12,7 @@ Child of 'ClassifierComponent' this class defines will
 define an appropriate 'componentLayout' based on a multiple decision tree
 visualisation.
 """
-class ClassifierMultiTreeComponent(ClassifierComponent):
+class ClassifierRandomForestComponent(ClassifierComponent):
 
     def __init__(self, modelInfo):
         # An instance of 'TreeUtil is created'
