@@ -14,8 +14,8 @@ import dash_mantine_components as dmc
 
 AUTHOR: Alfred Greenwood
 DATE CREATED: 03/03/2023
-PREVIOUS MAINTAINER: Alfred Greenwood
-DATE LAST MODIFIED: 29/04/2023
+PREVIOUS MAINTAINER: Daniel Ferring
+DATE LAST MODIFIED: 16/05/2023
 
 Child of 'ClassifierComponent', this class defines an
 appropriate 'componentLayout' to represent user input.
@@ -170,7 +170,13 @@ class ClassifierSVMDecisionBoundaryComponent(ClassifierComponent):
                     plot_bgcolor="#232323")
 
                 # Create graph from the figure and add it to the SVM decision boundary component
-                self.graph = dcc.Graph(figure = self.fig)
+                self.graph = html.Div(children=[
+                    html.Div(children = [dcc.Graph(figure = self.fig)],
+                        style = {"width":"100%"}),
+                    html.Div(children = [dcc.Graph(figure = boundUtil.createKey(modelInfo))],
+                        style = {"width":"80%", "padding-top":"2%", "margin":"auto"})],
+                    style = {"display":"flex", "flex-direction":"column", "column-gap":"2%"}
+                )
             else:
                 self.graph = html.P("SVM decision boundaries can only be visualised currently for linear SVM kernels")
         
