@@ -31,4 +31,4 @@ import callbacks.callbacks.FeatureSpaceCallbacks
 pageLayout = PageLayout("Results visualisation", dash_app)
 
 if __name__ == "__main__":
-    pageLayout.runServer(True)
+    pageLayout.runServer(False)

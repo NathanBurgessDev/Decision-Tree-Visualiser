@@ -55,7 +55,7 @@ class ClassifierSVMDecisionBoundaryComponent(ClassifierComponent):
         
         # Check for whether 2 inputs are given, any other number will not work
         if(len(modelInfo["modelData"].feature_names_in_) > 2):
-            self.graph = html.P("Higher Dimensions are not implemented")
+            self.graph = html.P("Higher Dimensions are not supported")
         elif(len(modelInfo["modelData"].feature_names_in_) <= 1):
             self.graph = html.P("More than 1 dimension is required")
         else:
