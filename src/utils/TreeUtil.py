@@ -404,13 +404,6 @@ class TreeUtil():
     When given an igraph Graph this function will return
     a plotly graph, which represents a large graphs structure.
 
-    TODO: 
-    - Try create a probability distribution using this,
-    if it's not made then this can be removed and
-    the calculation of the font and marker sizes
-    can be adjusted in the generateTreeGraph function instead to make it more efficient
-
-
     INPUTS
     igraph.Graph G: The Graph object to be displayed
     int nr_vertices: The number of verticies in the graph
@@ -452,11 +445,6 @@ class TreeUtil():
         - Markers are now bigger to fit the text.
         - The colour of leaf nodes is now different to the colour of decision nodes.
         - Markers and text size are now dependent on the number of nodes in the graph.
-
-        TODO:
-        - When using the built in zoom function the markers and text
-        will remain the same size, which is makes it difficult to read
-        when the markers and text are small.
 
         INPUTS
         dict pos: 
