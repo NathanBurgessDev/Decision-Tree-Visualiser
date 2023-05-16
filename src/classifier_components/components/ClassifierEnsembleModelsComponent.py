@@ -5,14 +5,17 @@ from utils.TreeUtil import TreeUtil
 """
 AUTHOR: Dominic Cripps
 DATE CREATED: 17/02/2023
-PREVIOUS MAINTAINER: Dominic Cripps
-DATE LAST MODIFIED: 18/02/2023
+PREVIOUS MAINTAINER: Kieran Patel
+DATE LAST MODIFIED: 16/05/2023
 
 Child of 'ClassifierComponent' this class defines will
-define an appropriate 'componentLayout' based on a multiple decision tree
-visualisation.
+define an appropriate 'componentLayout' based on random forest decision tree
+visualisations.
+
+Addiiton: The component now allows for other ensemble models to be visualised
+
 """
-class ClassifierRandomForestComponent(ClassifierComponent):
+class ClassifierEnsembleModelsComponent(ClassifierComponent):
 
     def __init__(self, modelInfo):
         # An instance of 'TreeUtil is created'
@@ -45,10 +48,20 @@ class ClassifierRandomForestComponent(ClassifierComponent):
 
         # The model is parsed to 'TreeUtil.generateDecisionTree', this will 
         # return a 'dcc.Graph' object containing the tree
-        self.componentTitle = "Random Forest Decision Tree"
+        self.componentTitle = self.getComponentTitle(modelInfo)
         # Set component layout property to be a div containing the tree graph
         # Important : className of this div must be "classifierComponent" to format correctly
         self.componentChildren = multiTreeShell
+
+    def getComponentTitle(self, modelInfo):
+        classifier = modelInfo["classifierType"]
+        if classifier == "GradientBoostingClassifier":
+            return "Gradient Boosted Decision Tree"
+        elif classifier == "RandomForestClassifier":
+            return "Random Forest Decision Tree"
+        else:
+            #Can add more ensemble models here
+            return "Unknown Decision Tree"
 
 
 
