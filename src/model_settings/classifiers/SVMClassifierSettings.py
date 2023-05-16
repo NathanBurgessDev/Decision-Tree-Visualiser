@@ -4,6 +4,7 @@ import dash_bootstrap_components as dbc
 from model_settings.ModelSettings import ClassifierSettings
 from sklearn.svm import SVC
 import dash_mantine_components as dmc
+from utils.ToolTipUtil import ToolTip
 
 """
 AUTHOR: Dominic Cripps
@@ -59,6 +60,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 step = 0.1,
                 className="floatInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="C"), "C", self.C),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="kernel"), 
                               checked=True,
@@ -72,7 +74,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 value = "linear",
                 className="dropdown"
             ),
-
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="kernel"), "Kernel", self.kernel),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="degree"), 
                               checked=False,
@@ -86,6 +88,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 value=3,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="degree"), "Degree", self.degree),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="gamma"), 
                               checked=False,
@@ -99,6 +102,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 value = "scale",
                 className="dropdown"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="gamma"), "Gamma", self.gamma),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="coef0"), 
                               checked=False,
@@ -114,6 +118,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 step = 0.1,
                 className="floatInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="coef0"), "Coef0", self.coef0),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="shrinking"),
                               checked=False,
@@ -127,6 +132,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 value = True,
                 className="dropdown"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="shrinking"), "Shrinking", self.shrinking),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="probability"),
                               checked=False,
@@ -140,6 +146,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 value = True,
                 className="dropdown"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="probability"), "Probability", self.probability),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="tol"), 
                               checked=False,
@@ -155,6 +162,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 step = 0.01,
                 className="floatInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="tol"), "Tolerance", self.tol),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="cache_size"), 
                               checked=False,
@@ -169,6 +177,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 max = 300,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="cache_size"), "Cache Size", self.cache_size),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="verbose"), 
                               checked=False,
@@ -182,6 +191,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 value=0,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="verbose"), "Verbose", self.verbose),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_iter"), 
                               checked=False,
@@ -195,6 +205,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 value=-1,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="max_iter"), "Max Iterations", self.max_iter),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="decision_function_shape"), 
                               checked=False,
@@ -208,6 +219,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 value = "ovr",
                 className="dropdown"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="decision_function_shape"), "Decision Function Shape", self.decision_function_shape),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="break_ties"),
                               checked=False,
@@ -221,7 +233,8 @@ class SVMClassifierSettings(ClassifierSettings):
                 value = False,
                 className="dropdown"
             ),
-        
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="break_ties"), "Break Ties", self.break_ties),
+
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="random_state"), 
                               checked=False,
                               size = "xs",
@@ -234,6 +247,7 @@ class SVMClassifierSettings(ClassifierSettings):
                 value=0,
                 className="numericInput"
             ),
+            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="random_state"), "Random State", self.random_state),
 
         ])]
 

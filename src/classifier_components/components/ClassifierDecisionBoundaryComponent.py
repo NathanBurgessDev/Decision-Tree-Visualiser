@@ -1,10 +1,10 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
+from utils.ToolTipUtil import ToolTip
 import dash_mantine_components as dmc
 import dash_bootstrap_components as dbc
 from dash import dcc
-
 
 """
 AUTHOR: Daniel Ferring
@@ -24,13 +24,21 @@ modelInfo : contains all the information relating to the model
 class ClassifierDecisionBoundaryComponent(ClassifierComponent):
 
     def __init__(self, modelInfo, sessionID):
+
+        boundaryDescription = 'This visualisation shows the relationship between two features and how they are used to classify data instances. '\
+        'The axes are the features used to train the model and the data instances are plotted within the feature space as markers. '\
+        'The colours of the instances represent their true class (taken from the data set). The colour of the section that they are plotted in '\
+        'represents the class that the model would predict them to be. It should be noted that the colour of the markers is slightly darker than '\
+        'that of their predicted class, this is done to make them more distinguishable from the background. '\
+        'Additionally, cases of symbols overlapping indicate that the instances are not separable using only those two features; another feature would be required '\
+        'to accurately classify them.'
         
         BoundaryUtil = DecisionBoundaryUtil()
         features = modelInfo["modelData"].feature_names_in_
 
         #If the model contains more than two features, the system will display the pairwise plot visualisation
         if(len(features) > 2):
-            self.boundary = html.Div(id = "pairwise-plot",
+            self.boundary = [html.Div(id = "pairwise-plot",
                             children = [
                                 html.Div(children = [
                                     html.H3("Select Features to display"),
@@ -44,11 +52,14 @@ class ClassifierDecisionBoundaryComponent(ClassifierComponent):
                                     style = {"width":"20%", "padding-top":"2%"}),
                                 html.Div(id = "pairwise-boundary", style = {'width':'75%'},),
                                 dcc.ConfirmDialog(id = "feature-error", message = "")],
-                                style = {"display":"flex", "flex-direction":"row", "column-gap":"2%"}
-                            )
+                                style = {"display":"flex", "flex-direction":"row", "column-gap":"2%"}),
+                                ToolTip().generateToolTip("pairwise-boundary", 'Decision Boundary', boundaryDescription)]
         #For one or two features, the system displays the standard decision boundary visualisation
         else:
-            self.boundary = BoundaryUtil.generateDecisionBoundary(modelInfo, sessionID)
+            self.boundary = [
+                html.Div(id = "decision-boundary", children = BoundaryUtil.generateDecisionBoundary(modelInfo, sessionID)),
+                ToolTip().generateToolTip("decision-boundary", 'Decision Boundary', boundaryDescription)           
+            ]
 
         self.componentTitle = "Decision Boundary Visualisation"
         
