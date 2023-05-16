@@ -204,33 +204,6 @@ class RandomForestClassifierSettings(ClassifierSettings):
             ),
             ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="bootstrap"), "Bootstrap", self.bootstrap),
 
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="oob_score"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "OOB Score",
-                              className = "paramCheckbox"),
-            dcc.Dropdown(
-                id=dict(name="classifier-settings", idx="oob_score"), 
-                options = [True, False], 
-                value = False,
-                className="dropdown"
-            ),
-            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="oob_score"), "OOB Score", self.oob_score),
-
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="n_jobs"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Number Of Jobs",
-                              className = "paramCheckbox"),
-            daq.NumericInput(
-                id=dict(name="classifier-settings", idx="n_jobs"), 
-                value=0,
-                className="numericInput"
-            ),
-            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="n_jobs"), "N Jobs", self.n_jobs),
-
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="random_state"), 
                               checked=False,
                               size = "xs",
@@ -244,34 +217,6 @@ class RandomForestClassifierSettings(ClassifierSettings):
                 className="numericInput"
             ),
             ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="random_state"), "Random State", self.random_state),
-
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="verbose"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Verbose",
-                              className = "paramCheckbox"),
-            daq.NumericInput(
-                id=dict(name="classifier-settings", idx="verbose"), 
-                min=0,
-                value=0,
-                className="numericInput"
-            ),
-            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="verbose"), "Verbose", self.verbose),
-
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="warm_start"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Warm Start",
-                              className = "paramCheckbox"),
-            dcc.Dropdown(
-                id=dict(name="classifier-settings", idx="warm_start"), 
-                options = [True, False], 
-                value = False,
-                className="dropdown"
-            ),
-            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="warm_start"), "Warm Start", self.warm_start),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_samples"), 
                               checked=False,
