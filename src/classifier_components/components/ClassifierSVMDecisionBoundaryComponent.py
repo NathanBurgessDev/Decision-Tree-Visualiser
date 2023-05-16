@@ -1,14 +1,12 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
-import plotly as py
-from utils.Util import GraphUtil as gu
 import plotly.graph_objects as go
+import dash_mantine_components as dmc
 import plotly.express as px
 import pandas as pd
 from dash import dcc
 from dash import html
 from plotly.graph_objs import *
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
-from sklearn.inspection import DecisionBoundaryDisplay as DBD
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
 import numpy as np
 
@@ -50,8 +48,23 @@ class ClassifierSVMDecisionBoundaryComponent(ClassifierComponent):
         # Save machine learning model
         self.svc = modelInfo["modelData"]
                 
-        # Name component title
-        self.componentTitle = "SVM Decision boundary"
+        # Name component title and add tooltips
+        self.componentTitle = html.Span(
+            dmc.Tooltip(
+                label = html.Div(children = [
+                    # HTML for tooltip
+                    html.H1("SVM decision boundary"),
+                    html.P("Support vector machines (SVM) are a machine learning method that utilises a set"),
+                    html.P("of hyperplanes. These hyperplanes seperate the machine learning models divide between"),
+                    html.P("two classifiers, assigning predicted values to marked categories. The model predicts"),
+                    html.P("for any number of input training features and supports any SVM Kernel. However this"),
+                    html.P("component will only support 2 dimensional linear Kernels.")
+                    ]),
+                children=[html.P("SVM Decision boundary")],
+                id="svm-tooltip",
+                className ="svmToolTip",
+                withArrow = True,
+            ))
         
         # Check for whether 2 inputs are given, any other number will not work
         if(len(modelInfo["modelData"].feature_names_in_) > 2):
