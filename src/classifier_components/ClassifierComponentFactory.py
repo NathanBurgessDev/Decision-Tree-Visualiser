@@ -50,8 +50,8 @@ class ClassifierComponentFactory():
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent],
                                             [ClassifierClassSplitComponent, ClassifierConfusionMatrixComponent],
-                                            [ClassifierParallelCoordinatesComponent],
                                             [ClassifierMultiTreeComponent],
+                                            [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ],
             "SVC":

@@ -111,9 +111,9 @@ class TreeUtil():
     Tree tree : The tree being evaluated.
     Integer nodeIndex : The index of the current leaf node.
     '''
-    def getClassificiation(self, model, tree, nodeIndex):
+    def getClassificiation(self, model, tree, nodeIndex, classifier):
         #An array of possible classifications.
-        classes = model.classes_
+        classes = classifier.classes_
         #Array representing how many of each classification
         #was used in training the current leaf.
         weights = tree.value[nodeIndex][0].tolist()
@@ -282,7 +282,7 @@ class TreeUtil():
                 # have made it to this leaf node
                 # Addition : The classification of each node will be 
                 # returned by getClassification and shown on the label.
-                self.annotations.append(self.getClassificiation(model, tree_, node))
+                self.annotations.append(self.getClassificiation(model, tree_, node, classifier))
 
         recurse(0, [])
 
