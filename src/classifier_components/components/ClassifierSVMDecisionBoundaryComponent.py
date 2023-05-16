@@ -1,6 +1,4 @@
 from classifier_components.ClassifierComponent import ClassifierComponent
-import plotly as py
-from utils.Util import GraphUtil as gu
 import plotly.graph_objects as go
 import plotly.express as px
 import pandas as pd
@@ -8,16 +6,16 @@ from dash import dcc
 from dash import html
 from plotly.graph_objs import *
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
-from sklearn.inspection import DecisionBoundaryDisplay as DBD
 from utils.DecisionBoundaryUtil import DecisionBoundaryUtil
 import numpy as np
+import dash_mantine_components as dmc
 
 """
 
 AUTHOR: Alfred Greenwood
 DATE CREATED: 03/03/2023
-PREVIOUS MAINTAINER: Alfred Greenwood
-DATE LAST MODIFIED: 29/04/2023
+PREVIOUS MAINTAINER: Daniel Ferring
+DATE LAST MODIFIED: 16/05/2023
 
 Child of 'ClassifierComponent', this class defines an
 appropriate 'componentLayout' to represent user input.
@@ -50,12 +48,27 @@ class ClassifierSVMDecisionBoundaryComponent(ClassifierComponent):
         # Save machine learning model
         self.svc = modelInfo["modelData"]
                 
-        # Name component title
-        self.componentTitle = "SVM Decision boundary"
+        # Name component title and add tooltips
+        self.componentTitle = html.Span(
+            dmc.Tooltip(
+                label = html.Div(children = [
+                    # HTML for tooltip
+                    html.H1("SVM decision boundary"),
+                    html.P("Support vector machines (SVM) are a machine learning method that utilises a set"),
+                    html.P("of hyperplanes. These hyperplanes seperate the machine learning models divide between"),
+                    html.P("two classifiers, assigning predicted values to marked categories. The model predicts"),
+                    html.P("for any number of input training features and supports any SVM Kernel. However this"),
+                    html.P("component will only support 2 dimensional linear Kernels.")
+                    ]),
+                children=[html.P("SVM Decision boundary")],
+                id="svm-tooltip",
+                className ="svmToolTip",
+                withArrow = True,
+            ))
         
         # Check for whether 2 inputs are given, any other number will not work
         if(len(modelInfo["modelData"].feature_names_in_) > 2):
-            self.graph = html.P("Higher Dimensions are not implemented")
+            self.graph = html.P("Higher Dimensions are not supported")
         elif(len(modelInfo["modelData"].feature_names_in_) <= 1):
             self.graph = html.P("More than 1 dimension is required")
         else:
@@ -157,7 +170,13 @@ class ClassifierSVMDecisionBoundaryComponent(ClassifierComponent):
                     plot_bgcolor="#232323")
 
                 # Create graph from the figure and add it to the SVM decision boundary component
-                self.graph = dcc.Graph(figure = self.fig)
+                self.graph = html.Div(children=[
+                    html.Div(children = [dcc.Graph(figure = self.fig)],
+                        style = {"width":"100%"}),
+                    html.Div(children = [dcc.Graph(figure = boundUtil.createKey(modelInfo))],
+                        style = {"width":"80%", "padding-top":"2%", "margin":"auto"})],
+                    style = {"display":"flex", "flex-direction":"column", "column-gap":"2%"}
+                )
             else:
                 self.graph = html.P("SVM decision boundaries can only be visualised currently for linear SVM kernels")
         

@@ -1,3 +1,4 @@
+from classifier_components.components.ClassifierEnsembleModelsComponent import ClassifierEnsembleModelsComponent
 from classifier_components.components.ClassifierInfoComponent import ClassifierInfoComponent
 from classifier_components.ClassifierComponent import ClassifierComponent
 from classifier_components.components.ClassifierTreeComponent import ClassifierTreeComponent
@@ -7,7 +8,6 @@ from classifier_components.components.ClassifierConfusionMatrixComponent import 
 from classifier_components.components.ClassifierParallelCoordinatesComponent import ClassifierParallelCoordinatesComponent
 from classifier_components.components.ClassifierUserInputComponent import ClassifierUserInputComponent
 from classifier_components.components.ClassifierSVMDecisionBoundaryComponent import ClassifierSVMDecisionBoundaryComponent
-from classifier_components.components.ClassifierMultiTreeComponent import ClassifierMultiTreeComponent
 from classifier_components.components.ClassifierFeatureSpaceComponent import ClassifierFeatureSpaceComponent
 from dash import html
 
@@ -43,6 +43,7 @@ class ClassifierComponentFactory():
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent],
                                             [ClassifierClassSplitComponent, ClassifierConfusionMatrixComponent],
+                                            [ClassifierEnsembleModelsComponent],
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ],
@@ -50,8 +51,8 @@ class ClassifierComponentFactory():
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent],
                                             [ClassifierClassSplitComponent, ClassifierConfusionMatrixComponent],
+                                            [ClassifierEnsembleModelsComponent],
                                             [ClassifierParallelCoordinatesComponent],
-                                            [ClassifierMultiTreeComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ],
             "SVC":

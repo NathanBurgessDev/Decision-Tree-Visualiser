@@ -49,7 +49,7 @@ class ImportUtil:
     '''
     def csvToDataFrame(csv):
         data = StringIO(csv)
-        df = pd.read_csv(data, sep=r'\s*,\s*')
+        df = pd.read_csv(data, sep=r'\s*,\s*', engine = 'python')
         return df
 
     '''

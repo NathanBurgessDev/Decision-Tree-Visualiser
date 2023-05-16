@@ -33,7 +33,6 @@ app = AppInstance().instance.app
 )
 def modelSelected(modelFilename, sessionID):
 
-    print("model selected")
     if sessionID == None or sessionID == "" or modelFilename == None or modelFilename == "":
         return [()]
 
