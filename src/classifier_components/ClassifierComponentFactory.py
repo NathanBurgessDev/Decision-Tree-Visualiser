@@ -1,3 +1,4 @@
+from classifier_components.components.ClassifierGradientBoostedComponent import ClassifierGradientBoostedComponent
 from classifier_components.components.ClassifierInfoComponent import ClassifierInfoComponent
 from classifier_components.ClassifierComponent import ClassifierComponent
 from classifier_components.components.ClassifierTreeComponent import ClassifierTreeComponent
@@ -43,6 +44,7 @@ class ClassifierComponentFactory():
                                         [
                                             [ClassifierInfoComponent, ClassifierUserInputComponent],
                                             [ClassifierClassSplitComponent, ClassifierConfusionMatrixComponent],
+                                            [ClassifierGradientBoostedComponent],
                                             [ClassifierParallelCoordinatesComponent],
                                             [ClassifierFeatureSpaceComponent]
                                         ],
