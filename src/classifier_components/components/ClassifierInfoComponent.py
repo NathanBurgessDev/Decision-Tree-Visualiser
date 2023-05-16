@@ -63,7 +63,7 @@ class ClassifierInfoComponent(ClassifierComponent):
         parameters = []
         for param in modelInfo["modelArguments"]:
             parameters.append(html.Div(children=[param + ":"], style={"font-weight" : "bold"}))
-            parameters.append(html.Div(modelInfo["modelArguments"][param]))
+            parameters.append(html.Div(str(modelInfo["modelArguments"][param])))
             parameters.append(html.Br())
 
         # It seperates the model information into two columns, one for general info,
