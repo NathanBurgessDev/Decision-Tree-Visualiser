@@ -2,6 +2,7 @@ from classifier_components.ClassifierComponent import ClassifierComponent
 from dash import html
 import dash_bootstrap_components as dbc
 from sklearn.metrics import accuracy_score
+from utils.ToolTipUtil import ToolTip
 
 """
 AUTHOR: Dominic Cripps
@@ -61,6 +62,7 @@ class ClassifierUserInputComponent(ClassifierComponent):
             html.Br(),
             html.Button("Predict", id="predict-button", n_clicks = 0, className = "trainButton"),
             html.Br(),
+            ToolTip().generateToolTip("user-input-component", "User Input", "The model will classify each sample of the testing data and compare the results to each samples true value, this is displayed under 'Accuracy'. The user can input their own custom data (all training features must have a value) the model then classifies this and the result is shown. The custom point is plotted on the decision boundary and the path taken to that classification is highlighted on the Decision Tree."),
         ]
 
         self.componentTitle = "Predict User Input"

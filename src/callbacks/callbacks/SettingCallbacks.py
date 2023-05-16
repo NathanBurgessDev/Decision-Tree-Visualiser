@@ -200,7 +200,9 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
             xTrain, xTest, yTrain, yTest = train_test_split(dfIn, dfOut, test_size = split)
             
             arguments = {}
+            
             for i in range (0, len(classifierSettings)):
+                print("running\n")
                 if customParameters[i] == True:
                     if classifierSettings[i] != None:
                         arguments[selectedSettings.parameters[i]] = classifierSettings[i] 
@@ -208,7 +210,6 @@ def train(clicks, classifierSettings, customParameters, features, classifier, sp
                         errorMessage += " \n Error : A Selected Parameter Has No Value"
                         error = True
                         return error, errorMessage, modelFilenames, dash.no_update, "Current Session : " + sessionID
-
 
             model = selectedSettings.classifier(**arguments).fit(xTrain, yTrain)
 

@@ -30,8 +30,6 @@ class SVMClassifierSettings(ClassifierSettings):
             "shrinking",
             "probability",
             "tol",
-            "cache_size",
-            "verbose",
             "max_iter",
             "decision_function_shape",          
             "break_ties",
@@ -128,7 +126,9 @@ class SVMClassifierSettings(ClassifierSettings):
                               className = "paramCheckbox"),
             dcc.Dropdown(
                 id=dict(name="classifier-settings", idx="shrinking"), 
-                options = [True, False], 
+                options = [
+                    {'label': 'True', 'value': True},
+                    {'label': 'False', 'value': False}],
                 value = True,
                 className="dropdown"
             ),
@@ -142,7 +142,9 @@ class SVMClassifierSettings(ClassifierSettings):
                               className = "paramCheckbox"),
             dcc.Dropdown(
                 id=dict(name="classifier-settings", idx="probability"), 
-                options = [True, False], 
+                options = [
+                    {'label': 'True', 'value': True},
+                    {'label': 'False', 'value': False}],
                 value = True,
                 className="dropdown"
             ),
@@ -163,35 +165,6 @@ class SVMClassifierSettings(ClassifierSettings):
                 className="floatInput"
             ),
             ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="tol"), "Tolerance", self.tol),
-
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="cache_size"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Cache Size",
-                              className = "paramCheckbox"),
-            daq.NumericInput(
-                id=dict(name="classifier-settings", idx="cache_size"), 
-                min=0,
-                value=200,
-                max = 300,
-                className="numericInput"
-            ),
-            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="cache_size"), "Cache Size", self.cache_size),
-
-            dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="verbose"), 
-                              checked=False,
-                              size = "xs",
-                              color = "violet",
-                              label = "Verbose",
-                              className = "paramCheckbox"),
-            daq.NumericInput(
-                id=dict(name="classifier-settings", idx="verbose"), 
-                min=0,
-                value=0,
-                className="numericInput"
-            ),
-            ToolTip().generateToolTip(dict(name="classifier-settings-custom", idx="verbose"), "Verbose", self.verbose),
 
             dmc.Checkbox(id = dict(name="classifier-settings-custom", idx="max_iter"), 
                               checked=False,
@@ -229,7 +202,9 @@ class SVMClassifierSettings(ClassifierSettings):
                               className = "paramCheckbox"),
             dcc.Dropdown(
                 id=dict(name="classifier-settings", idx="break_ties"), 
-                options = [True, False], 
+                options = [
+                    {'label': 'True', 'value': True},
+                    {'label': 'False', 'value': False}],
                 value = False,
                 className="dropdown"
             ),
