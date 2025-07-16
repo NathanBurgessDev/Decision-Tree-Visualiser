@@ -41,3 +41,7 @@ needing your own dataset.
 ## User Manual
 
 A comprehensive user manual can be found [here](https://team44usermanual.netlify.app/)
+
+## Final Report
+
+Final report for a comprehensive breakdown of the software as well as a review of SE management can be found [here](https://github.com/NathanBurgessDev/Decision-Tree-Visualiser/tree/dceacadfc91fe077354215e5fae5b162375f2ef4/Report/team44-final-report.pdf)
