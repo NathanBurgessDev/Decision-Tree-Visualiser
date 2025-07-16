@@ -37,3 +37,7 @@ https://docs.docker.com/engine/install/linux-postinstall/
 
 We have provided a CSV in `Example-CSV` to allow you to play around with the website without
 needing your own dataset.
+
+## User Manual
+
+A comprehensive user manual can be found [here](https://team44usermanual.netlify.app/)
